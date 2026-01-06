@@ -21,6 +21,21 @@ https://github.com/MartinGjoreski/martingjoreski.github.io/blob/master/files/Cog
 
 Signals are segmented into fixed-length windows (e.g., 30 seconds).
 
+## Relation to Previous Work
+
+This work is an extension of our previous study on cognitive load classification
+using a classical Bayesian Network (BN), where physiological features were modeled
+using crisp states.
+
+Previous implementation:
+https://github.com/TyTy7023/cogLoad_experiment.git
+
+In contrast to the previous BN-based approach, this study introduces:
+- Fuzzy linguistic modeling of physiological signals
+- Fuzzy Bayesian Network (FBN) inference
+- Improved interpretability under noisy real-world measurements
+- Direct and fair comparison with the baseline Bayesian Network model
+
 ## 3. Methodology
 The proposed framework consists of:
 1. Feature extraction from raw physiological signals
