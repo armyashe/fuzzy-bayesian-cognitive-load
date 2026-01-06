@@ -12,6 +12,12 @@ The following signals are used:
 - Respiration Rate (RR)
 - Galvanic Skin Response (GSR)
 - Skin Temperature (Temp)
+### Dataset
+This work uses the cognitive load dataset released for the UbiComp 2020 challenge,
+provided by Gjoreski et al.
+
+Dataset source:
+https://github.com/MartinGjoreski/martingjoreski.github.io/blob/master/files/CogDatasets.rar
 
 Signals are segmented into fixed-length windows (e.g., 30 seconds).
 
@@ -43,4 +49,8 @@ The proposed model provides:
 - Online cognitive load monitoring
 
 ## 8. References
+[1] M. Gjoreski, H. Gjoreski, M. Luštrek, and M. Gams,
+"Monitoring cognitive load with wearable sensors,"
+Proc. ACM IMWUT, vol. 4, no. 1, 2020.
+
 (To be updated)
