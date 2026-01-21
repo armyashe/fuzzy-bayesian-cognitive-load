@@ -1,0 +1,6 @@
+file demo-FTS-PART-I.ipynb
+-> https://medium.com/data-science/a-short-tutorial-on-fuzzy-time-series-dcc6d4eb1b15
+
+A short tutorial on Fuzzy Time Series — Part II
+-> https://medium.com/data-science/a-short-tutorial-on-fuzzy-time-series-part-ii-with-an-case-study-on-solar-energy-bda362ecca6d
+colab-part-II-> https://colab.research.google.com/drive/1QPne6kLfkT0l9hZyVvIJTLKN01EgVKXD
