@@ -1,0 +1,22 @@
+{
+  "mf_type": "gaussian",
+  "n_sets": 3,
+  "mf_sigma_scale": 0.6,
+  "gbell_b": 2.0,
+  "fts_norm": "row",
+  "n_rules": 6,
+  "sigma_scale": 1.3,
+  "ridge_lambda": 0.01,
+  "n_epochs": 20,
+  "lr": 0.003,
+  "n_bins": 3,
+  "alpha": 2.0,
+  "seed": 42,
+  "k_folds": 5,
+  "primary_metric": "accuracy",
+  "best_threshold": 0.515,
+  "oof_accuracy": 0.6092,
+  "oof_f1": 0.6171,
+  "test_accuracy": 0.5285,
+  "test_f1": 0.4551
+}
