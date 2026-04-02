@@ -1,0 +1,2 @@
+exp,eval_protocol,seed,k_folds,n_sets,mf_type,mf_sigma_scale,gbell_b,fts_norm,n_rules,anfis_sigma_scale,ridge_lambda,n_epochs,lr,n_bins,alpha,scale_fts,robust_fts,bn_soft,bn_reliability,calibrate,rank_metric,thr_metric,best_thr,oof_acc,oof_bal_acc,oof_macro_f1,oof_f1,oof_auc,test_acc,test_bal_acc,test_macro_f1,test_f1,test_auc
+main_run,subject-independent hold-out + GroupKFold OOF,42,5,3,gaussian,0.4,2.0,row,6,1.3,0.01,50,0.003,5,0.5,False,False,True,False,none,auc,balanced_accuracy,0.55,0.6234,0.6236,0.6222,0.6437,0.6201,0.7513,0.7519,0.7511,0.7447,0.7734
