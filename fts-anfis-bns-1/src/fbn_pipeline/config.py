@@ -37,7 +37,33 @@ class ExperimentConfig:
     calibrate: str = "none"
 
     dump_rules: bool = False
-    save_csv: str = "experiment_results.csv"
+    save_csv: str = "results_main.csv"
+
+    # ------------------------------------------------------------------
+    # Ablation experiment controls
+    # ------------------------------------------------------------------
+    # Which pipeline variant to run:
+    #   exp1 = Stage1 (FTS) + Stage2 (ANFIS) + Stage3 (BN)  — full pipeline
+    #   exp2 = Stage1 (FTS) + Stage2 (ANFIS)                — no BN, fuse by mean
+    #   exp3 = Stage2 (ANFIS) + Stage3 (BN)                 — no FTS, use stat feats
+    #   exp4 = Stage1 (FTS) + Stage3 (BN)                   — no ANFIS, FTS summary
+    ablation: str = "exp1"
+
+    # exp2 only: how to fuse 4 per-signal probs when BN is absent
+    #   "mean"          → simple average of 4 ANFIS outputs
+    #   "weighted_mean" → AUC-weighted average (weights from train fold)
+    fusion_mode_when_no_bn: str = "mean"
+
+    # exp3 only: feature type replacing Stage 1
+    #   "stats" → 8 handcrafted statistical features per signal (currently only option)
+    no_stage1_feature_mode: str = "stats"
+
+    # exp4 only: how to summarise FTS features into one score per signal
+    #   "diag"      → sum of self-transition probabilities
+    #   "high"      → transitions involving the highest fuzzy state
+    #   "diag_high" → normalised average of diag + high (default)
+    #   "entropy"   → 1 − normalised Shannon entropy of transition dist.
+    fts_summary_mode: str = "diag_high"
 
     def to_dict(self) -> dict:
         return asdict(self)

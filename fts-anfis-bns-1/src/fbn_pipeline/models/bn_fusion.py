@@ -3,11 +3,18 @@ Bayesian Network Fusion (Naive Bayes structure)
 ================================================
 DAG:   Task  →  E_Temp,  E_HR,  E_GSR,  E_RR
 
-Each evidence node E_s is a discretised version of the ANFIS probability
-output for signal s.  Discretisation uses quantile-based binning (3 bins:
-low / med / high) fitted on the **training fold** to avoid leakage.
+Each evidence node E_s is a **discretised** version of a per-signal
+continuous evidence score.  Depending on the ablation experiment, this
+can be either:
 
-CPTs are estimated by counting with Laplace smoothing (alpha = 1).
+  * The ANFIS probability output P(task | signal_s)  -- exp1, exp2, exp3
+  * A continuous FTS summary score per signal         -- exp4
+    (e.g. diagonal self-transition sum, high-state activity, entropy)
+
+Discretisation uses **quantile-based binning** fitted on the training fold
+only to avoid data leakage.
+
+CPTs are estimated by counting with Laplace smoothing (alpha >= 0).
 
 Inference modes
 ---------------
@@ -15,7 +22,7 @@ Inference modes
     P(Task=c | e) ∝ P(c) · ∏_s P(E_s = e_s | c)
 
 * Soft evidence (soft=True):
-    P(Task=c | e) ∝ P(c) · ∏_s [ Σ_b  μ_b(p_s) · P(bin_b | c) ]
+    P(Task=c | e) ∝ P(c) · ∏_s [ Σ_b  μ_b(v_s) · P(bin_b | c) ]
     where μ_b is a Gaussian kernel membership over bin midpoints.
 
 * Reliability weighting (signal_weights):
@@ -39,7 +46,13 @@ def _make_bin_names(n_bins: int) -> list[str]:
 
 
 class BNFusion:
-    """Naive Bayes BN for fusing 4 ANFIS probability outputs."""
+    """
+    Naive Bayes BN for fusing 4 per-signal continuous evidence scores.
+
+    Evidence inputs may be ANFIS probabilities (exp1, exp2, exp3) or
+    FTS-derived summary scores (exp4).  All inputs are discretised via
+    quantile binning fitted on the training fold only.
+    """
 
     def __init__(self, n_bins: int = 3, alpha: float = 1.0,
                  soft: bool = False):
@@ -58,8 +71,11 @@ class BNFusion:
 
         Parameters
         ----------
-        probs : ndarray, shape (N, 4)  — P(task) from 4 ANFIS models
-        y     : ndarray, shape (N,)    — binary labels {0, 1}
+        probs : ndarray, shape (N, 4)
+            Per-signal continuous evidence scores.  Can be ANFIS probability
+            outputs P(task | signal_s) or any per-signal continuous value
+            such as FTS summary scores (exp4).
+        y     : ndarray, shape (N,)    -- binary labels {0, 1}
         signal_weights : ndarray, shape (4,), optional
             Per-signal reliability weights in (0, 1].  Default: all 1.0.
         """

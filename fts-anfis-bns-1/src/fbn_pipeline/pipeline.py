@@ -13,6 +13,7 @@ from sklearn.model_selection import GroupKFold
 from sklearn.preprocessing import StandardScaler
 
 from .config import ExperimentConfig
+from .features import extract_stat_features, summarise_fts_per_signal
 from .metrics import find_best_threshold
 from .models.anfis_tsk import ANFIS_TSK
 from .models.bn_fusion import BNFusion
@@ -85,6 +86,22 @@ def _fit_signal_models(
     *,
     seed_offset: int = 0,
 ) -> tuple[np.ndarray, np.ndarray, list[ANFIS_TSK]]:
+    """
+    Train one ANFIS per signal and collect per-signal posterior probabilities.
+
+    Parameters
+    ----------
+    F_train : (N_tr, n_signals * n_feat_per_signal)
+    F_valid : (N_va, n_signals * n_feat_per_signal)
+    y_train : (N_tr,)  binary labels
+    cfg     : experiment config
+
+    Returns
+    -------
+    train_probs : (N_tr, n_signals)  — P(task | signal_s) on train set
+    valid_probs : (N_va, n_signals)  — P(task | signal_s) on valid set
+    anfis_list  : list of fitted ANFIS_TSK, one per signal
+    """
     n_signals = 4
     feat_per_sig = F_train.shape[1] // n_signals
     train_probs = np.zeros((len(y_train), n_signals))
@@ -110,21 +127,40 @@ def _fit_signal_models(
     return train_probs, valid_probs, anfis_models
 
 
-def run_cv(
-    X_train: np.ndarray,
-    y_train: np.ndarray,
-    user_train: np.ndarray,
+# ------------------------------------------------------------------
+# Stage 1 dispatch: FTS encoder vs. statistical features
+# ------------------------------------------------------------------
+
+def _extract_features_for_ablation(
+    X_tr: np.ndarray,
+    X_va: np.ndarray,
     cfg: ExperimentConfig,
-) -> tuple[np.ndarray, np.ndarray, list[tuple[np.ndarray, np.ndarray]]]:
-    gkf = GroupKFold(n_splits=cfg.k_folds)
-    oof_post = np.full(len(y_train), np.nan)
-    fold_indices: list[tuple[np.ndarray, np.ndarray]] = []
+) -> tuple[np.ndarray, np.ndarray, FTSEncoder | None]:
+    """
+    Dispatch Stage 1 feature extraction based on cfg.ablation.
 
-    for fold_i, (tr_idx, va_idx) in enumerate(gkf.split(X_train, y_train, user_train)):
-        fold_indices.append((tr_idx, va_idx))
-        X_tr, X_va = X_train[tr_idx], X_train[va_idx]
-        y_tr = y_train[tr_idx]
+    - exp1, exp2, exp3 → FTSEncoder (transition matrices)
+    - exp4             → handcrafted statistical features (no FTSEncoder)
 
+    Parameters
+    ----------
+    X_tr : (N_tr, 4, T)  raw train windows
+    X_va : (N_va, 4, T)  raw validation / test windows
+    cfg  : ExperimentConfig
+
+    Returns
+    -------
+    F_tr : (N_tr, n_features)
+    F_va : (N_va, n_features)
+    fts  : FTSEncoder or None  (None for exp4; kept for rule dumping otherwise)
+    """
+    if cfg.ablation == "exp4":
+        # Stage 1 bypass: use handcrafted statistical features
+        F_tr = extract_stat_features(X_tr)
+        F_va = extract_stat_features(X_va)
+        fts = None
+    else:
+        # Standard FTSEncoder (exp1, exp2, exp3)
         fts = FTSEncoder(
             n_sets=cfg.n_sets,
             mf_type=cfg.mf_type,
@@ -136,22 +172,131 @@ def run_cv(
         F_tr = fts.fit_transform(X_tr)
         F_va = fts.transform(X_va)
 
-        if cfg.scale_fts:
-            scaler = StandardScaler()
-            F_tr = scaler.fit_transform(F_tr)
-            F_va = scaler.transform(F_va)
+    if cfg.scale_fts:
+        scaler = StandardScaler()
+        F_tr = scaler.fit_transform(F_tr)
+        F_va = scaler.transform(F_va)
 
-        tr_probs, va_probs, _ = _fit_signal_models(F_tr, F_va, y_tr, cfg, seed_offset=fold_i * 100)
-        tr_probs, va_probs = _calibrate_probs(tr_probs, va_probs, y_tr, cfg.calibrate)
+    return F_tr, F_va, fts
 
-        signal_weights = _compute_signal_weights(y_tr, tr_probs) if cfg.bn_reliability else None
 
-        bn = BNFusion(n_bins=cfg.n_bins, alpha=cfg.alpha, soft=cfg.bn_soft)
-        bn.fit(tr_probs, y_tr, signal_weights=signal_weights)
-        oof_post[va_idx] = bn.predict_proba(va_probs)
+# ------------------------------------------------------------------
+# exp2: BN-free fusion
+# ------------------------------------------------------------------
+
+def _fuse_without_bn(
+    y_train: np.ndarray,
+    tr_probs: np.ndarray,
+    va_probs: np.ndarray,
+    cfg: ExperimentConfig,
+) -> np.ndarray:
+    """
+    Fuse 4 per-signal ANFIS probabilities without a Bayesian Network.
+
+    Used in **exp2** where BNFusion is bypassed.
+
+    Parameters
+    ----------
+    y_train  : (N_tr,)   — training labels, used to compute AUC weights
+    tr_probs : (N_tr, 4) — ANFIS outputs on training fold
+    va_probs : (N_va, 4) — ANFIS outputs on validation / test fold
+    cfg      : ExperimentConfig (reads fusion_mode_when_no_bn)
+
+    Returns
+    -------
+    posterior : (N_va,)  — fused probability estimate
+    """
+    if cfg.fusion_mode_when_no_bn == "weighted_mean":
+        weights = _compute_signal_weights(y_train, tr_probs)
+        weights = weights / weights.sum()          # normalise to sum=1
+        return (va_probs * weights).sum(axis=1)
+    else:  # "mean"
+        return va_probs.mean(axis=1)
+
+
+# ------------------------------------------------------------------
+# Cross-validation
+# ------------------------------------------------------------------
+
+def run_cv(
+    X_train: np.ndarray,
+    y_train: np.ndarray,
+    user_train: np.ndarray,
+    cfg: ExperimentConfig,
+) -> tuple[np.ndarray, np.ndarray, list[tuple[np.ndarray, np.ndarray]]]:
+    """
+    GroupKFold cross-validation dispatcher.
+
+    Dispatches the inner fold logic based on cfg.ablation:
+      exp1 : FTS → ANFIS → BN
+      exp2 : FTS → ANFIS → mean / weighted_mean fusion
+      exp3 : stat-features → ANFIS → BN
+      exp4 : FTS → per-signal summary → BN
+
+    Threshold selection happens **outside** this function on the returned
+    OOF posteriors to avoid any data leakage.
+
+    Parameters
+    ----------
+    X_train    : (N, 4, T)
+    y_train    : (N,)
+    user_train : (N,)  subject IDs for GroupKFold
+
+    Returns
+    -------
+    oof_post     : (N,)   out-of-fold posterior probabilities
+    oof_y        : (N,)   copy of y_train
+    fold_indices : list of (tr_idx, va_idx) arrays
+    """
+    gkf = GroupKFold(n_splits=cfg.k_folds)
+    oof_post = np.full(len(y_train), np.nan)
+    fold_indices: list[tuple[np.ndarray, np.ndarray]] = []
+
+    for fold_i, (tr_idx, va_idx) in enumerate(
+        gkf.split(X_train, y_train, user_train)
+    ):
+        fold_indices.append((tr_idx, va_idx))
+        X_tr, X_va = X_train[tr_idx], X_train[va_idx]
+        y_tr = y_train[tr_idx]
+
+        # --- Stage 1 (or bypass) ---
+        F_tr, F_va, _fts = _extract_features_for_ablation(X_tr, X_va, cfg)
+
+        if cfg.ablation == "exp3":
+            # Stage 1 → continuous summary → Stage 3 (ANFIS bypassed)
+            tr_scores = summarise_fts_per_signal(F_tr, cfg.n_sets, cfg.fts_summary_mode)
+            va_scores = summarise_fts_per_signal(F_va, cfg.n_sets, cfg.fts_summary_mode)
+
+            sw = _compute_signal_weights(y_tr, tr_scores) if cfg.bn_reliability else None
+
+            bn = BNFusion(n_bins=cfg.n_bins, alpha=cfg.alpha, soft=cfg.bn_soft)
+            bn.fit(tr_scores, y_tr, signal_weights=sw)
+
+            oof_post[va_idx] = bn.predict_proba(va_scores)
+
+        else:
+            # Stage 2: ANFIS per signal (exp1, exp2, exp4)
+            tr_probs, va_probs, _ = _fit_signal_models(
+                F_tr, F_va, y_tr, cfg, seed_offset=fold_i * 100
+            )
+            tr_probs, va_probs = _calibrate_probs(tr_probs, va_probs, y_tr, cfg.calibrate)
+
+            if cfg.ablation == "exp2":
+                # No BN: fuse probabilities directly
+                oof_post[va_idx] = _fuse_without_bn(y_tr, tr_probs, va_probs, cfg)
+            else:
+                # Stage 3: BN fusion (exp1, exp4)
+                sw = _compute_signal_weights(y_tr, tr_probs) if cfg.bn_reliability else None
+                bn = BNFusion(n_bins=cfg.n_bins, alpha=cfg.alpha, soft=cfg.bn_soft)
+                bn.fit(tr_probs, y_tr, signal_weights=sw)
+                oof_post[va_idx] = bn.predict_proba(va_probs)
 
     return oof_post, y_train.copy(), fold_indices
 
+
+# ------------------------------------------------------------------
+# Final retrain + test evaluation
+# ------------------------------------------------------------------
 
 def retrain_and_test(
     X_train: np.ndarray,
@@ -161,40 +306,67 @@ def retrain_and_test(
     threshold: float,
     cfg: ExperimentConfig,
 ) -> tuple[np.ndarray, np.ndarray, dict[str, float], dict]:
-    fts = FTSEncoder(
-        n_sets=cfg.n_sets,
-        mf_type=cfg.mf_type,
-        mf_sigma_scale=cfg.mf_sigma_scale,
-        gbell_b=cfg.gbell_b,
-        norm_mode=cfg.fts_norm,
-        robust=cfg.robust_fts,
-    )
-    F_tr = fts.fit_transform(X_train)
-    F_te = fts.transform(X_test)
+    """
+    Retrain on the full training set and evaluate on the held-out test set.
 
-    if cfg.scale_fts:
-        scaler = StandardScaler()
-        F_tr = scaler.fit_transform(F_tr)
-        F_te = scaler.transform(F_te)
+    Dispatches based on cfg.ablation (same logic as run_cv).
 
-    tr_probs, te_probs, anfis_models = _fit_signal_models(F_tr, F_te, y_train, cfg)
-    tr_probs, te_probs = _calibrate_probs(tr_probs, te_probs, y_train, cfg.calibrate)
+    Returns
+    -------
+    y_pred   : (N_te,)  binary predictions
+    te_post  : (N_te,)  posterior probabilities
+    metrics  : dict with acc, bal_acc, macro_f1, f1, auc
+    models   : dict with keys:
+                 "fts"        → FTSEncoder | None
+                 "bn"         → BNFusion   | None
+                 "anfis_list" → list[ANFIS_TSK] | None
+                 "te_probs"   → (N_te, 4) per-signal evidence fed to BN/fusion
+    """
+    F_tr, F_te, fts = _extract_features_for_ablation(X_train, X_test, cfg)
 
-    signal_weights = _compute_signal_weights(y_train, tr_probs) if cfg.bn_reliability else None
+    if cfg.ablation == "exp3":
+        tr_scores = summarise_fts_per_signal(F_tr, cfg.n_sets, cfg.fts_summary_mode)
+        te_scores = summarise_fts_per_signal(F_te, cfg.n_sets, cfg.fts_summary_mode)
 
-    bn = BNFusion(n_bins=cfg.n_bins, alpha=cfg.alpha, soft=cfg.bn_soft)
-    bn.fit(tr_probs, y_train, signal_weights=signal_weights)
+        sw = _compute_signal_weights(y_train, tr_scores) if cfg.bn_reliability else None
 
-    te_post = bn.predict_proba(te_probs)
-    y_pred = (te_post >= threshold).astype(int)
-    metrics = compute_oof_metrics(y_test, te_post, threshold)
+        bn = BNFusion(n_bins=cfg.n_bins, alpha=cfg.alpha, soft=cfg.bn_soft)
+        bn.fit(tr_scores, y_train, signal_weights=sw)
 
-    models = {
-        "fts": fts,
-        "bn": bn,
-        "anfis_list": anfis_models,
-        "te_probs": te_probs,
-    }
+        te_post = bn.predict_proba(te_scores)
+        y_pred = (te_post >= threshold).astype(int)
+        metrics = compute_oof_metrics(y_test, te_post, threshold)
+
+        models = {
+            "fts": fts,
+            "bn": bn,
+            "anfis_list": None,
+            "te_probs": te_scores,   # continuous FTS summary scores (N_te, 4)
+        }
+
+    else:
+        tr_probs, te_probs, anfis_models = _fit_signal_models(F_tr, F_te, y_train, cfg)
+        tr_probs, te_probs = _calibrate_probs(tr_probs, te_probs, y_train, cfg.calibrate)
+
+        if cfg.ablation == "exp2":
+            te_post = _fuse_without_bn(y_train, tr_probs, te_probs, cfg)
+            bn = None
+        else:
+            # exp1, exp4
+            sw = _compute_signal_weights(y_train, tr_probs) if cfg.bn_reliability else None
+            bn = BNFusion(n_bins=cfg.n_bins, alpha=cfg.alpha, soft=cfg.bn_soft)
+            bn.fit(tr_probs, y_train, signal_weights=sw)
+            te_post = bn.predict_proba(te_probs)
+
+        y_pred = (te_post >= threshold).astype(int)
+        metrics = compute_oof_metrics(y_test, te_post, threshold)
+        models = {
+            "fts": fts,
+            "bn": bn,
+            "anfis_list": anfis_models,
+            "te_probs": te_probs,    # ANFIS probability outputs (N_te, 4)
+        }
+
     return y_pred, te_post, metrics, models
 
 

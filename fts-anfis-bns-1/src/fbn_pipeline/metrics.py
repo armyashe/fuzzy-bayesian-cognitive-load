@@ -16,14 +16,22 @@ from sklearn.metrics import (
 )
 
 
-def print_metrics(y_true: np.ndarray, y_pred: np.ndarray,
-                  y_prob: np.ndarray | None = None,
-                  title: str = "Evaluation") -> None:
-    """Print accuracy, balanced accuracy, macro-F1, AUC, confusion matrix."""
+def print_metrics(
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
+    y_prob: np.ndarray | None = None,
+    title: str = "Evaluation",
+    compact: bool = True,
+) -> None:
+    """Print evaluation metrics. If compact=True, show only Accuracy."""
     print(f"\n{'=' * 58}")
     print(f"  {title}")
     print(f"{'=' * 58}")
     print(f"  Accuracy          : {accuracy_score(y_true, y_pred):.4f}")
+
+    if compact:
+        return
+
     print(f"  Balanced Accuracy : {balanced_accuracy_score(y_true, y_pred):.4f}")
     print(f"  Macro-F1          : {f1_score(y_true, y_pred, average='macro', zero_division=0):.4f}")
     print(f"  F1 (task)         : {f1_score(y_true, y_pred, zero_division=0):.4f}")
@@ -42,14 +50,12 @@ def print_metrics(y_true: np.ndarray, y_pred: np.ndarray,
     print(f"  Actual rest  {cm[0, 0]:4d}  {cm[0, 1]:4d}")
     print(f"  Actual task  {cm[1, 0]:4d}  {cm[1, 1]:4d}")
 
-    # Per-class recall for quick diagnosis
     rest_recall = cm[0, 0] / max(cm[0].sum(), 1)
     task_recall = cm[1, 1] / max(cm[1].sum(), 1)
     print(f"\n  Rest recall : {rest_recall:.4f}")
     print(f"  Task recall : {task_recall:.4f}")
     print()
-    print(classification_report(y_true, y_pred,
-                                target_names=["rest", "task"]))
+    print(classification_report(y_true, y_pred, target_names=["rest", "task"]))
 
 
 def find_best_threshold(
@@ -141,36 +147,48 @@ def per_subject_metrics(
 
 
 def print_per_subject_table(rows: list[dict], title: str = "PER-SUBJECT TEST RESULTS") -> None:
-    """Pretty-print the per-subject metrics table."""
-    print(f"\n{'=' * 78}")
+    """Pretty-print the per-subject metrics table without Balanced Accuracy."""
+    print(f"\n{'=' * 70}")
     print(f"  {title}")
-    print(f"{'=' * 78}")
-    print(f"  {'Subject':<12s} {'N':>6s} {'Acc':>8s} {'BalAcc':>8s} {'MacF1':>8s} {'F1':>8s} {'AUC':>8s}")
-    print(f"  {'-' * 64}")
-    accs, bal_accs, macro_f1s, f1s, aucs = [], [], [], [], []
+    print(f"{'=' * 70}")
+    print(f"  {'Subject':<12s} {'N':>6s} {'Acc':>8s} {'MacF1':>8s} {'F1':>8s} {'AUC':>8s}")
+    print(f"  {'-' * 56}")
+
+    accs, macro_f1s, f1s, aucs = [], [], [], []
+
     for r in rows:
         auc_str = f"{r['auc']:>8.4f}" if not (r['auc'] != r['auc']) else f"{'N/A':>8s}"
-        print(f"  {r['subject']:<12s} {r['n']:>6d} {r['acc']:>8.4f} "
-              f"{r['bal_acc']:>8.4f} {r['macro_f1']:>8.4f} {r['f1']:>8.4f} {auc_str}")
+
+        print(
+            f"  {r['subject']:<12s} {r['n']:>6d} {r['acc']:>8.4f} "
+            f"{r['macro_f1']:>8.4f} {r['f1']:>8.4f} {auc_str}"
+        )
+
         accs.append(r["acc"])
-        bal_accs.append(r["bal_acc"])
         macro_f1s.append(r["macro_f1"])
         f1s.append(r["f1"])
+
         if r["auc"] == r["auc"]:  # not NaN
             aucs.append(r["auc"])
-    print(f"  {'-' * 64}")
+
+    print(f"  {'-' * 56}")
+
     accs_a = np.array(accs)
-    bal_accs_a = np.array(bal_accs)
     macro_f1s_a = np.array(macro_f1s)
     f1s_a = np.array(f1s)
     aucs_a = np.array(aucs) if aucs else np.array([0.0])
-    print(f"  {'Mean':<12s} {'':>6s} {accs_a.mean():>8.4f} "
-          f"{bal_accs_a.mean():>8.4f} {macro_f1s_a.mean():>8.4f} "
-          f"{f1s_a.mean():>8.4f} {aucs_a.mean():>8.4f}")
-    print(f"  {'Std':<12s} {'':>6s} {accs_a.std():>8.4f} "
-          f"{bal_accs_a.std():>8.4f} {macro_f1s_a.std():>8.4f} "
-          f"{f1s_a.std():>8.4f} {aucs_a.std():>8.4f}")
-    print(f"{'=' * 78}\n")
+
+    print(
+        f"  {'Mean':<12s} {'':>6s} {accs_a.mean():>8.4f} "
+        f"{macro_f1s_a.mean():>8.4f} {f1s_a.mean():>8.4f} {aucs_a.mean():>8.4f}"
+    )
+
+    print(
+        f"  {'Std':<12s} {'':>6s} {accs_a.std():>8.4f} "
+        f"{macro_f1s_a.std():>8.4f} {f1s_a.std():>8.4f} {aucs_a.std():>8.4f}"
+    )
+
+    print(f"{'=' * 70}\n")
 
 
 def print_config(config: dict) -> None:

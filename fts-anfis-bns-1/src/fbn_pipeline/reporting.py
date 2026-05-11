@@ -16,6 +16,8 @@ CSV_COLUMNS = [
     "rank_metric", "thr_metric", "best_thr",
     "oof_acc", "oof_bal_acc", "oof_macro_f1", "oof_f1", "oof_auc",
     "test_acc", "test_bal_acc", "test_macro_f1", "test_f1", "test_auc",
+    # Ablation experiment metadata
+    "ablation", "fusion_mode_when_no_bn", "no_stage1_feature_mode", "fts_summary_mode",
 ]
 
 
@@ -76,6 +78,11 @@ def make_result_row(
         "test_macro_f1": test.get("macro_f1", ""),
         "test_f1": test.get("f1", ""),
         "test_auc": test.get("auc", ""),
+        # Ablation metadata
+        "ablation": cfg.get("ablation", "exp1"),
+        "fusion_mode_when_no_bn": cfg.get("fusion_mode_when_no_bn", "mean"),
+        "no_stage1_feature_mode": cfg.get("no_stage1_feature_mode", "stats"),
+        "fts_summary_mode": cfg.get("fts_summary_mode", "diag_high"),
     }
 
 
@@ -91,7 +98,7 @@ def feature_names_for_fts(n_sets: int) -> list[str]:
     return [f"P({to_}|{from_})" for from_ in labels for to_ in labels]
 
 
-def dump_anfis_rules(anfis_models, n_sets: int, top_k: int = 4) -> None:
+def dump_anfis_rules(anfis_models, n_sets: int, top_k: int | None = None) -> None:
     feat_names = feature_names_for_fts(n_sets)
     print("\n" + "=" * 68)
     print("  ANFIS RULE BASE  (IF-THEN rules per signal channel)")
