@@ -12,6 +12,10 @@ Mở terminal:
 
 ## 3. Tạo môi trường ảo
 
+```
+Remove-Item -Recurse -Force .venv
+```
+
 ```powershell
 python -m venv .venv
 ```
