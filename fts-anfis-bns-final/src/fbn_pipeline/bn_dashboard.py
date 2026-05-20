@@ -38,6 +38,7 @@ def export_bn_details_json(
     test_metrics: dict,
     test_probs: np.ndarray | None = None,
     y_test: np.ndarray | None = None,
+    user_test: np.ndarray | None = None,
     output_path: Path | None = None,
 ) -> dict[str, Any]:
     """
@@ -78,6 +79,21 @@ def export_bn_details_json(
         
         sample_probs = test_probs[pos_idx]
         sample_trace = bn.explain_sample(sample_probs)
+        sample_trace["sample_index"] = int(pos_idx)
+        if user_test is not None and pos_idx < len(user_test):
+            sample_trace["user_id"] = str(user_test[pos_idx])
+        # Store raw ANFIS probs so the notebook can recompute soft posterior
+        # without needing to re-run training.
+        sample_trace["anfis_probs"] = {
+            (SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"): round(float(sample_probs[s]), 8)
+            for s in range(bn.n_signals_)
+        }
+        # final_posterior_task uses predict_proba (soft evidence when bn_soft=True),
+        # matching the value shown in Streamlit — differs from posterior_task above
+        # which is the hard-bin explanatory trace posterior.
+        final_post = float(bn.predict_proba(sample_probs.reshape(1, -1))[0])
+        sample_trace["final_posterior_task"] = round(final_post, 8)
+        sample_trace["final_posterior_rest"] = round(1.0 - final_post, 8)
 
     # CPT tables
     cpt_tables = bn.get_cpt_table()
@@ -103,6 +119,16 @@ def export_bn_details_json(
             ],
             "n_bins": bn.n_bins,
             "bin_names": bn.bin_names_,
+            # bin_mids and bin_sigmas allow notebooks to reproduce soft-evidence
+            # posteriors from JSON alone (no model object needed).
+            "bin_mids": {
+                (SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"): bn.bin_mids_[s].tolist()
+                for s in range(bn.n_signals_)
+            } if hasattr(bn, "bin_mids_") else None,
+            "bin_sigmas": {
+                (SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"): float(bn.bin_sigmas_[s])
+                for s in range(bn.n_signals_)
+            } if hasattr(bn, "bin_sigmas_") else None,
         },
         "prior": {
             "rest": float(bn.prior_[0]),
@@ -188,6 +214,7 @@ def export_bn_dashboard_artifacts(
     test_metrics: dict,
     test_probs: np.ndarray | None = None,
     y_test: np.ndarray | None = None,
+    user_test: np.ndarray | None = None,
     artifacts_dir: Path | str = "artifacts",
 ) -> dict[str, Path | None]:
     """
@@ -259,6 +286,7 @@ def export_bn_dashboard_artifacts(
                 test_metrics,
                 test_probs=test_probs,
                 y_test=y_test,
+                user_test=user_test,
                 output_path=details_path,
             )
             results["bn_details"] = details_path

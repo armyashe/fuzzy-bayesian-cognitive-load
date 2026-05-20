@@ -287,13 +287,16 @@ def run_single(args: argparse.Namespace | None = None) -> dict[str, Any]:
     print(f"Experiment   : {exp_name}")
     print(f"Artifacts dir : {artifacts_dir}")
     print("=" * 72)
+    import numpy as _np
+    train_uids = sorted(_np.unique(dataset.user_train).tolist())
+    test_uids  = sorted(_np.unique(dataset.user_test).tolist())
     print(
         f"Train: X={dataset.X_train.shape}, y={dataset.y_train.shape}, "
-        f"users={dataset.user_train.shape}"
+        f"users={dataset.user_train.shape}  user_ids={train_uids}"
     )
     print(
         f"Test : X={dataset.X_test.shape}, y={dataset.y_test.shape}, "
-        f"users={dataset.user_test.shape}"
+        f"users={dataset.user_test.shape}  user_ids={test_uids}"
     )
     print_config(cfg.to_dict())
 
@@ -361,7 +364,8 @@ def run_single(args: argparse.Namespace | None = None) -> dict[str, Any]:
         test_metrics=test_metrics,
         test_probs=models["te_probs"],
         y_test=dataset.y_test,
-        artifacts_dir=artifacts_dir,
+        user_test=dataset.user_test,
+        artifacts_dir=artifacts_dir.parent,  # avoid double-nesting: parent/exp_name/exp_name
     )
 
     if save_csv:
