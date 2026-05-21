@@ -111,6 +111,9 @@ def _fit_signal_models(
     for s in range(n_signals):
         col_s = s * feat_per_sig
         col_e = col_s + feat_per_sig
+        # anfis_mf_type overrides mf_type for ANFIS premise layer only.
+        # Empty string means inherit the same MF as the FTS encoder.
+        effective_anfis_mf = cfg.anfis_mf_type or cfg.mf_type
         model = ANFIS_TSK(
             n_rules=cfg.n_rules,
             sigma_scale=cfg.sigma_scale,
@@ -118,6 +121,8 @@ def _fit_signal_models(
             n_epochs=cfg.n_epochs,
             lr=cfg.lr,
             random_state=cfg.seed + seed_offset + s,
+            mf_type=effective_anfis_mf,
+            gbell_b=cfg.gbell_b,
         )
         model.fit(F_train[:, col_s:col_e], y_train)
         train_probs[:, s] = model.predict_proba(F_train[:, col_s:col_e])

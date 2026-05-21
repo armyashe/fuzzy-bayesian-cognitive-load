@@ -16,6 +16,11 @@ class ExperimentConfig:
     gbell_b: float = 2.0
     fts_norm: str = "total_sum"
 
+    # MF type for ANFIS premise layer (Stage 2).
+    # Empty string ("") means inherit from mf_type (FTS encoder setting).
+    # Set explicitly to "gaussian" or "gbell" to override independently.
+    anfis_mf_type: str = ""
+
     n_rules: int = 8
     sigma_scale: float = 1.5
     ridge_lambda: float = 0.1
@@ -134,6 +139,25 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
         "n_epochs": 50, "lr": 0.003,
         "n_bins": 5, "alpha": 0.5, "k_folds": 5,
         "bn_soft": True,
+    },
+    "A2_gbell": {
+        # A2_soft với gbell cho cả FTS encoder lẫn ANFIS premise MFs
+        "n_sets": 3, "mf_type": "gbell", "mf_sigma_scale": 0.4,
+        "gbell_b": 2.0, "fts_norm": "row",
+        "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
+        "n_epochs": 50, "lr": 0.003,
+        "n_bins": 5, "alpha": 0.5, "k_folds": 5,
+        "bn_soft": True,
+    },
+    "A2_soft_anfis_gbell": {
+        # FTS encoder dùng Gaussian, ANFIS premise dùng Gbell
+        "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
+        "gbell_b": 2.0, "fts_norm": "row",
+        "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
+        "n_epochs": 50, "lr": 0.003,
+        "n_bins": 5, "alpha": 0.5, "k_folds": 5,
+        "bn_soft": True,
+        "anfis_mf_type": "gbell",
     },
     "A2_cal": {
         "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,

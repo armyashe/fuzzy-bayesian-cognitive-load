@@ -147,6 +147,15 @@ def _parse_args() -> argparse.Namespace:
         help="(exp3 only) How to summarise FTS features into per-signal evidence.",
     )
     parser.add_argument(
+        "--anfis-mf-type",
+        dest="anfis_mf_type",
+        choices=["gaussian", "gbell"],
+        default=None,
+        help="MF type for ANFIS premise layer. Overrides the FTS mf_type for ANFIS only.\n"
+             "  gaussian = standard Gaussian (default, same as before)\n"
+             "  gbell    = generalized bell 1/(1+|(x-c)/\u03c3|^{2b})",
+    )
+    parser.add_argument(
         "--no-stage1-feature-mode",
         dest="no_stage1_feature_mode",
         choices=["stats"],
@@ -218,6 +227,8 @@ def build_config(args: argparse.Namespace | None = None) -> ExperimentConfig:
         if args.dump_rules:
             dump_rules = True
 
+    anfis_mf_type_override = getattr(args, "anfis_mf_type", None) if args is not None else None
+
     cfg = ExperimentConfig(data_path=DATA_FOLDER)
     cfg = apply_preset(cfg, preset_name)
 
@@ -230,6 +241,7 @@ def build_config(args: argparse.Namespace | None = None) -> ExperimentConfig:
         no_stage1_feature_mode=no_stage1_feature_mode,
         fts_summary_mode=fts_summary_mode,
         dump_rules=dump_rules,
+        **(({"anfis_mf_type": anfis_mf_type_override}) if anfis_mf_type_override else {}),
     )
     return cfg
 
