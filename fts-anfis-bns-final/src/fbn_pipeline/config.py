@@ -151,6 +151,14 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
         "n_bins": 3, "alpha": 2.0, "k_folds": 5,
         "bn_soft": True,
     },
+    "A2_gbell": {
+    "n_sets": 3, "mf_type": "gbell", "mf_sigma_scale": 0.4,
+    "gbell_b": 2.0, "fts_norm": "row",
+    "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
+    "n_epochs": 50, "lr": 0.003,
+    "n_bins": 5, "alpha": 0.5, "k_folds": 5,
+    "bn_soft": True,
+},
 }
 
 
