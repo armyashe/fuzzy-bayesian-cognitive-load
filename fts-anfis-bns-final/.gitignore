@@ -1,6 +1,4 @@
-# =========================
 # Python cache
-# =========================
 __pycache__/
 *.py[cod]
 *$py.class
@@ -8,65 +6,16 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 
-# =========================
 # Virtual environments
-# =========================
 .venv/
 venv/
 env/
 ENV/
 
-# =========================
-# Jupyter Notebook
-# =========================
+# Jupyter
 .ipynb_checkpoints/
 
-# =========================
-# Streamlit
-# =========================
-.streamlit/secrets.toml
-
-# =========================
-# OS / Editor
-# =========================
+# OS / editor
 .DS_Store
 Thumbs.db
-.vscode/
-.idea/
-
-# =========================
-# Logs
-# =========================
-*.log
-
-# =========================
-# Experiment outputs
-# =========================
-artifacts/
-results_main.csv
-experiment_results.csv
-*.pkl
-*.joblib
-
-# =========================
-# Generated figures / reports
-# =========================
-figures/
-figures_*/
-plots/
-reports/
-outputs/
-
-# =========================
-# Temporary files
-# =========================
-tmp/
-temp/
-*.tmp
-
-# =========================
-# Environment files
-# =========================
-.env
-.env.*
-!.env.example
+.vscode/settings.json
