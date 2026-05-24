@@ -45,6 +45,15 @@ class ExperimentConfig:
     save_csv: str = "results_main.csv"
 
     # ------------------------------------------------------------------
+    # Bayesian Network structure variant
+    # ------------------------------------------------------------------
+    # Controls which BN fusion class is used in Stage 3:
+    #   "naive"     → BNFusion  (Naive Bayes, default)
+    #   "dependent" → TANFusion (Tree-Augmented NB, experimental)
+    #   "tan"       → TANFusion (alias for "dependent")
+    bn_structure: str = "naive"
+
+    # ------------------------------------------------------------------
     # Ablation experiment controls
     # ------------------------------------------------------------------
     # Which pipeline variant to run:
@@ -183,6 +192,30 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
     "n_bins": 5, "alpha": 0.5, "k_folds": 5,
     "bn_soft": True,
 },
+    # ------------------------------------------------------------------
+    # TAN (Tree-Augmented Naive Bayes) experiment
+    # Identical hyperparameters to A2_soft but with TAN fusion structure.
+    # Designed to compare against A2_soft (naive BN) in the same protocol.
+    # ------------------------------------------------------------------
+    "A2_soft_tan": {
+        "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
+        "gbell_b": 2.0, "fts_norm": "row",
+        "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
+        "n_epochs": 50, "lr": 0.003,
+        "n_bins": 5, "alpha": 0.5, "k_folds": 5,
+        "bn_soft": True,    # Gaussian soft evidence over bins (same as A2_soft)
+        "bn_structure": "tan",
+    },
+    # Hard-evidence TAN for ablation: compare soft vs hard within TAN
+    "A2_hard_tan": {
+        "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
+        "gbell_b": 2.0, "fts_norm": "row",
+        "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
+        "n_epochs": 50, "lr": 0.003,
+        "n_bins": 5, "alpha": 0.5, "k_folds": 5,
+        "bn_soft": False,
+        "bn_structure": "tan",
+    },
 }
 
 

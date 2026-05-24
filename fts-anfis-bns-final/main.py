@@ -524,7 +524,8 @@ def print_bn_details() -> dict[str, Any]:
             "evidence_nodes": ["Temp", "HR", "GSR", "RR"],
             "n_bins": int(bn.n_bins),
             "bin_names": list(bn.bin_names_),
-            "soft_evidence": bool(bn.soft),
+            "soft_evidence": bool(getattr(bn, "soft", False)),
+            "structure_type": getattr(cfg, "bn_structure", "naive"),
         },
         "prior": {
             "rest": round(float(bn.prior_[0]), 4),

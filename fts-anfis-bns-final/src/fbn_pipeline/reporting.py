@@ -13,6 +13,7 @@ CSV_COLUMNS = [
     "n_rules", "anfis_sigma_scale", "ridge_lambda", "n_epochs", "lr",
     "n_bins", "alpha",
     "scale_fts", "robust_fts", "bn_soft", "bn_reliability", "calibrate",
+    "bn_structure",
     "rank_metric", "thr_metric", "best_thr",
     "oof_acc", "oof_bal_acc", "oof_macro_f1", "oof_f1", "oof_auc",
     "test_acc", "test_bal_acc", "test_macro_f1", "test_f1", "test_auc",
@@ -65,6 +66,7 @@ def make_result_row(
         "bn_soft": cfg.get("bn_soft", False),
         "bn_reliability": cfg.get("bn_reliability", False),
         "calibrate": cfg.get("calibrate", "none"),
+        "bn_structure": cfg.get("bn_structure", "naive"),
         "rank_metric": rank_metric,
         "thr_metric": thr_metric,
         "best_thr": best_thr,
@@ -140,6 +142,15 @@ def dump_fts_transitions(fts, X_sample, top_k: int = 5) -> None:
 
 
 def dump_bn_cpt(bn, sample_probs=None) -> None:
+    """
+    Print BN details.  Dispatches to dump_tan_bn() if bn is a TANFusion.
+    """
+    # Import here to avoid circular dependency at module load time
+    from .models.bn_dependent import TANFusion  # noqa: PLC0415
+    if isinstance(bn, TANFusion):
+        dump_tan_bn(bn, sample_probs=sample_probs)
+        return
+
     print("=" * 68)
     print("  BAYESIAN NETWORK - CPT  (Conditional Probability Tables)")
     print("=" * 68)
@@ -162,6 +173,75 @@ def dump_bn_cpt(bn, sample_probs=None) -> None:
 
     if sample_probs is not None:
         print("\n--- BN Inference Trace (sample) ---")
+        trace = bn.explain_sample(sample_probs)
+        print(f"  Evidence bins   : {trace['evidence_bins']}")
+        print(f"  P(task|evidence): {trace['posterior_task']:.4f}")
+        print(f"  P(rest|evidence): {trace['posterior_rest']:.4f}")
+        print("  Log-likelihoods :")
+        for c in (0, 1):
+            cls = "rest" if c == 0 else "task"
+            print(f"    Class={cls}: {trace['log_likelihoods'][c]}")
+    print()
+
+
+def dump_tan_bn(bn, sample_probs=None) -> None:
+    """
+    Print TAN (TANFusion) BN details including learned structure,
+    CMI matrix, CPTs, and an optional sample inference trace.
+    """
+    structure = bn.get_structure()
+
+    print("=" * 68)
+    print("  TREE-AUGMENTED NAIVE BAYES (TAN) — STRUCTURE")
+    print("=" * 68)
+    print(f"\n  Root evidence node : {structure['root']}")
+    print("\n  Directed edges:")
+    for parent, child in structure["edges"]:
+        print(f"    {parent} -> {child}")
+
+    print("\n  Evidence parent map:")
+    for sig, par in structure["parent_map"].items():
+        par_str = par if par is not None else "(root)"
+        print(f"    E_{sig}  parent = {par_str}")
+
+    print("\n  Conditional Mutual Information matrix  I(E_i ; E_j | Task):")
+    signals = [s for s in structure["cmi_matrix"]]
+    header = "  {:>6s}".format("")
+    for s in signals:
+        header += f"  {s:>7s}"
+    print(header)
+    for s_i in signals:
+        row = f"  {s_i:>6s}"
+        for s_j in signals:
+            row += f"  {structure['cmi_matrix'][s_i][s_j]:>7.4f}"
+        print(row)
+
+    print("\n" + "=" * 68)
+    print("  TAN - CPT SUMMARY  (child nodes: averaged over parent bins)")
+    print("=" * 68)
+    cpt = bn.get_cpt_table()
+    for sig_name, table in cpt.items():
+        if sig_name == structure["root"]:
+            print(f"\n--- CPT - E_{sig_name}  (root) ---")
+        else:
+            par = table.get("parent_signal", "?")
+            print(f"\n--- CPT - E_{sig_name}  (parent: E_{par}) ---")
+        header = "  {:>12s}".format("Class")
+        for bname in bn.bin_names_:
+            header += f"  {bname:>8s}"
+        print(header)
+        for cls in ("rest", "task"):
+            if cls not in table:
+                continue
+            row = "  {:>12s}".format(cls)
+            for bname in bn.bin_names_:
+                row += f"  {table[cls][bname]:>8.4f}"
+            print(row)
+
+    print(f"\n  Prior: P(rest)={bn.prior_[0]:.4f}  P(task)={bn.prior_[1]:.4f}")
+
+    if sample_probs is not None:
+        print("\n--- TAN Inference Trace (sample) ---")
         trace = bn.explain_sample(sample_probs)
         print(f"  Evidence bins   : {trace['evidence_bins']}")
         print(f"  P(task|evidence): {trace['posterior_task']:.4f}")

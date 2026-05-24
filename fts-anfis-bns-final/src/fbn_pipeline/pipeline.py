@@ -17,6 +17,7 @@ from .features import extract_stat_features, summarise_fts_per_signal
 from .metrics import find_best_threshold
 from .models.anfis_tsk import ANFIS_TSK
 from .models.bn_fusion import BNFusion
+from .models.bn_dependent import TANFusion
 from .models.fts_encoder import FTSEncoder
 
 
@@ -189,6 +190,24 @@ def _extract_features_for_ablation(
 # exp2: BN-free fusion
 # ------------------------------------------------------------------
 
+def _make_bn(cfg: ExperimentConfig) -> BNFusion | TANFusion:
+    """
+    Construct the correct BN fusion object based on cfg.bn_structure.
+
+    "naive"            -> BNFusion  (Naive Bayes, default)
+    "dependent" | "tan"-> TANFusion (Tree-Augmented Naive Bayes, experimental)
+    """
+    bn_structure = getattr(cfg, "bn_structure", "naive")
+    if bn_structure in ("dependent", "tan"):
+        return TANFusion(n_bins=cfg.n_bins, alpha=cfg.alpha, soft=cfg.bn_soft)
+    if bn_structure == "naive":
+        return BNFusion(n_bins=cfg.n_bins, alpha=cfg.alpha, soft=cfg.bn_soft)
+    raise ValueError(
+        f"Unknown bn_structure: {bn_structure!r}. "
+        "Expected one of: 'naive', 'dependent', 'tan'."
+    )
+
+
 def _fuse_without_bn(
     y_train: np.ndarray,
     tr_probs: np.ndarray,
@@ -257,12 +276,27 @@ def run_cv(
     oof_post = np.full(len(y_train), np.nan)
     fold_indices: list[tuple[np.ndarray, np.ndarray]] = []
 
+    header = f"  {'Fold':>4} | {'Split':>5} | {'Total':>5} | {'cls 0':>5} | {'cls 1':>5} | Users"
+    print("-" * 80)
+    print(header)
+    print("-" * 80)
+
     for fold_i, (tr_idx, va_idx) in enumerate(
         gkf.split(X_train, y_train, user_train)
     ):
         fold_indices.append((tr_idx, va_idx))
         X_tr, X_va = X_train[tr_idx], X_train[va_idx]
         y_tr = y_train[tr_idx]
+        y_va = y_train[va_idx]
+
+        users_tr = sorted(np.unique(user_train[tr_idx]).tolist())
+        users_va = sorted(np.unique(user_train[va_idx]).tolist())
+        n_tr_0, n_tr_1 = int(np.sum(y_tr == 0)), int(np.sum(y_tr == 1))
+        n_va_0, n_va_1 = int(np.sum(y_va == 0)), int(np.sum(y_va == 1))
+
+        print(f"  {fold_i + 1:>4} | {'Train':>5} | {len(tr_idx):>5} | {n_tr_0:>5} | {n_tr_1:>5} | {users_tr}")
+        print(f"  {' ':>4} | {'Val':>5} | {len(va_idx):>5} | {n_va_0:>5} | {n_va_1:>5} | {users_va}")
+        print("-" * 80)
 
         # --- Stage 1 (or bypass) ---
         F_tr, F_va, _fts = _extract_features_for_ablation(X_tr, X_va, cfg)
@@ -274,7 +308,7 @@ def run_cv(
 
             sw = _compute_signal_weights(y_tr, tr_scores) if cfg.bn_reliability else None
 
-            bn = BNFusion(n_bins=cfg.n_bins, alpha=cfg.alpha, soft=cfg.bn_soft)
+            bn = _make_bn(cfg)
             bn.fit(tr_scores, y_tr, signal_weights=sw)
 
             oof_post[va_idx] = bn.predict_proba(va_scores)
@@ -292,7 +326,7 @@ def run_cv(
             else:
                 # Stage 3: BN fusion (exp1, exp4)
                 sw = _compute_signal_weights(y_tr, tr_probs) if cfg.bn_reliability else None
-                bn = BNFusion(n_bins=cfg.n_bins, alpha=cfg.alpha, soft=cfg.bn_soft)
+                bn = _make_bn(cfg)
                 bn.fit(tr_probs, y_tr, signal_weights=sw)
                 oof_post[va_idx] = bn.predict_proba(va_probs)
 
@@ -335,7 +369,7 @@ def retrain_and_test(
 
         sw = _compute_signal_weights(y_train, tr_scores) if cfg.bn_reliability else None
 
-        bn = BNFusion(n_bins=cfg.n_bins, alpha=cfg.alpha, soft=cfg.bn_soft)
+        bn = _make_bn(cfg)
         bn.fit(tr_scores, y_train, signal_weights=sw)
 
         te_post = bn.predict_proba(te_scores)
@@ -359,7 +393,7 @@ def retrain_and_test(
         else:
             # exp1, exp4
             sw = _compute_signal_weights(y_train, tr_probs) if cfg.bn_reliability else None
-            bn = BNFusion(n_bins=cfg.n_bins, alpha=cfg.alpha, soft=cfg.bn_soft)
+            bn = _make_bn(cfg)
             bn.fit(tr_probs, y_train, signal_weights=sw)
             te_post = bn.predict_proba(te_probs)
 
