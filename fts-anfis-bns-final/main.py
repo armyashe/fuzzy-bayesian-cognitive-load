@@ -391,6 +391,7 @@ def run_single(args: argparse.Namespace | None = None) -> dict[str, Any]:
             eval_protocol="subject-independent hold-out + GroupKFold OOF",
             rank_metric=cfg.rank_metric,
             thr_metric=cfg.threshold_metric,
+            preset_name=preset_name or "",
         )
         log_to_csv(str(csv_path), row)
         print(f"Saved CSV row to: {csv_path}")
@@ -464,20 +465,44 @@ def explain_test_sample(i: int) -> dict[str, Any]:
     for sig, p in result["anfis_probs"].items():
         print(f"  {sig:<5s}: {p:.4f}")
 
-    print("\nBN evidence bins:")
-    for sig, b in trace["evidence_bins"].items():
-        print(f"  {sig:<5s}: {b}")
+    mode = trace.get("mode", "hard")
+    if mode == "soft":
+        print("\nDominant bins (visualization only — not actual soft evidence):")
+        for sig, b in trace.get("dominant_bins", trace.get("evidence_bins", {})).items():
+            print(f"  {sig:<5s}: {b}")
 
-    print("\nBN posterior from explain_sample:")
-    print(f"  P(task | evidence): {trace['posterior_task']:.4f}")
-    print(f"  P(rest | evidence): {trace['posterior_rest']:.4f}")
+        sm = trace.get("soft_memberships", {})
+        if sm:
+            print("\nSoft memberships:")
+            for sig, bins in sm.items():
+                parts = ", ".join(f"{k}={v:.4f}" for k, v in bins.items())
+                print(f"  {sig:<5s}: {parts}")
 
-    print("\nLog-likelihood contributions:")
-    for cls_id, contrib in trace["log_likelihoods"].items():
-        cls_name = "rest" if int(cls_id) == 0 else "task"
-        print(f"  Class = {cls_name}")
-        for sig, val in contrib.items():
-            print(f"    {sig:<5s}: {val:.4f}")
+        llr = trace.get("log_likelihood_ratio", {})
+        if llr:
+            print("\nLog-likelihood ratio task/rest (+ supports TASK, − supports REST):")
+            for sig, val in llr.items():
+                print(f"  {sig:<5s}: {val:+.4f}")
+
+        print("\nBN posterior from explain_sample (soft evidence):")
+        print(f"  P(task | soft evidence): {trace['posterior_task']:.4f}")
+        print(f"  P(rest | soft evidence): {trace['posterior_rest']:.4f}")
+
+    else:
+        print("\nBN evidence bins:")
+        for sig, b in trace["evidence_bins"].items():
+            print(f"  {sig:<5s}: {b}")
+
+        print("\nBN posterior from explain_sample:")
+        print(f"  P(task | evidence): {trace['posterior_task']:.4f}")
+        print(f"  P(rest | evidence): {trace['posterior_rest']:.4f}")
+
+        print("\nLog-likelihood contributions:")
+        for cls_id, contrib in trace["log_likelihoods"].items():
+            cls_name = "rest" if int(cls_id) == 0 else "task"
+            print(f"  Class = {cls_name}")
+            for sig, val in contrib.items():
+                print(f"    {sig:<5s}: {val:.4f}")
 
     return result
 

@@ -7,6 +7,8 @@ from sklearn.metrics import (
     accuracy_score,
     balanced_accuracy_score,
     f1_score,
+    precision_score,
+    recall_score,
     roc_auc_score,
 )
 from sklearn.model_selection import GroupKFold
@@ -27,12 +29,23 @@ def compute_oof_metrics(y_true: np.ndarray, y_prob: np.ndarray, threshold: float
         auc = round(float(roc_auc_score(y_true, y_prob)), 4)
     except ValueError:
         auc = 0.0
+    acc = round(float(accuracy_score(y_true, y_pred)), 4)
+    prec = round(float(precision_score(y_true, y_pred, zero_division=0)), 4)
+    rec = round(float(recall_score(y_true, y_pred, zero_division=0)), 4)
+    f1 = round(float(f1_score(y_true, y_pred, zero_division=0)), 4)
+    macro_f1 = round(float(f1_score(y_true, y_pred, average="macro", zero_division=0)), 4)
+    bal_acc = round(float(balanced_accuracy_score(y_true, y_pred)), 4)
     return {
-        "acc": round(float(accuracy_score(y_true, y_pred)), 4),
-        "bal_acc": round(float(balanced_accuracy_score(y_true, y_pred)), 4),
-        "macro_f1": round(float(f1_score(y_true, y_pred, average="macro", zero_division=0)), 4),
-        "f1": round(float(f1_score(y_true, y_pred, zero_division=0)), 4),
+        # required field names
+        "accuracy": acc,
+        "precision": prec,
+        "recall": rec,
+        "f1": f1,
         "auc": auc,
+        # legacy aliases kept for backward compatibility
+        "acc": acc,
+        "bal_acc": bal_acc,
+        "macro_f1": macro_f1,
     }
 
 
@@ -301,6 +314,8 @@ def run_cv(
         # --- Stage 1 (or bypass) ---
         F_tr, F_va, _fts = _extract_features_for_ablation(X_tr, X_va, cfg)
 
+        tr_post_fold: np.ndarray  # train posterior for this fold (computed below)
+
         if cfg.ablation == "exp3":
             # Stage 1 → continuous summary → Stage 3 (ANFIS bypassed)
             tr_scores = summarise_fts_per_signal(F_tr, cfg.n_sets, cfg.fts_summary_mode)
@@ -312,6 +327,7 @@ def run_cv(
             bn.fit(tr_scores, y_tr, signal_weights=sw)
 
             oof_post[va_idx] = bn.predict_proba(va_scores)
+            tr_post_fold = bn.predict_proba(tr_scores)
 
         else:
             # Stage 2: ANFIS per signal (exp1, exp2, exp4)
@@ -323,12 +339,37 @@ def run_cv(
             if cfg.ablation == "exp2":
                 # No BN: fuse probabilities directly
                 oof_post[va_idx] = _fuse_without_bn(y_tr, tr_probs, va_probs, cfg)
+                tr_post_fold = _fuse_without_bn(y_tr, tr_probs, tr_probs, cfg)
             else:
                 # Stage 3: BN fusion (exp1, exp4)
                 sw = _compute_signal_weights(y_tr, tr_probs) if cfg.bn_reliability else None
                 bn = _make_bn(cfg)
                 bn.fit(tr_probs, y_tr, signal_weights=sw)
                 oof_post[va_idx] = bn.predict_proba(va_probs)
+                tr_post_fold = bn.predict_proba(tr_probs)
+
+        # --- Per-fold metrics (threshold = 0.5) ---
+        fold_post = oof_post[va_idx]
+
+        # Train fold metrics
+        tr_acc = round(float(accuracy_score(y_tr, (tr_post_fold >= 0.5).astype(int))), 4)
+        try:
+            tr_auc = round(float(roc_auc_score(y_tr, tr_post_fold)), 4)
+        except ValueError:
+            tr_auc = float("nan")
+        tr_f1 = round(float(f1_score(y_tr, (tr_post_fold >= 0.5).astype(int), zero_division=0)), 4)
+
+        # Val fold metrics
+        fold_acc = round(float(accuracy_score(y_va, (fold_post >= 0.5).astype(int))), 4)
+        try:
+            fold_auc = round(float(roc_auc_score(y_va, fold_post)), 4)
+        except ValueError:
+            fold_auc = float("nan")
+        fold_f1 = round(float(f1_score(y_va, (fold_post >= 0.5).astype(int), zero_division=0)), 4)
+
+        print(f"  Fold {fold_i + 1:>2} │ Train │ Acc: {tr_acc:.4f} │ AUC: {tr_auc:.4f} │ F1: {tr_f1:.4f}")
+        print(f"  {' ':>6} │  Val  │ Acc: {fold_acc:.4f} │ AUC: {fold_auc:.4f} │ F1: {fold_f1:.4f}")
+        print("-" * 80)
 
     return oof_post, y_train.copy(), fold_indices
 

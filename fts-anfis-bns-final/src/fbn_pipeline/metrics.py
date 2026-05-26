@@ -10,6 +10,8 @@ from sklearn.metrics import (
     accuracy_score,
     balanced_accuracy_score,
     f1_score,
+    precision_score,
+    recall_score,
     confusion_matrix,
     classification_report,
     roc_auc_score,
@@ -23,7 +25,7 @@ def print_metrics(
     title: str = "Evaluation",
     compact: bool = True,
 ) -> None:
-    """Print evaluation metrics. If compact=True, show only Accuracy."""
+    """Print evaluation metrics in the standard 5-metric format."""
     print(f"\n{'=' * 58}")
     print(f"  {title}")
     print(f"{'=' * 58}")
@@ -32,16 +34,19 @@ def print_metrics(
     if compact:
         return
 
-    print(f"  Balanced Accuracy : {balanced_accuracy_score(y_true, y_pred):.4f}")
-    print(f"  Macro-F1          : {f1_score(y_true, y_pred, average='macro', zero_division=0):.4f}")
-    print(f"  F1 (task)         : {f1_score(y_true, y_pred, zero_division=0):.4f}")
+    print(f"  Precision (task)  : {precision_score(y_true, y_pred, zero_division=0):.4f}")
+    print(f"  Recall    (task)  : {recall_score(y_true, y_pred, zero_division=0):.4f}")
+    print(f"  F1-score  (task)  : {f1_score(y_true, y_pred, zero_division=0):.4f}")
 
     if y_prob is not None:
         try:
             auc = roc_auc_score(y_true, y_prob)
-            print(f"  AUC               : {auc:.4f}")
+            print(f"  ROC-AUC           : {auc:.4f}")
         except ValueError:
-            print(f"  AUC               : N/A")
+            print(f"  ROC-AUC           : N/A")
+
+    print(f"  Balanced Accuracy : {balanced_accuracy_score(y_true, y_pred):.4f}")
+    print(f"  Macro-F1          : {f1_score(y_true, y_pred, average='macro', zero_division=0):.4f}")
 
     cm = confusion_matrix(y_true, y_pred)
     print(f"\n  Confusion Matrix:")
@@ -198,4 +203,41 @@ def print_config(config: dict) -> None:
     print("=" * 58)
     for k, v in config.items():
         print(f"  {k:35s}: {v}")
+
+
+def compute_metrics(
+    y_true: np.ndarray,
+    y_prob: np.ndarray,
+    threshold: float,
+) -> dict[str, float]:
+    """Compute the five required metrics plus legacy aliases.
+
+    Returns
+    -------
+    dict with keys:
+        accuracy, precision, recall, f1, auc   (required)
+        acc, bal_acc, macro_f1                  (legacy / threshold selection)
+    """
+    y_pred = (y_prob >= threshold).astype(int)
+    acc = round(float(accuracy_score(y_true, y_pred)), 4)
+    prec = round(float(precision_score(y_true, y_pred, zero_division=0)), 4)
+    rec = round(float(recall_score(y_true, y_pred, zero_division=0)), 4)
+    f1 = round(float(f1_score(y_true, y_pred, zero_division=0)), 4)
+    macro_f1 = round(float(f1_score(y_true, y_pred, average="macro", zero_division=0)), 4)
+    bal_acc = round(float(balanced_accuracy_score(y_true, y_pred)), 4)
+    try:
+        auc = round(float(roc_auc_score(y_true, y_prob)), 4)
+    except ValueError:
+        auc = float("nan")
+    return {
+        "accuracy": acc,
+        "precision": prec,
+        "recall": rec,
+        "f1": f1,
+        "auc": auc,
+        # legacy
+        "acc": acc,
+        "bal_acc": bal_acc,
+        "macro_f1": macro_f1,
+    }
     print("=" * 58 + "\n")

@@ -119,6 +119,7 @@ def export_bn_details_json(
             ],
             "n_bins": bn.n_bins,
             "bin_names": bn.bin_names_,
+            "soft_evidence": bool(getattr(bn, "soft", False)),
             # bin_mids and bin_sigmas allow notebooks to reproduce soft-evidence
             # posteriors from JSON alone (no model object needed).
             "bin_mids": {
