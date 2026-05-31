@@ -267,8 +267,8 @@ def run_cv(
     Dispatches the inner fold logic based on cfg.ablation:
       exp1 : FTS → ANFIS → BN
       exp2 : FTS → ANFIS → mean / weighted_mean fusion
-      exp3 : stat-features → ANFIS → BN
-      exp4 : FTS → per-signal summary → BN
+      exp3 : FTS summary → BN  (no ANFIS)
+      exp4 : stat features → ANFIS → BN  (no FTS)
 
     Threshold selection happens **outside** this function on the returned
     OOF posteriors to avoid any data leakage.

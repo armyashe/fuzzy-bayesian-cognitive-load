@@ -59,8 +59,8 @@ class ExperimentConfig:
     # Which pipeline variant to run:
     #   exp1 = Stage1 (FTS) + Stage2 (ANFIS) + Stage3 (BN)  — full pipeline
     #   exp2 = Stage1 (FTS) + Stage2 (ANFIS)                — no BN, fuse by mean
-    #   exp3 = Stage2 (ANFIS) + Stage3 (BN)                 — no FTS, use stat feats
-    #   exp4 = Stage1 (FTS) + Stage3 (BN)                   — no ANFIS, FTS summary
+    #   exp3 = Stage1 (FTS) + Stage3 (BN)                   — no ANFIS, FTS summary → BN
+    #   exp4 = Stage2 (ANFIS) + Stage3 (BN)                 — no FTS, stat features → ANFIS → BN
     ablation: str = "exp1"
 
     # exp2 only: how to fuse 4 per-signal probs when BN is absent
