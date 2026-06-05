@@ -13,30 +13,27 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from fbn_pipeline.config import ExperimentConfig, apply_preset, setup_seed, EXPERIMENT_PRESETS
-from fbn_pipeline.data import load_dataset
-from fbn_pipeline.metrics import find_best_threshold, per_subject_metrics
-from fbn_pipeline.pipeline import run_cv, retrain_and_test, compute_oof_metrics
+from fbn_pipeline.config import EXPERIMENT_PRESETS, ExperimentConfig
 from fbn_pipeline.models.bn_fusion import SIGNAL_NAMES
-from fbn_pipeline.bn_dashboard import export_bn_dashboard_artifacts
+from fbn_pipeline.streamlit_support import (
+    RULE_COUNT_OPTIONS,
+    get_group1_default_variant,
+    get_group2_default_base_preset,
+    get_group3_default_variant,
+    get_group_help,
+    get_group_options,
+    get_variant_options,
+    group2_variant_label,
+    resolve_selection,
+    run_streamlit_experiment,
+)
 
 
 st.set_page_config(page_title="Fuzzy–ANFIS–BN Dashboard", layout="wide")
 st.title("Fuzzy–ANFIS–Bayesian Network Dashboard")
 
-ABLATION_LABELS = {
-    "exp1": "exp1 — FTS → ANFIS → BN",
-    "exp2": "exp2 — FTS → ANFIS → Mean",
-    "exp3": "exp3 — FTS → Summary → BN",
-    "exp4": "exp4 — Stat → ANFIS → BN",
-}
-
-ABLATION_DESC = {
-    "exp1": "Full pipeline: FTS encoding, ANFIS inference, Bayesian Network fusion.",
-    "exp2": "No BN: FTS + ANFIS, then mean fusion.",
-    "exp3": "No ANFIS: FTS summary score, then Bayesian Network fusion.",
-    "exp4": "No FTS: statistical features, then ANFIS + Bayesian Network.",
-}
+GROUP_OPTIONS = get_group_options()
+GROUP_LABELS = {option.key: option.label for option in GROUP_OPTIONS}
 
 
 def get_state_names(n_sets: int) -> list[str]:
@@ -110,6 +107,19 @@ def plot_rule_firing(firing: np.ndarray):
 
 def cpt_dict_to_df(cpt_signal_dict: dict) -> pd.DataFrame:
     return pd.DataFrame(cpt_signal_dict).T
+
+
+def signal_weights_df(signal_weights: dict) -> pd.DataFrame:
+    return pd.DataFrame(
+        [{"signal": k, "weight": round(float(v), 4)} for k, v in signal_weights.items()]
+    )
+
+
+def signal_weights_are_uniform(signal_weights: dict) -> bool:
+    if not signal_weights:
+        return True
+    values = [float(v) for v in signal_weights.values()]
+    return bool(np.allclose(values, np.ones(len(values))))
 
 
 def load_bn_artifact_json(exp_name: str, artifacts_root: Path | str = "artifacts") -> dict | None:
@@ -311,109 +321,162 @@ def compute_soft_membership_table(bn, probs_single: np.ndarray) -> pd.DataFrame 
         sigma = bn.bin_sigmas_[s]
         mem = np.exp(-0.5 * ((probs_single[s] - mids) / max(sigma, 1e-10)) ** 2)
         mem = mem / np.maximum(mem.sum(), 1e-10)
+        row = {
+            "signal": SIGNAL_NAMES[s],
+            "p_task_from_ANFIS": round(float(probs_single[s]), 4),
+        }
         for b, value in enumerate(mem):
-            rows.append(
-                {
-                    "signal": SIGNAL_NAMES[s],
-                    "bin": bn.bin_names_[b],
-                    "soft_membership": round(float(value), 4),
-                }
-            )
+            row[bn.bin_names_[b]] = round(float(value), 4)
+        rows.append(row)
     return pd.DataFrame(rows)
 
 
-def run_full_experiment(
-    data_path: str,
-    preset_name: str,
-    ablation: str,
-    fusion_mode: str = "mean",
-    fts_summary_mode: str = "diag_high",
-    no_stage1_feature_mode: str = "stats",
-) -> dict:
-    cfg = ExperimentConfig(data_path=data_path)
-    cfg = apply_preset(cfg, preset_name)
+def render_soft_membership_heatmap(membership_df: pd.DataFrame, caption: str | None = None) -> None:
+    level_cols = [
+        col for col in membership_df.columns
+        if col not in {"signal", "p_task_from_ANFIS"}
+    ]
+    if not level_cols:
+        return
 
-    cfg = cfg.merged(
-        ablation=ablation,
-        fusion_mode_when_no_bn=fusion_mode,
-        no_stage1_feature_mode=no_stage1_feature_mode,
-        fts_summary_mode=fts_summary_mode,
+    heatmap_df = membership_df.set_index("signal")[level_cols].astype(float)
+    values = heatmap_df.values
+
+    fig_width = max(7.2, 1.2 * len(level_cols))
+    fig_height = max(3.8, 0.7 * len(heatmap_df.index) + 1.6)
+
+    fig, ax = plt.subplots(figsize=(fig_width, fig_height))
+
+    # Use white background like the reference figure
+    fig.patch.set_facecolor("white")
+    ax.set_facecolor("white")
+
+    # Orange/yellow/red colormap like the notebook figure
+    image = ax.imshow(
+        values,
+        cmap="YlOrRd",
+        vmin=0.0,
+        vmax=1.0,
+        aspect="auto",
     )
 
-    setup_seed(cfg.seed)
-
-    dataset = load_dataset(ROOT / cfg.data_path)
-
-    oof_post, oof_y, fold_indices = run_cv(
-        dataset.X_train,
-        dataset.y_train,
-        dataset.user_train,
-        cfg,
+    ax.set_title(
+        "Soft Evidence Memberships for a Test Sample",
+        color="black",
+        fontsize=13,
+        pad=12,
+        weight="bold",
     )
 
-    best_thr, thr_score, thresholds, scores = find_best_threshold(
-        oof_y,
-        oof_post,
-        metric=cfg.threshold_metric,
-        n_grid=cfg.threshold_grid,
-        return_sweep=True,
-    )
+    ax.set_xlabel("Bayesian evidence bins", color="black", labelpad=8)
+    ax.set_ylabel("Physiological signals", color="black", labelpad=8)
 
-    oof_metrics = compute_oof_metrics(oof_y, oof_post, best_thr)
-    oof_pred = (oof_post >= best_thr).astype(int)
+    ax.set_xticks(np.arange(len(level_cols)))
+    ax.set_xticklabels(level_cols, rotation=30, ha="right", color="black")
 
-    test_pred, test_post, test_metrics, models = retrain_and_test(
-        dataset.X_train,
-        dataset.y_train,
-        dataset.X_test,
-        dataset.y_test,
-        best_thr,
-        cfg,
-    )
+    ax.set_yticks(np.arange(len(heatmap_df.index)))
+    ax.set_yticklabels(heatmap_df.index, color="black")
 
-    subject_rows = per_subject_metrics(
-        dataset.y_test,
-        test_pred,
-        test_post,
-        dataset.user_test,
-    )
+    ax.tick_params(colors="black")
 
-    # Export BN dashboard artifacts
-    exp_name = f"{preset_name}_{ablation}"  # Use preset name as experiment identifier
-    try:
-        artifact_results = export_bn_dashboard_artifacts(
-            models=models,
-            cfg=cfg.to_dict(),
-            exp_name=exp_name,
-            best_threshold=best_thr,
-            test_metrics=test_metrics,
-            test_probs=models["te_probs"],
-            y_test=dataset.y_test,
-            artifacts_dir=ROOT / "artifacts",
+    # Annotate values and highlight dominant membership per signal
+    for row_idx in range(values.shape[0]):
+        max_col_idx = int(np.argmax(values[row_idx]))
+
+        for col_idx in range(values.shape[1]):
+            value = values[row_idx, col_idx]
+            is_max = col_idx == max_col_idx
+
+            text_color = "white" if value > 0.55 else "black"
+            label = f"{value:.4f}\n★" if is_max else f"{value:.4f}"
+
+            ax.text(
+                col_idx,
+                row_idx,
+                label,
+                ha="center",
+                va="center",
+                color=text_color,
+                fontsize=8,
+                fontweight="bold" if is_max else "normal",
+            )
+
+        # Black border around dominant membership cell
+        ax.add_patch(
+            plt.Rectangle(
+                (max_col_idx - 0.5, row_idx - 0.5),
+                1,
+                1,
+                fill=False,
+                edgecolor="black",
+                linewidth=2.0,
+                zorder=3,
+            )
         )
-    except Exception as e:
-        artifact_results = {"error": str(e)}
 
-    return {
-        "cfg": cfg,
-        "dataset": dataset,
-        "oof_post": oof_post,
-        "oof_y": oof_y,
-        "oof_pred": oof_pred,
-        "fold_indices": fold_indices,
-        "best_thr": best_thr,
-        "thr_score": thr_score,
-        "thresholds": thresholds,
-        "scores": scores,
-        "oof_metrics": oof_metrics,
-        "test_pred": test_pred,
-        "test_post": test_post,
-        "test_metrics": test_metrics,
-        "models": models,
-        "subject_df": pd.DataFrame(subject_rows),
-        "exp_name": exp_name,
-        "artifact_results": artifact_results,
-    }
+    colorbar = fig.colorbar(image, ax=ax, fraction=0.046, pad=0.04)
+    colorbar.set_label("Membership degree μ", color="black")
+    colorbar.ax.yaxis.set_tick_params(color="black")
+    plt.setp(colorbar.ax.get_yticklabels(), color="black")
+    colorbar.outline.set_edgecolor("black")
+
+    for spine in ax.spines.values():
+        spine.set_edgecolor("black")
+
+    fig.tight_layout()
+    st.pyplot(fig, use_container_width=True)
+    plt.close(fig)
+
+    if caption:
+        st.caption(caption)
+
+    st.caption(
+        "★ indicates the dominant membership level for visualization only; "
+        "BN inference still uses the full soft membership vector."
+    )
+
+
+def compute_soft_influence_table(bn_trace: dict) -> pd.DataFrame | None:
+    if bn_trace.get("mode") != "soft":
+        return None
+
+    rows = []
+    for class_id, class_name in [(0, "rest"), (1, "task")]:
+        for sig, value in bn_trace.get("log_likelihoods", {}).get(class_id, {}).items():
+            rows.append(
+                {
+                    "class": class_name,
+                    "signal": sig,
+                    "soft_log_contribution": round(float(value), 4),
+                    "effective_likelihood": round(
+                        float(
+                            bn_trace.get("effective_likelihoods", {})
+                            .get(class_name, {})
+                            .get(sig, np.nan)
+                        ),
+                        4,
+                    ),
+                }
+            )
+    return pd.DataFrame(rows) if rows else None
+
+
+def compute_hard_debug_contribution_table(bn_trace: dict) -> pd.DataFrame:
+    contrib_rows = []
+    for class_id, class_name in [(0, "rest"), (1, "task")]:
+        for sig, value in bn_trace.get("log_likelihoods", {}).get(class_id, {}).items():
+            contrib_rows.append(
+                {
+                    "class": class_name,
+                    "signal": sig,
+                    "log_contribution": round(float(value), 4),
+                }
+            )
+    return pd.DataFrame(contrib_rows)
+
+
+def format_metric(value: float) -> str:
+    return "N/A" if pd.isna(value) else f"{float(value):.4f}"
 
 
 def extract_sample_stage_outputs(results: dict, sample_idx: int) -> dict:
@@ -524,71 +587,96 @@ def extract_sample_stage_outputs(results: dict, sample_idx: int) -> dict:
 with st.sidebar:
     st.header("Experiment")
 
-    preset_keys = list(EXPERIMENT_PRESETS.keys())
-    default_idx = preset_keys.index("A2_soft") if "A2_soft" in preset_keys else 0
-
-    preset_name = st.selectbox(
-        "Preset",
-        preset_keys,
-        index=default_idx,
+    base_preset_keys = [
+        key for key in EXPERIMENT_PRESETS.keys()
+        if not key.startswith(("EXP1_", "EXP2_", "EXP3_"))
+    ]
+    default_base_preset = get_group2_default_base_preset()
+    default_base_idx = (
+        base_preset_keys.index(default_base_preset)
+        if default_base_preset in base_preset_keys
+        else 0
     )
 
-    ablation = st.selectbox(
-        "Ablation experiment",
-        list(ABLATION_LABELS.keys()),
+    base_preset_name = st.selectbox(
+        "Preset / Base configuration",
+        base_preset_keys,
+        index=default_base_idx,
+    )
+
+    group_key = st.selectbox(
+        "Experiment group",
+        [option.key for option in GROUP_OPTIONS],
         index=0,
-        format_func=lambda k: ABLATION_LABELS[k],
+        format_func=lambda key: GROUP_LABELS[key],
     )
 
-    st.caption(ABLATION_DESC[ablation])
+    st.caption(get_group_help(group_key))
+
+    variant_key: str | None = None
+    n_rules_override: int | None = None
+
+    if group_key == "exp1":
+        group1_options = get_variant_options("exp1")
+        group1_keys = [option.key for option in group1_options]
+        default_group1 = get_group1_default_variant()
+        variant_key = st.selectbox(
+            "Variant / preset",
+            group1_keys,
+            index=group1_keys.index(default_group1),
+            format_func=lambda key: next(option.label for option in group1_options if option.key == key),
+        )
+    elif group_key == "exp2":
+        st.selectbox(
+            "Variant",
+            [base_preset_name],
+            index=0,
+            format_func=lambda _: group2_variant_label(base_preset_name),
+            disabled=True,
+        )
+        n_rules_override = st.selectbox(
+            "Number of ANFIS rules",
+            list(RULE_COUNT_OPTIONS),
+            index=list(RULE_COUNT_OPTIONS).index(6),
+        )
+    else:
+        group3_options = get_variant_options("exp3")
+        group3_keys = [option.key for option in group3_options]
+        default_group3 = get_group3_default_variant()
+        variant_key = st.selectbox(
+            "Ablation variant",
+            group3_keys,
+            index=group3_keys.index(default_group3),
+            format_func=lambda key: next(option.label for option in group3_options if option.key == key),
+        )
 
     data_path = st.text_input("Data path", "last_30s_segments")
-
-    fusion_mode = "mean"
-    if ablation == "exp2":
-        fusion_mode = st.selectbox(
-            "Fusion mode for exp2",
-            ["mean", "weighted_mean"],
-            index=0,
-        )
-
-    fts_summary_mode = "diag_high"
-    if ablation == "exp3":
-        fts_summary_mode = st.selectbox(
-            "FTS summary mode for exp3",
-            ["diag", "high", "diag_high", "entropy"],
-            index=2,
-        )
-
-    no_stage1_feature_mode = "stats"
-    if ablation == "exp4":
-        no_stage1_feature_mode = st.selectbox(
-            "Feature mode for exp4",
-            ["stats"],
-            index=0,
-        )
 
     run_btn = st.button("Run / refresh experiment", use_container_width=True)
 
 if run_btn:
-    with st.spinner(f"Running {preset_name}_{ablation}..."):
-        st.session_state["results"] = run_full_experiment(
+    selection = resolve_selection(
+        group_key=group_key,
+        variant_key=variant_key,
+        base_preset_name=base_preset_name,
+        n_rules_override=n_rules_override,
+    )
+    with st.spinner(f"Running {selection.run_name}..."):
+        st.session_state["results"] = run_streamlit_experiment(
+            project_root=ROOT,
             data_path=data_path,
-            preset_name=preset_name,
-            ablation=ablation,
-            fusion_mode=fusion_mode,
-            fts_summary_mode=fts_summary_mode,
-            no_stage1_feature_mode=no_stage1_feature_mode,
+            selection=selection,
         )
 
 if "results" not in st.session_state:
-    st.info("Nhấn 'Run / refresh experiment' ở sidebar để chạy pipeline.")
+    st.info("Select an experiment group and run the pipeline from the sidebar.")
     st.stop()
 
 results = st.session_state["results"]
 cfg = results["cfg"]
 dataset = results["dataset"]
 models = results["models"]
+selection = results["selection"]
 
 fts = models.get("fts")
 bn = models.get("bn")
@@ -598,25 +686,29 @@ has_fts = fts is not None
 has_bn = bn is not None
 has_anfis = anfis_list is not None
 
-tab0, tab1, tab2, tab3, tab4 = st.tabs(
-    ["Proposed Method", "Overview", "Experiment Metrics", "Stage-by-Stage Demo", "Rules & CPT"]
+tab1, tab2, tab3, tab4 = st.tabs(
+    ["Overview", "Results", "Sample Explanation", "BN / Rules"]
 )
 
-with tab0:
-    render_method_diagram(cfg, dataset.X_train.shape[2])
+with tab1:
+    st.subheader("Experiment")
 
-    st.markdown("**Current experimental setting**")
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Window length", dataset.X_train.shape[2])
-    c2.metric("FTS sets", cfg.n_sets)
-    c3.metric("ANFIS rules", cfg.n_rules)
-    c4.metric("BN bins", cfg.n_bins)
+    st.markdown(f"**Preset / Base configuration:** `{selection.base_preset_name}`")
+    st.markdown(f"**Experiment group:** {selection.group_label}")
+    if selection.group_key == "exp1":
+        st.markdown(f"**Variant / preset:** {selection.variant_label}")
+    elif selection.group_key == "exp2":
+        st.markdown(f"**Variant:** {selection.variant_label}")
+    else:
+        st.markdown(f"**Ablation variant:** {selection.variant_label}")
 
-    st.markdown(
-        "**Interpretation:** each physiological channel is first converted into a fuzzy temporal representation, then mapped into a per-signal task probability by ANFIS, and finally fused probabilistically by the Bayesian Network."
+    st.markdown("**Current configuration summary**")
+    st.dataframe(
+        pd.DataFrame(results["config_summary_rows"]),
+        use_container_width=True,
+        hide_index=True,
     )
 
-with tab1:
     st.subheader("Dataset overview")
 
     c1, c2, c3, c4 = st.columns(4)
@@ -659,22 +751,20 @@ with tab1:
             """
         )
 
-        st.markdown("**Preset configuration**")
+        st.markdown("**Resolved configuration**")
         cfg_df = pd.DataFrame(
             [{"parameter": k, "value": v} for k, v in cfg.to_dict().items()]
         )
         st.dataframe(cfg_df, use_container_width=True, hide_index=True)
 
 with tab2:
-    st.subheader("Cross-validation and held-out test")
+    st.subheader("OOF / Cross-validation result")
 
-    st.markdown("**OOF metrics**")
-    c1, c2, c3, c4, c5 = st.columns(5)
-    c1.metric("Threshold", f"{results['best_thr']:.4f}")
-    c2.metric("Threshold score", f"{results['thr_score']:.4f}")
-    c3.metric("OOF ACC", f"{results['oof_metrics']['acc']:.4f}")
-    c4.metric("OOF F1", f"{results['oof_metrics']['f1']:.4f}")
-    c5.metric("OOF AUC", f"{results['oof_metrics']['auc']:.4f}")
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Accuracy", format_metric(results["oof_metrics"]["accuracy"]))
+    c2.metric("Balanced Accuracy", format_metric(results["oof_metrics"]["bal_acc"]))
+    c3.metric("AUC", format_metric(results["oof_metrics"]["auc"]))
+    c4.metric("Selected threshold", format_metric(results["best_thr"]))
 
     plot_threshold_sweep(results["thresholds"], results["scores"])
 
@@ -687,21 +777,26 @@ with tab2:
         st.dataframe(confusion_df(results["oof_y"], results["oof_pred"]), use_container_width=True)
 
     with right:
-        st.markdown("**Test metric table**")
+        st.markdown("**Held-out test metric table**")
         st.dataframe(pd.DataFrame([results["test_metrics"]]), use_container_width=True, hide_index=True)
 
-        st.markdown("**Test confusion matrix**")
+        st.markdown("**Held-out test confusion matrix**")
         st.dataframe(confusion_df(dataset.y_test, results["test_pred"]), use_container_width=True)
+
+    st.subheader("Held-out test result")
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Accuracy", format_metric(results["test_metrics"]["accuracy"]))
+    c2.metric("Balanced Accuracy", format_metric(results["test_metrics"]["bal_acc"]))
+    c3.metric("AUC", format_metric(results["test_metrics"]["auc"]))
 
     st.markdown("**Per-subject test metrics**")
     st.dataframe(results["subject_df"], use_container_width=True, hide_index=True)
 
 with tab3:
-    st.subheader("Run one test sample through all stages")
-    if not (has_fts and has_anfis and has_bn):
+    st.subheader("Sample explanation")
+    if not selection.supports_stage_demo or not (has_fts and has_anfis and has_bn):
         st.warning(
-            "Stage-by-stage demo hiện chỉ hỗ trợ exp1 đầy đủ "
-            "(FTS → ANFIS → BN). Với exp2/exp3/exp4, một stage đã bị ablate nên demo chi tiết sẽ không chạy."
+            "Detailed stage-by-stage explanation is available only when the current variant keeps the full FTS → ANFIS → BN pipeline."
         )
 
     else:
@@ -758,7 +853,7 @@ with tab3:
             time.sleep(0.15)
             progress.progress(75)
 
-            status.info("Stage 4/4 — Running Bayesian Network fusion...")
+            status.info("Stage 4/4 — Running Bayesian Network soft-evidence fusion...")
             time.sleep(0.15)
             progress.progress(100)
             status.success("Completed.")
@@ -807,59 +902,112 @@ with tab3:
                         st.dataframe(sample["firing_tables"][sig], use_container_width=True, hide_index=True)
                         plot_rule_firing(sample["firing_tables"][sig]["firing_strength"].values)
 
-            with st.expander("Stage 4 — Bayesian Network fusion", expanded=True):
-                st.markdown("**Input:** four ANFIS probabilities.")
-                st.markdown("**Output:** posterior over {rest, task}.")
+            with st.expander("Stage 4 — Bayesian Network Fusion with Soft Evidence", expanded=True):
+                st.markdown("**Input:** four ANFIS probability outputs.")
+                st.markdown(
+                    "**Soft evidence:** each probability is converted into a membership vector "
+                    "over evidence levels."
+                )
+                st.markdown("**Output:** posterior probability over {rest, task}.")
+                st.caption(
+                    "Unlike hard evidence, no signal is assigned to a single discrete bin. "
+                    "Each signal contributes as a probability distribution across multiple evidence levels."
+                )
                 bn_trace = sample["bn_trace"]
+                post_df = pd.DataFrame(
+                    [
+                        {"class": "rest", "posterior": bn_trace["posterior_rest"]},
+                        {"class": "task", "posterior": sample["posterior_task"]},
+                    ]
+                )
 
-                left, right = st.columns(2)
-                with left:
-                    st.markdown("**Evidence bins**")
-                    st.dataframe(
-                        pd.DataFrame(
-                            [{"signal": k, "bin": v} for k, v in bn_trace["evidence_bins"].items()]
-                        ),
-                        use_container_width=True,
-                        hide_index=True,
-                    )
-
-                    st.markdown("**Signal weights**")
-                    st.dataframe(
-                        pd.DataFrame(
-                            [{"signal": k, "weight": v} for k, v in bn_trace["signal_weights"].items()]
-                        ),
-                        use_container_width=True,
-                        hide_index=True,
-                    )
-
-                with right:
-                    st.markdown("**Posterior**")
-                    post_df = pd.DataFrame(
-                        [
-                            {"class": "rest", "posterior": bn_trace["posterior_rest"]},
-                            {"class": "task", "posterior": sample["posterior_task"]},
-                        ]
-                    )
-                    st.dataframe(post_df, use_container_width=True, hide_index=True)
-                    st.bar_chart(post_df.set_index("class"))
+                st.markdown("**ANFIS probabilities per signal**")
+                st.dataframe(sample["signal_prob_df"], use_container_width=True, hide_index=True)
 
                 if sample["soft_membership_df"] is not None:
-                    st.markdown("**Soft evidence memberships**")
+                    st.markdown("**Soft evidence membership**")
                     st.dataframe(sample["soft_membership_df"], use_container_width=True, hide_index=True)
-                    st.caption("Bảng này chỉ xuất hiện khi BN đang chạy ở chế độ soft evidence.")
+                    pred_label = "TASK" if sample["y_pred"] == 1 else "REST"
+                    render_soft_membership_heatmap(
+                        sample["soft_membership_df"],
+                        caption=(
+                            f"user={sample['user_id']} | idx={sample['sample_idx']} | "
+                            f"P(TASK)={sample['posterior_task']:.4f} | "
+                            f"P(REST)={bn_trace['posterior_rest']:.4f} | "
+                            f"thr={sample['threshold']:.4f} -> {pred_label}"
+                        ),
+                    )
+                else:
+                    st.info(
+                        "This selected variant is not running BN soft evidence, "
+                        "so no soft membership matrix is available."
+                    )
 
-                st.markdown("**Log-likelihood contributions (hard-bin trace for interpretability)**")
-                contrib_rows = []
-                for class_id, class_name in [(0, "rest"), (1, "task")]:
-                    for sig, value in bn_trace["log_likelihoods"][class_id].items():
-                        contrib_rows.append(
-                            {
-                                "class": class_name,
-                                "signal": sig,
-                                "log_contribution": round(float(value), 4),
-                            }
+                st.markdown("**Posterior from soft evidence BN inference**")
+                st.dataframe(post_df, use_container_width=True, hide_index=True)
+                st.bar_chart(post_df.set_index("class"))
+
+                weights = bn_trace.get("signal_weights", {})
+                if weights and not signal_weights_are_uniform(weights):
+                    st.markdown("**Signal weights used in soft evidence fusion**")
+                    st.dataframe(signal_weights_df(weights), use_container_width=True, hide_index=True)
+
+                influence_df = compute_soft_influence_table(bn_trace)
+                if influence_df is not None:
+                    st.markdown("**Soft evidence influence by class**")
+                    st.caption(
+                        "Each contribution is computed from the soft effective likelihood used by the BN: "
+                        "log(sum over evidence levels of membership * P(level | class)), with signal weighting applied."
+                    )
+                    st.dataframe(influence_df, use_container_width=True, hide_index=True)
+
+                debug_items = []
+                if bn_trace.get("dominant_bins"):
+                    debug_items.append("dominant_bins")
+                if bn_trace.get("evidence_bins") and bn_trace.get("mode") != "soft":
+                    debug_items.append("hard_evidence_bins")
+                if bn_trace.get("signal_weights") and signal_weights_are_uniform(bn_trace["signal_weights"]):
+                    debug_items.append("uniform_signal_weights")
+                if bn_trace.get("mode") != "soft" and bn_trace.get("log_likelihoods"):
+                    debug_items.append("hard_contributions")
+
+                if debug_items:
+                    with st.expander("Debug: hard-bin approximation", expanded=False):
+                        st.caption(
+                            "This section is only a debug approximation and is not the inference mechanism "
+                            "used in the main soft-evidence experiment."
                         )
-                st.dataframe(pd.DataFrame(contrib_rows), use_container_width=True, hide_index=True)
+                        if "dominant_bins" in debug_items:
+                            st.markdown("**Dominant evidence level for visualization only**")
+                            st.dataframe(
+                                pd.DataFrame(
+                                    [
+                                        {"signal": k, "dominant_evidence_level": v}
+                                        for k, v in bn_trace["dominant_bins"].items()
+                                    ]
+                                ),
+                                use_container_width=True,
+                                hide_index=True,
+                            )
+                        if "hard_evidence_bins" in debug_items:
+                            st.markdown("**Hard evidence bins for non-soft variants**")
+                            st.dataframe(
+                                pd.DataFrame(
+                                    [{"signal": k, "hard_bin": v} for k, v in bn_trace["evidence_bins"].items()]
+                                ),
+                                use_container_width=True,
+                                hide_index=True,
+                            )
+                        if "uniform_signal_weights" in debug_items:
+                            st.markdown("**Uniform signal weights**")
+                            st.dataframe(signal_weights_df(bn_trace["signal_weights"]), use_container_width=True, hide_index=True)
+                        if "hard_contributions" in debug_items:
+                            st.markdown("**Hard-bin log-likelihood contributions**")
+                            st.dataframe(
+                                compute_hard_debug_contribution_table(bn_trace),
+                                use_container_width=True,
+                                hide_index=True,
+                            )
         else:
             st.info("Chọn sample index rồi bấm 'Run selected sample step-by-step'.")
 
@@ -901,16 +1049,20 @@ with tab4:
             )
         st.dataframe(prior_df, use_container_width=True, hide_index=True)
 
-        st.markdown("**BN Signal Weights**")
         if bn_details is not None and "signal_weights" in bn_details:
-            weights_df = pd.DataFrame(
-                [{"signal": k, "weight": v} for k, v in bn_details["signal_weights"].items()]
-            )
+            weights_df = signal_weights_df(bn_details["signal_weights"])
         else:
-            weights_df = pd.DataFrame(
-                [{"signal": k, "weight": v} for k, v in bn.get_signal_weights().items()]
-            )
-        st.dataframe(weights_df, use_container_width=True, hide_index=True)
+            weights_df = signal_weights_df(bn.get_signal_weights())
+        weights_dict = dict(zip(weights_df["signal"], weights_df["weight"]))
+        if signal_weights_are_uniform(weights_dict):
+            with st.expander("Debug: uniform BN signal weights", expanded=False):
+                st.caption(
+                    "Uniform weights are shown for completeness; they do not change the relative signal weighting."
+                )
+                st.dataframe(weights_df, use_container_width=True, hide_index=True)
+        else:
+            st.markdown("**BN Signal Weights Used in Soft Evidence Fusion**")
+            st.dataframe(weights_df, use_container_width=True, hide_index=True)
 
         st.markdown("**BN CPT Tables**")
         cpt_tables = bn.get_cpt_table()
@@ -924,17 +1076,46 @@ with tab4:
             trace = bn_details["sample_inference_trace"]
             if trace is not None:
                 with st.expander("Sample Inference Trace", expanded=False):
-                    st.markdown("**Evidence Bins**")
-                    st.json(trace.get("evidence_bins", {}))
+                    if trace.get("soft_memberships"):
+                        st.markdown("**Soft evidence membership**")
+                        st.dataframe(
+                            pd.DataFrame(
+                                [
+                                    {
+                                        "signal": signal,
+                                        "p_task_from_ANFIS": round(
+                                            float(trace.get("anfis_probs", {}).get(signal, np.nan)),
+                                            4,
+                                        ),
+                                        **{
+                                            level: round(float(value), 4)
+                                            for level, value in memberships.items()
+                                        },
+                                    }
+                                    for signal, memberships in trace["soft_memberships"].items()
+                                ]
+                            ),
+                            use_container_width=True,
+                            hide_index=True,
+                        )
+                    elif trace.get("evidence_bins"):
+                        with st.expander("Debug: hard-bin approximation", expanded=False):
+                            st.caption(
+                                "This is only a debug approximation and is not the inference mechanism "
+                                "used in the main soft-evidence experiment."
+                            )
+                            st.json(trace.get("evidence_bins", {}))
 
                     col1, col2 = st.columns(2)
                     with col1:
-                        st.metric("P(task|e)", round(trace.get("posterior_task", 0.0), 4))
+                        st.metric("P(task | soft evidence)", round(trace.get("posterior_task", 0.0), 4))
                     with col2:
-                        st.metric("P(rest|e)", round(trace.get("posterior_rest", 0.0), 4))
+                        st.metric("P(rest | soft evidence)", round(trace.get("posterior_rest", 0.0), 4))
 
-                    st.markdown("**Log-likelihood Contributions**")
-                    st.json(trace.get("log_likelihoods", {}))
+                    influence_df = compute_soft_influence_table(trace)
+                    if influence_df is not None:
+                        st.markdown("**Soft evidence influence by class**")
+                        st.dataframe(influence_df, use_container_width=True, hide_index=True)
 
     # =========================
     # ANFIS section
