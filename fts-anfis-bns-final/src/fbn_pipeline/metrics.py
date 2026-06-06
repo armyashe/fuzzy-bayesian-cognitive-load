@@ -240,4 +240,3 @@ def compute_metrics(
         "bal_acc": bal_acc,
         "macro_f1": macro_f1,
     }
-    print("=" * 58 + "\n")

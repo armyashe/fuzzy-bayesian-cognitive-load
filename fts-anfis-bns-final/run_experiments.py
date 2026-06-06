@@ -82,8 +82,6 @@ from fbn_pipeline.data import load_dataset
 from fbn_pipeline.metrics import (
     find_best_threshold,
     per_subject_metrics,
-    print_config,
-    print_metrics,
     print_per_subject_table,
 )
 from fbn_pipeline.pipeline import compute_oof_metrics, retrain_and_test, run_cv

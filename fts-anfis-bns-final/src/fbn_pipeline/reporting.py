@@ -160,7 +160,7 @@ def dump_anfis_rules(anfis_models, n_sets: int, top_k: int | None = None) -> Non
     print()
 
 
-def dump_fts_transitions(fts, X_sample, top_k: int = 5) -> None:
+def dump_fts_transitions(fts, X_sample, top_k: int | None = None) -> None:
     n_sets = fts.n_sets
     if n_sets == 3:
         labels = ["L", "M", "H"]
@@ -171,8 +171,14 @@ def dump_fts_transitions(fts, X_sample, top_k: int = 5) -> None:
     else:
         labels = [f"S{k}" for k in range(n_sets)]
 
+    title = (
+        "FTS TRANSITION RULES  (all transitions)"
+        if top_k is None
+        else f"FTS TRANSITION RULES  (top {top_k} transitions)"
+    )
+
     print("=" * 68)
-    print("  FTS TRANSITION RULES  (illustrative sample, top transitions)")
+    print(f"  {title}")
     print("=" * 68)
     for s, name in enumerate(SIGNAL_NAMES):
         trans = fts.get_transition_matrix(X_sample, s)
@@ -181,8 +187,9 @@ def dump_fts_transitions(fts, X_sample, top_k: int = 5) -> None:
             for j in range(n_sets):
                 triples.append((labels[i], labels[j], trans[i, j]))
         triples.sort(key=lambda x: x[2], reverse=True)
+        triples_to_print = triples if top_k is None else triples[:top_k]
         print(f"\n--- FTS Transitions - {name} ---")
-        for rank, (fr, to, p) in enumerate(triples[:top_k], 1):
+        for rank, (fr, to, p) in enumerate(triples_to_print, 1):
             print(f"  T{rank}: IF state(t) is {fr} THEN state(t+1) is {to}  (p={p:.4f})")
     print()
 

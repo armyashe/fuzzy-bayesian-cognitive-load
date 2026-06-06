@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
@@ -6,11 +6,16 @@ from typing import Any
 
 import pandas as pd
 
-from .config import EXPERIMENT_PRESETS, ExperimentConfig, apply_preset, setup_seed
-from .data import load_dataset
-from .metrics import find_best_threshold, per_subject_metrics
-from .pipeline import compute_oof_metrics, retrain_and_test, run_cv
-from .bn_dashboard import export_bn_dashboard_artifacts
+from fbn_pipeline.config import (
+    EXPERIMENT_PRESETS,
+    ExperimentConfig,
+    apply_preset,
+    setup_seed,
+)
+from fbn_pipeline.data import load_dataset
+from fbn_pipeline.metrics import find_best_threshold, per_subject_metrics
+from fbn_pipeline.pipeline import compute_oof_metrics, retrain_and_test, run_cv
+from fbn_pipeline.bn_dashboard import export_bn_dashboard_artifacts
 
 
 @dataclass(frozen=True, slots=True)
@@ -69,7 +74,7 @@ GROUP3_VARIANTS: tuple[ExperimentOption, ...] = (
 )
 
 
-RULE_COUNT_OPTIONS: tuple[int, ...] = (2, 4, 6, 8, 10, 12)
+RULE_COUNT_OPTIONS: tuple[int, ...] = (3, 6, 8, 12)
 
 
 def get_group_options() -> tuple[ExperimentOption, ...]:
@@ -113,7 +118,8 @@ def get_group3_default_variant() -> str:
 def group2_variant_label(base_preset_name: str) -> str:
     cfg = apply_preset(ExperimentConfig(), base_preset_name)
     return (
-        f"{base_preset_name} — {cfg.mf_type.capitalize()} FTS + ANFIS + "
+        f"{base_preset_name} - {cfg.mf_type.capitalize()} FTS + "
+        f"{cfg.anfis_mf_type.capitalize()} ANFIS + "
         f"{'soft BN' if cfg.bn_soft else 'hard BN'}"
     )
 
@@ -199,7 +205,8 @@ def build_config_from_selection(
 
 def config_summary_rows(cfg: ExperimentConfig, selected_threshold: float) -> list[dict[str, Any]]:
     return [
-        {"parameter": "MF type", "value": cfg.mf_type},
+        {"parameter": "FTS MF type", "value": cfg.mf_type},
+        {"parameter": "ANFIS MF type", "value": cfg.anfis_mf_type},
         {"parameter": "Number of fuzzy sets", "value": cfg.n_sets},
         {"parameter": "FTS normalization", "value": cfg.fts_norm},
         {"parameter": "ANFIS rules", "value": cfg.n_rules},

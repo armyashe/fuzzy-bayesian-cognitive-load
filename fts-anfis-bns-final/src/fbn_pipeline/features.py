@@ -95,31 +95,6 @@ def extract_stat_features(X: np.ndarray) -> np.ndarray:
     return F
 
 
-def feature_names_stat(n_signals: int = 4) -> list[str]:
-    """
-    Return ordered feature name strings for stat-based features.
-
-    Parameters
-    ----------
-    n_signals : int, default 4
-
-    Returns
-    -------
-    list of str, length n_signals * N_STAT_FEATURES
-    """
-    try:
-        from .models.bn_fusion import SIGNAL_NAMES
-    except ImportError:
-        SIGNAL_NAMES = [f"sig{s}" for s in range(n_signals)]
-
-    names: list[str] = []
-    for s in range(n_signals):
-        sig = SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"sig{s}"
-        for feat in STAT_FEATURE_NAMES:
-            names.append(f"{sig}_{feat}")
-    return names
-
-
 # ------------------------------------------------------------------
 # Generic signal splitter (shared by exp2, exp3, exp4)
 # ------------------------------------------------------------------

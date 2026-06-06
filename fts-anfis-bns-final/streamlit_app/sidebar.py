@@ -3,7 +3,7 @@ from pathlib import Path
 import streamlit as st
 
 from fbn_pipeline.config import EXPERIMENT_PRESETS
-from fbn_pipeline.streamlit_support import (
+from streamlit_app.services.streamlit_support import (
     RULE_COUNT_OPTIONS,
     get_group1_default_variant,
     get_group2_default_base_preset,

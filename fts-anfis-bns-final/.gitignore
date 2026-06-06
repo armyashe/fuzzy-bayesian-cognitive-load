@@ -19,3 +19,4 @@ ENV/
 .DS_Store
 Thumbs.db
 .vscode/settings.json
+.artifacts/

@@ -122,12 +122,15 @@ def _fit_signal_models(
     valid_probs = np.zeros((len(F_valid), n_signals))
     anfis_models: list[ANFIS_TSK] = []
 
+    if cfg.anfis_mf_type not in {"gaussian", "gbell"}:
+        raise ValueError(
+            "ANFIS mf_type must be 'gaussian' or 'gbell', "
+            f"got {cfg.anfis_mf_type!r}"
+        )
+
     for s in range(n_signals):
         col_s = s * feat_per_sig
         col_e = col_s + feat_per_sig
-        # anfis_mf_type overrides mf_type for ANFIS premise layer only.
-        # Empty string means inherit the same MF as the FTS encoder.
-        effective_anfis_mf = cfg.anfis_mf_type or cfg.mf_type
         model = ANFIS_TSK(
             n_rules=cfg.n_rules,
             sigma_scale=cfg.sigma_scale,
@@ -135,7 +138,7 @@ def _fit_signal_models(
             n_epochs=cfg.n_epochs,
             lr=cfg.lr,
             random_state=cfg.seed + seed_offset + s,
-            mf_type=effective_anfis_mf,
+            mf_type=cfg.anfis_mf_type,
             gbell_b=cfg.gbell_b,
         )
         model.fit(F_train[:, col_s:col_e], y_train)
@@ -448,30 +451,3 @@ def retrain_and_test(
         }
 
     return y_pred, te_post, metrics, models
-
-
-def inner_cv_score(
-    X: np.ndarray,
-    y: np.ndarray,
-    users: np.ndarray,
-    cfg: ExperimentConfig,
-) -> tuple[float, float, dict[str, float]]:
-    oof_post, oof_y, _ = run_cv(X, y, users, cfg)
-    best_thr, _ = find_best_threshold(
-        oof_y,
-        oof_post,
-        metric=cfg.threshold_metric,
-        n_grid=cfg.threshold_grid,
-    )
-    metrics = compute_oof_metrics(oof_y, oof_post, best_thr)
-
-    if cfg.composite_score:
-        rank_score = round(0.5 * metrics["auc"] + 0.5 * metrics["bal_acc"], 4)
-    elif cfg.rank_metric == "balanced_accuracy":
-        rank_score = metrics["bal_acc"]
-    elif cfg.rank_metric == "macro_f1":
-        rank_score = metrics["macro_f1"]
-    else:
-        rank_score = metrics["auc"]
-
-    return rank_score, best_thr, metrics

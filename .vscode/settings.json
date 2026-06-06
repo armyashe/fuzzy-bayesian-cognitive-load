@@ -5,5 +5,8 @@
     "**/.pytest_cache": true,
     "**/.mypy_cache": true,
     "**/.ruff_cache": true
-  }
+  },
+  "python.analysis.extraPaths": [
+    "./fts-anfis-bns-final/src"
+  ]
 }

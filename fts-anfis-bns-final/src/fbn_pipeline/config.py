@@ -17,9 +17,10 @@ class ExperimentConfig:
     fts_norm: str = "total_sum"
 
     # MF type for ANFIS premise layer (Stage 2).
-    # Empty string ("") means inherit from mf_type (FTS encoder setting).
-    # Set explicitly to "gaussian" or "gbell" to override independently.
-    anfis_mf_type: str = ""
+    # This is intentionally separate from mf_type, which belongs to the
+    # FTS encoder and may be triangular / gaussian / trapezoid / gbell.
+    # ANFIS_TSK currently supports only gaussian or gbell premise MFs.
+    anfis_mf_type: str = "gaussian"
 
     n_rules: int = 8
     sigma_scale: float = 1.5
@@ -106,6 +107,7 @@ def setup_seed(seed: int) -> None:
 EXPERIMENT_PRESETS: dict[str, dict] = {
     "A1": {
         "n_sets": 3, "mf_type": "triangular", "mf_sigma_scale": 0.5,
+        "anfis_mf_type": "gaussian",
         "gbell_b": 2.0, "fts_norm": "total_sum",
         "n_rules": 8, "sigma_scale": 1.5, "ridge_lambda": 0.1,
         "n_epochs": 15, "lr": 0.001,
@@ -120,6 +122,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
     },
     "A3": {
         "n_sets": 5, "mf_type": "trapezoid", "mf_sigma_scale": 0.5,
+        "anfis_mf_type": "gaussian",
         "gbell_b": 2.0, "fts_norm": "row",
         "n_rules": 12, "sigma_scale": 1.0, "ridge_lambda": 0.0,
         "n_epochs": 50, "lr": 0.001,
@@ -127,6 +130,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
     },
     "A4": {
         "n_sets": 3, "mf_type": "gbell", "mf_sigma_scale": 0.8,
+        "anfis_mf_type": "gbell",
         "gbell_b": 3.0, "fts_norm": "total_sum",
         "n_rules": 6, "sigma_scale": 0.8, "ridge_lambda": 0.1,
         "n_epochs": 10, "lr": 0.005,
@@ -160,6 +164,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
     "A2_gbell": {
         # A2_soft với gbell cho cả FTS encoder lẫn ANFIS premise MFs
         "n_sets": 3, "mf_type": "gbell", "mf_sigma_scale": 0.4,
+        "anfis_mf_type": "gbell",
         "gbell_b": 2.0, "fts_norm": "row",
         "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
         "n_epochs": 50, "lr": 0.003,
@@ -258,6 +263,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
         "n_bins": 5, "alpha": 0.5, "k_folds": 5,
         "bn_structure": "naive", "bn_soft": True,
         "ablation": "exp1",
+        "anfis_mf_type": "gaussian",  # ANFIS premise fixed; only FTS encoder MF varies
         "experiment_group": "EXP1", "variant_name": "EXP1_MF_GAUSS",
     },
     "EXP1_MF_TRAP": {
@@ -279,6 +285,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
         "n_bins": 5, "alpha": 0.5, "k_folds": 5,
         "bn_structure": "naive", "bn_soft": True,
         "ablation": "exp1",
+        "anfis_mf_type": "gaussian",  # ANFIS premise fixed; only FTS encoder MF varies
         "experiment_group": "EXP1", "variant_name": "EXP1_MF_GBELL",
     },
 
