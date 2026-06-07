@@ -2,7 +2,7 @@
 Evaluation Utilities
 ====================
 Metrics printing, threshold tuning, and configuration display for the
-FTS → ANFIS → BN cognitive-load classification pipeline.
+FTS -> ANFIS -> BN cognitive-load classification pipeline.
 """
 
 import numpy as np
@@ -122,8 +122,8 @@ def per_subject_metrics(
     Parameters
     ----------
     y_true, y_pred : ndarray (N,)
-    y_prob         : ndarray (N,)  — posterior probabilities
-    subjects       : ndarray (N,)  — subject IDs (str or int)
+    y_prob         : ndarray (N,)  - posterior probabilities
+    subjects       : ndarray (N,)  - subject IDs (str or int)
 
     Returns
     -------
@@ -203,6 +203,19 @@ def print_config(config: dict) -> None:
     print("=" * 58)
     for k, v in config.items():
         print(f"  {k:35s}: {v}")
+
+
+def compute_oof_metrics(
+    y_true: np.ndarray,
+    y_prob: np.ndarray,
+    threshold: float,
+) -> dict[str, float]:
+    """Compute the standard metrics for out-of-fold probabilities.
+
+    Kept as a named wrapper because callers use the OOF terminology, but the
+    implementation is identical to held-out test metric calculation.
+    """
+    return compute_metrics(y_true, y_prob, threshold)
 
 
 def compute_metrics(

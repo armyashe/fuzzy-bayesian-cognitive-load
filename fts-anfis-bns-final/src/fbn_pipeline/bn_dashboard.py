@@ -14,12 +14,14 @@ from typing import Any
 
 import numpy as np
 
-from .models.bn_fusion import BNFusion, SIGNAL_NAMES
+from .artifacts.anfis_serializer import build_anfis_rules_artifact
+from .artifacts.bn_serializer import build_bn_details_artifact
 from .models.anfis_tsk import ANFIS_TSK
+from .models.fusion_protocol import FusionModel
 
 
 def export_bn_graph_image(
-    bn: BNFusion,
+    bn: FusionModel,
     output_path: Path,
     dpi: int = 150,
 ) -> bool:
@@ -30,7 +32,7 @@ def export_bn_graph_image(
 
 
 def export_bn_details_json(
-    bn: BNFusion,
+    bn: FusionModel,
     cfg: dict,
     exp_name: str,
     best_threshold: float,
@@ -67,77 +69,16 @@ def export_bn_details_json(
     dict
         JSON-serializable dict with BN details.
     """
-    # Select a positive sample for trace if available
-    sample_trace = None
-    if test_probs is not None and len(test_probs) > 0:
-        # Pick first sample of class "task" if available, else first sample
-        if y_test is not None and np.sum(y_test == 1) > 0:
-            pos_idx = np.where(y_test == 1)[0][0]
-        else:
-            pos_idx = 0
-        
-        sample_probs = test_probs[pos_idx]
-        sample_trace = bn.explain_sample(sample_probs)
-        sample_trace["sample_index"] = int(pos_idx)
-        if user_test is not None and pos_idx < len(user_test):
-            sample_trace["user_id"] = str(user_test[pos_idx])
-        # Store raw ANFIS probs so the notebook can recompute soft posterior
-        # without needing to re-run training.
-        sample_trace["anfis_probs"] = {
-            (SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"): round(float(sample_probs[s]), 8)
-            for s in range(bn.n_signals_)
-        }
-        # final_posterior_task uses predict_proba (soft evidence when bn_soft=True),
-        # matching the value shown in Streamlit — differs from posterior_task above
-        # which is the hard-bin explanatory trace posterior.
-        final_post = float(bn.predict_proba(sample_probs.reshape(1, -1))[0])
-        sample_trace["final_posterior_task"] = round(final_post, 8)
-        sample_trace["final_posterior_rest"] = round(1.0 - final_post, 8)
-
-    # CPT tables
-    cpt_tables = bn.get_cpt_table()
-    cpt_dict = {}
-    for sig_name, table in cpt_tables.items():
-        cpt_dict[sig_name] = table
-
-    # Signal weights
-    signal_weights = bn.get_signal_weights()
-
-    # Build full JSON
-    details = {
-        "experiment": exp_name,
-        "configuration": cfg,
-        "threshold": best_threshold,
-        "test_metrics": test_metrics,
-        "bn_structure": {
-            "root": "CL",
-            "root_states": ["rest", "task"],
-            "evidence_nodes": [
-                SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"
-                for s in range(bn.n_signals_)
-            ],
-            "n_bins": bn.n_bins,
-            "bin_names": bn.bin_names_,
-            "soft_evidence": bool(getattr(bn, "soft", False)),
-            # bin_mids and bin_sigmas allow notebooks to reproduce soft-evidence
-            # posteriors from JSON alone (no model object needed).
-            "bin_mids": {
-                (SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"): bn.bin_mids_[s].tolist()
-                for s in range(bn.n_signals_)
-            } if hasattr(bn, "bin_mids_") else None,
-            "bin_sigmas": {
-                (SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"): float(bn.bin_sigmas_[s])
-                for s in range(bn.n_signals_)
-            } if hasattr(bn, "bin_sigmas_") else None,
-        },
-        "prior": {
-            "rest": float(bn.prior_[0]),
-            "task": float(bn.prior_[1]),
-        },
-        "signal_weights": signal_weights,
-        "cpt_tables": cpt_dict,
-        "sample_inference_trace": sample_trace,
-    }
+    details = build_bn_details_artifact(
+        bn,
+        cfg,
+        exp_name,
+        best_threshold,
+        test_metrics,
+        test_probs=test_probs,
+        y_test=y_test,
+        user_test=user_test,
+    )
 
     if output_path is not None:
         output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -169,34 +110,7 @@ def export_anfis_rules_json(
     dict
         JSON-serializable dict with rules per signal.
     """
-    rules_dict: dict[str, list[str]] = {}
-
-    if anfis_list is None:
-        if output_path is not None:
-            output_path.parent.mkdir(parents=True, exist_ok=True)
-            with open(output_path, 'w', encoding='utf-8') as f:
-                json.dump(rules_dict, f, indent=2)
-        return rules_dict
-
-    # Generate feature names based on n_sets
-    if n_sets == 3:
-        labels = ["L", "M", "H"]
-    elif n_sets == 4:
-        labels = ["VL", "L", "M", "H"]
-    elif n_sets == 5:
-        labels = ["VL", "L", "M", "H", "VH"]
-    else:
-        labels = [f"S{k}" for k in range(n_sets)]
-
-    feature_names = [f"P({to_}|{from_})" for from_ in labels for to_ in labels]
-
-    for s, sig_name in enumerate(SIGNAL_NAMES if len(anfis_list) == len(SIGNAL_NAMES) else [f"S{s}" for s in range(len(anfis_list))]):
-        if s < len(anfis_list):
-            anfis = anfis_list[s]
-            rules = anfis.rule_strings_full(
-                feature_names=feature_names,
-            )
-            rules_dict[sig_name] = rules
+    rules_dict = build_anfis_rules_artifact(anfis_list, n_sets)
 
     if output_path is not None:
         output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -303,7 +217,7 @@ def export_bn_dashboard_artifacts(
             results["anfis_rules"] = rules_path
             print(f"[OK] Exported ANFIS rules: {rules_path}")
         else:
-            print(f"[WARN] No ANFIS models (likely exp4: FTS summary)")
+            print(f"[WARN] No ANFIS models (likely exp3: FTS summary)")
 
     except Exception as e:
         print(f"[ERROR] Error during artifact export: {e}")

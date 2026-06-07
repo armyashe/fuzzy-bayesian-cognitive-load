@@ -1,13 +1,13 @@
 """
 run_experiments.py
 ==================
-Structured experiment runner for the FTS–ANFIS–BN cognitive-load pipeline.
+Structured experiment runner for the FTS-ANFIS-BN cognitive-load pipeline.
 
 Three main experiment groups:
-  exp1  — Effect of FTS membership function type  (EXP1_MF_TRI/GAUSS/TRAP/GBELL)
-  exp2  — Effect of number of ANFIS rules          (EXP2_RULES_3/6/8/12)
-  exp3  — Contribution of pipeline stages          (EXP3_FULL/NO_BN/NO_ANFIS)
-  all   — Run all three groups in sequence
+  exp1  - Effect of FTS membership function type  (EXP1_MF_TRI/GAUSS/TRAP/GBELL)
+  exp2  - Effect of number of ANFIS rules          (EXP2_RULES_3/6/8/12)
+  exp3  - Contribution of pipeline stages          (EXP3_FULL/NO_BN/NO_ANFIS)
+  all   - Run all three groups in sequence
 
 Usage
 -----
@@ -25,7 +25,7 @@ Leakage prevention
 For every variant:
   1. GroupKFold CV is run on the training subjects only.
   2. OOF posteriors are used to select the decision threshold
-     (criterion: balanced_accuracy — avoids class-bias without touching test set).
+     (criterion: balanced_accuracy - avoids class-bias without touching test set).
   3. The model is retrained on the *full* training set.
   4. The held-out test set is evaluated exactly once.
 
@@ -44,7 +44,7 @@ from pathlib import Path
 from typing import Any
 
 # ============================================================
-# USER SETTINGS — edit EXPERIMENT_GROUP to choose which group to run.
+# USER SETTINGS - edit EXPERIMENT_GROUP to choose which group to run.
 # CLI flag --group overrides this value.
 # ============================================================
 EXPERIMENT_GROUP: str = "exp1"   # "exp1" | "exp2" | "exp3" | "all"
@@ -77,24 +77,13 @@ for _stale_mod in [k for k in sys.modules if k.startswith("fbn_pipeline")]:
     del sys.modules[_stale_mod]
 _importlib.invalidate_caches()
 
-from fbn_pipeline import ExperimentConfig, apply_preset, setup_seed
+from fbn_pipeline import ExperimentConfig, apply_preset
 from fbn_pipeline.data import load_dataset
-from fbn_pipeline.metrics import (
-    find_best_threshold,
-    per_subject_metrics,
-    print_per_subject_table,
-)
-from fbn_pipeline.pipeline import compute_oof_metrics, retrain_and_test, run_cv
-from fbn_pipeline.reporting import (
-    dump_anfis_rules,
-    dump_bn_cpt,
-    dump_fts_transitions,
-    log_to_csv,
-    make_result_row,
-)
+from fbn_pipeline.metrics import print_per_subject_table
+from fbn_pipeline.runner import run_one_experiment
 
 # ============================================================
-# Experiment group → ordered list of preset names
+# Experiment group -> ordered list of preset names
 # ============================================================
 
 EXP1_VARIANTS: list[str] = [
@@ -126,9 +115,9 @@ EXP_GROUP_LABELS: dict[str, str] = {
 
 # Short pipeline description for each EXP3 variant
 _EXP3_PIPELINE_DESC: dict[str, str] = {
-    "EXP3_FULL":      "FTS({mf_type}) → ANFIS({n_rules} rules) → Naive BN(soft evidence)",
-    "EXP3_NO_BN":     "FTS({mf_type}) → ANFIS({n_rules} rules) → Mean Fusion (no BN)",
-    "EXP3_NO_ANFIS":  "FTS({mf_type}) summary({fts_summary}) → Naive BN(soft evidence)",
+    "EXP3_FULL":      "FTS({mf_type}) -> ANFIS({n_rules} rules) -> Naive BN(soft evidence)",
+    "EXP3_NO_BN":     "FTS({mf_type}) -> ANFIS({n_rules} rules) -> Mean Fusion (no BN)",
+    "EXP3_NO_ANFIS":  "FTS({mf_type}) summary({fts_summary}) -> Naive BN(soft evidence)",
 }
 
 
@@ -160,7 +149,6 @@ def run_variant(
     """
     cfg = ExperimentConfig(data_path=DATA_FOLDER)
     cfg = apply_preset(cfg, preset_name)
-    setup_seed(cfg.seed)
 
     # Derive pipeline description for the banner
     variant = cfg.variant_name or preset_name
@@ -172,7 +160,7 @@ def run_variant(
     if preset_name.startswith("EXP3"):
         template = _EXP3_PIPELINE_DESC.get(
             preset_name,
-            "FTS({mf_type}) → ANFIS({n_rules} rules) → {bn_structure} BN({bn_soft})",
+            "FTS({mf_type}) -> ANFIS({n_rules} rules) -> {bn_structure} BN({bn_soft})",
         )
         pipeline_desc = template.format(
             mf_type=mf_type,
@@ -182,7 +170,7 @@ def run_variant(
         )
     else:
         pipeline_desc = (
-            f"FTS({mf_type}) → ANFIS({n_rules} rules) → "
+            f"FTS({mf_type}) -> ANFIS({n_rules} rules) -> "
             f"{bn_structure.capitalize()} BN({bn_soft_label})"
         )
 
@@ -192,31 +180,22 @@ def run_variant(
     print(f"Pipeline: {pipeline_desc}")
     print("=" * 64)
 
-    # ------------------------------------------------------------------
-    # Step 1: GroupKFold OOF on training subjects
-    # ------------------------------------------------------------------
     print(f"\n[1/3] GroupKFold CV ({cfg.k_folds} folds, grouped by subject)...")
-    oof_post, oof_y, fold_indices = run_cv(
-        dataset.X_train,
-        dataset.y_train,
-        dataset.user_train,
+    result = run_one_experiment(
         cfg,
+        dataset,
+        exp_name=variant,
+        preset_name=preset_name,
+        csv_path=csv_path,
+        show_per_subject=show_per_subject,
+        dump_rules=dump_rules,
+        print_progress=False,
+        pipeline_desc=pipeline_desc,
     )
-
-    # ------------------------------------------------------------------
-    # Step 2: Select threshold from OOF only — no test-set access here.
-    # ------------------------------------------------------------------
-    best_thr, thr_score = find_best_threshold(
-        oof_y,
-        oof_post,
-        metric=cfg.threshold_metric,
-        n_grid=cfg.threshold_grid,
-    )
-    oof_pred = (oof_post >= best_thr).astype(int)
-    oof_metrics = compute_oof_metrics(oof_y, oof_post, best_thr)
+    oof_metrics = result.oof_metrics
 
     print(f"\nOOF / Cross-Validation  (threshold selected by {cfg.threshold_metric})")
-    print(f"  Best threshold    : {best_thr:.4f}  (score = {thr_score:.4f})")
+    print(f"  Best threshold    : {result.best_threshold:.4f}  (score = {result.threshold_score:.4f})")
     print(f"  Accuracy          : {oof_metrics['accuracy']:.4f}")
     print(f"  Balanced Accuracy : {oof_metrics['bal_acc']:.4f}")
     print(f"  Precision         : {oof_metrics['precision']:.4f}")
@@ -224,20 +203,8 @@ def run_variant(
     print(f"  F1-score          : {oof_metrics['f1']:.4f}")
     print(f"  ROC-AUC           : {oof_metrics['auc']:.4f}")
 
-    # ------------------------------------------------------------------
-    # Step 3: Retrain on full training set, evaluate held-out test set once.
-    # ------------------------------------------------------------------
-    print(f"\n[2/3] Retraining on full training set & evaluating held-out test...")
-    test_pred, test_post, test_metrics, models = retrain_and_test(
-        dataset.X_train,
-        dataset.y_train,
-        dataset.X_test,
-        dataset.y_test,
-        best_thr,
-        cfg,
-    )
-
-    print(f"\nHeld-out Test  (threshold = {best_thr:.4f})")
+    test_metrics = result.test_metrics
+    print(f"\nHeld-out Test  (threshold = {result.best_threshold:.4f})")
     print(f"  Accuracy          : {test_metrics['accuracy']:.4f}")
     print(f"  Balanced Accuracy : {test_metrics['bal_acc']:.4f}")
     print(f"  Precision         : {test_metrics['precision']:.4f}")
@@ -245,62 +212,10 @@ def run_variant(
     print(f"  F1-score          : {test_metrics['f1']:.4f}")
     print(f"  ROC-AUC           : {test_metrics['auc']:.4f}")
 
-    # ------------------------------------------------------------------
-    # Step 4: Optional per-subject breakdown
-    # ------------------------------------------------------------------
-    subject_rows = None
-    if show_per_subject:
-        subject_rows = per_subject_metrics(
-            dataset.y_test, test_pred, test_post, dataset.user_test
-        )
-        print_per_subject_table(subject_rows, title=f"PER-SUBJECT — {variant}")
+    if show_per_subject and result.subject_rows is not None:
+        print_per_subject_table(result.subject_rows, title=f"PER-SUBJECT - {variant}")
 
-    # ------------------------------------------------------------------
-    # Step 5: Optional rule / CPT dump
-    # ------------------------------------------------------------------
-    if dump_rules:
-        if models["anfis_list"] is not None:
-            dump_anfis_rules(
-                models["anfis_list"],
-                n_sets=cfg.n_sets,
-                top_k=cfg.n_sets * cfg.n_sets,
-            )
-        if models["fts"] is not None:
-            dump_fts_transitions(models["fts"], dataset.X_train[0])
-        if models["bn"] is not None and len(dataset.y_test) > 0:
-            dump_bn_cpt(models["bn"], sample_probs=models["te_probs"][0])
-
-    # ------------------------------------------------------------------
-    # Step 6: Save CSV row
-    # ------------------------------------------------------------------
-    if csv_path is not None:
-        row = make_result_row(
-            cfg.to_dict(),
-            exp_name=variant,
-            best_thr=best_thr,
-            oof=oof_metrics,
-            test=test_metrics,
-            eval_protocol="subject-independent hold-out + GroupKFold OOF",
-            rank_metric=cfg.rank_metric,
-            thr_metric=cfg.threshold_metric,
-            preset_name=preset_name,
-        )
-        log_to_csv(str(csv_path), row)
-
-    return {
-        "variant": variant,
-        "preset_name": preset_name,
-        "config": cfg,
-        "best_threshold": best_thr,
-        "oof_metrics": oof_metrics,
-        "test_metrics": test_metrics,
-        "test_pred": test_pred,
-        "test_post": test_post,
-        "fold_indices": fold_indices,
-        "models": models,
-        "subject_rows": subject_rows,
-        "pipeline_desc": pipeline_desc,
-    }
+    return result.as_dict()
 
 
 # ============================================================
@@ -311,7 +226,7 @@ def _print_comparison_table(results: list[dict], group_label: str) -> None:
     """Print a compact side-by-side comparison table for one experiment group."""
     hdr = (
         f"\n{'=' * 124}\n"
-        f"  COMPARISON TABLE — {group_label}\n"
+        f"  COMPARISON TABLE - {group_label}\n"
         f"{'=' * 124}\n"
         f"  {'Variant':<20s}  {'Thr':>6s}  "
         f"{'OOFAcc':>7s} {'OOFBal':>7s} {'OOFPrec':>7s} {'OOFRec':>7s} {'OOF_F1':>7s} {'OOF_AUC':>8s}  "
@@ -349,7 +264,7 @@ def run_experiment_group(
 
     Parameters
     ----------
-    group : str  — one of "exp1", "exp2", "exp3"
+    group : str  - one of "exp1", "exp2", "exp3"
 
     Returns
     -------
@@ -396,7 +311,7 @@ def run_experiment_group(
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="FBN Pipeline — structured experiment runner",
+        description="FBN Pipeline - structured experiment runner",
         formatter_class=argparse.RawTextHelpFormatter,
     )
     parser.add_argument(
@@ -438,7 +353,7 @@ def main() -> None:
     csv_path = (PROJECT_ROOT / csv_path_str) if save_csv else None
 
     print("=" * 72)
-    print("FBN PIPELINE — EXPERIMENT RUNNER")
+    print("FBN PIPELINE - EXPERIMENT RUNNER")
     print("=" * 72)
     print(f"Experiment group : {group.upper()}")
     print(f"Project root     : {PROJECT_ROOT}")

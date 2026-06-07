@@ -6,15 +6,12 @@ from typing import Any
 
 import pandas as pd
 
-from fbn_pipeline.config import (
-    EXPERIMENT_PRESETS,
-    ExperimentConfig,
-    apply_preset,
-    setup_seed,
-)
+from fbn_pipeline.ablation import Ablation
+from fbn_pipeline.config import ExperimentConfig, setup_seed
 from fbn_pipeline.data import load_dataset
-from fbn_pipeline.metrics import find_best_threshold, per_subject_metrics
-from fbn_pipeline.pipeline import compute_oof_metrics, retrain_and_test, run_cv
+from fbn_pipeline.metrics import compute_oof_metrics, find_best_threshold, per_subject_metrics
+from fbn_pipeline.pipeline import retrain_and_test, run_cv
+from fbn_pipeline.presets import EXPERIMENT_PRESETS, apply_preset
 from fbn_pipeline.bn_dashboard import export_bn_dashboard_artifacts
 
 
@@ -198,7 +195,7 @@ def build_config_from_selection(
         "variant_name": selection.variant_key,
     }
     if selection.group_key == "exp2" and selection.n_rules_override is not None:
-        overrides["ablation"] = "exp1"
+        overrides["ablation"] = Ablation.FULL.value
         overrides["n_rules"] = selection.n_rules_override
     return cfg.merged(**overrides)
 

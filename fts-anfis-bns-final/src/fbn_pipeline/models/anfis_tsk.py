@@ -3,24 +3,24 @@ ANFIS 5-Layer (TSK / Sugeno) Classifier
 ========================================
 Adaptive-Network-based Fuzzy Inference System with:
 
-  Layer 1 — Premise MFs (gaussian or gbell per (rule, dimension)), centres
+  Layer 1 - Premise MFs (gaussian or gbell per (rule, dimension)), centres
              initialised by KMeans to avoid rule explosion.
-             Gaussian : μ = exp(−(x−c)²/(2σ²))
-             Gbell    : μ = 1/(1+|(x−c)/σ|^(2b))
-  Layer 2 — Firing strength: product of per-dimension memberships (computed
+             Gaussian : mu = exp(-(x-c)^2/(2sigma^2))
+             Gbell    : mu = 1/(1+|(x-c)/sigma|^(2b))
+  Layer 2 - Firing strength: product of per-dimension memberships (computed
              in log-space for numerical stability).
-  Layer 3 — Normalised firing strength (softmax of log-firing).
-  Layer 4 — Linear consequent (TSK): f_r(x) = a_r^T x + b_r.
-  Layer 5 — Output: y_hat = Σ w̄_r · f_r(x).
+  Layer 3 - Normalised firing strength (softmax of log-firing).
+  Layer 4 - Linear consequent (TSK): f_r(x) = a_r^T x + b_r.
+  Layer 5 - Output: y_hat = sum w_bar_r * f_r(x).
 
 Hybrid learning
 ---------------
-* Forward pass  — compute w̄ with current premise, then solve consequent
+* Forward pass  - compute w_bar with current premise, then solve consequent
                    parameters via ridge (weighted) least-squares.
-* Backward pass — gradient descent on premise parameters (centres, sigmas)
+* Backward pass - gradient descent on premise parameters (centres, sigmas)
                    to reduce MSE(y_hat, y).
 
-The raw output is mapped through sigmoid → p ∈ [0, 1].
+The raw output is mapped through sigmoid -> p in [0, 1].
 """
 
 import numpy as np
@@ -28,7 +28,7 @@ from sklearn.cluster import KMeans
 
 
 class ANFIS_TSK:
-    """One-signal ANFIS binary classifier (9-dim FTS features → p_task)."""
+    """One-signal ANFIS binary classifier (9-dim FTS features -> p_task)."""
 
     def __init__(
         self,
@@ -61,8 +61,8 @@ class ANFIS_TSK:
 
         Parameters
         ----------
-        X : ndarray, shape (N, d)   — e.g. 9 FTS features for one signal
-        y : ndarray, shape (N,)     — binary {0, 1}
+        X : ndarray, shape (N, d)   - e.g. 9 FTS features for one signal
+        y : ndarray, shape (N,)     - binary {0, 1}
         """
         N, d = X.shape
         self.d_ = d
@@ -105,21 +105,21 @@ class ANFIS_TSK:
     # ------------------------------------------------------------------
     def _normalised_firing(self, X: np.ndarray) -> np.ndarray:
         """
-        Compute w̄  (N, R)  via softmax over log firing strengths.
+        Compute w_bar  (N, R)  via softmax over log firing strengths.
 
-        Gaussian: μ_{r,j}(x_j) = exp(−(x_j−c_{r,j})²/(2σ_{r,j}²))
-        Gbell   : μ_{r,j}(x_j) = 1/(1+|(x_j−c_{r,j})/σ_{r,j}|^(2b))
-        Layer 2: w_r = ∏_j μ_{r,j}  ⟹  log w_r = Σ_j log μ_{r,j}
-        Layer 3: w̄ = softmax(log w)
+        Gaussian: mu_{r,j}(x_j) = exp(-(x_j-c_{r,j})^2/(2sigma_{r,j}^2))
+        Gbell   : mu_{r,j}(x_j) = 1/(1+|(x_j-c_{r,j})/sigma_{r,j}|^(2b))
+        Layer 2: w_r = prod_j mu_{r,j}  =>  log w_r = sum_j log mu_{r,j}
+        Layer 3: w_bar = softmax(log w)
         """
-        # (N,1,d) − (1,R,d)  →  (N,R,d)
+        # (N,1,d) - (1,R,d)  ->  (N,R,d)
         diff = X[:, np.newaxis, :] - self.centers_[np.newaxis, :, :]
         sig  = self.sigmas_[np.newaxis, :, :]                         # (1,R,d)
 
         if self.mf_type == "gaussian":
             log_mu = -0.5 * (diff / sig) ** 2                        # L1 Gaussian
         else:  # gbell
-            u_b = ((diff / sig) ** 2) ** self.gbell_b                # |d/σ|^{2b}
+            u_b = ((diff / sig) ** 2) ** self.gbell_b                # |d/sigma|^{2b}
             log_mu = -np.log1p(u_b)                                  # L1 Gbell
 
         log_w = log_mu.sum(axis=2)                                    # L2
@@ -132,12 +132,12 @@ class ANFIS_TSK:
         return w / w_sum
 
     # ------------------------------------------------------------------
-    # Design matrix  Φ  for WLS
+    # Design matrix  Phi  for WLS
     # ------------------------------------------------------------------
     def _build_phi(self, X: np.ndarray,
                    W_bar: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         """
-        Φ[i, r*(d+1) : (r+1)*(d+1)] = w̄_r(i) · [x_i ; 1]
+        Phi[i, r*(d+1) : (r+1)*(d+1)] = w_bar_r(i) * [x_i ; 1]
         """
         N, d = X.shape
         R = self.n_rules_
@@ -204,7 +204,7 @@ class ANFIS_TSK:
             # dL/dW_bar
             dW = residual[:, np.newaxis] * f_r  # (N, R)
 
-            # softmax backward:  dL/dlog_w_s = w̄_s · (dL/dw̄_s − Σ_r dL/dw̄_r · w̄_r)
+            # softmax backward:  dL/dlog_w_s = w_bar_s * (dL/dw_bar_s - sum_r dL/dw_bar_r * w_bar_r)
             weighted = (dW * W_bar).sum(axis=1, keepdims=True)  # (N,1)
             d_logw = W_bar * (dW - weighted)                    # (N, R)
 
@@ -216,16 +216,16 @@ class ANFIS_TSK:
             sig = self.sigmas_[np.newaxis, :, :]                         # (1,R,d)
 
             if self.mf_type == "gaussian":
-                # d(log μ)/dc = d/σ²,   d(log μ)/dσ = d²/σ³
+                # d(log mu)/dc = d/sigma^2,   d(log mu)/dsigma = d^2/sigma^3
                 dc = diff / (sig ** 2)                                   # (N,R,d)
                 ds = (diff ** 2) / (sig ** 3)                            # (N,R,d)
             else:  # gbell
-                # d(log μ)/dc = 2b(1−μ)/d,   d(log μ)/dσ = 2b(1−μ)/σ
-                # where μ = 1/(1+|d/σ|^{2b}),  1−μ = |d/σ|^{2b}/(1+|d/σ|^{2b})
+                # d(log mu)/dc = 2b(1-mu)/d,   d(log mu)/dsigma = 2b(1-mu)/sigma
+                # where mu = 1/(1+|d/sigma|^{2b}),  1-mu = |d/sigma|^{2b}/(1+|d/sigma|^{2b})
                 u_b   = ((diff / sig) ** 2) ** self.gbell_b              # (N,R,d)
-                one_m = u_b / (1.0 + u_b)                               # 1 − μ per dim
-                fac   = 2.0 * self.gbell_b * one_m                      # 2b(1−μ)
-                # Safe division by diff: limit is 0 when diff→0
+                one_m = u_b / (1.0 + u_b)                               # 1 - mu per dim
+                fac   = 2.0 * self.gbell_b * one_m                      # 2b(1-mu)
+                # Safe division by diff: limit is 0 when diff->0
                 dc = np.where(np.abs(diff) > 1e-8, fac / diff, 0.0)     # (N,R,d)
                 ds = fac / sig                                           # (N,R,d)
 
@@ -252,7 +252,7 @@ class ANFIS_TSK:
         return Phi @ self.theta_
 
     def predict_proba(self, X: np.ndarray) -> np.ndarray:
-        """Sigmoid of raw output  →  P(task)."""
+        """Sigmoid of raw output  ->  P(task)."""
         raw = self.predict_raw(X)
         return 1.0 / (1.0 + np.exp(-np.clip(raw, -500, 500)))
 
@@ -293,8 +293,8 @@ class ANFIS_TSK:
 
         Returns
         -------
-        list[str]   — one string per rule, e.g.
-            ``"R1: IF x2 is Gauss(c=0.12, σ=0.05) AND ... THEN y = 0.3*x2 + ... + 0.01"``
+        list[str]   - one string per rule, e.g.
+            ``"R1: IF x2 is Gauss(c=0.12, sigma=0.05) AND ... THEN y = 0.3*x2 + ... + 0.01"``
         """
         R = self.n_rules_
         d = self.d_
@@ -319,7 +319,7 @@ class ANFIS_TSK:
                 c_val = self.centers_[r, j]
                 s_val = self.sigmas_[r, j]
                 if self.mf_type == "gaussian":
-                    mf_str = f"Gauss(c={c_val:{fmt}}, σ={s_val:{fmt}})"
+                    mf_str = f"Gauss(c={c_val:{fmt}}, sigma={s_val:{fmt}})"
                 else:
                     mf_str = f"Gbell(c={c_val:{fmt}}, a={s_val:{fmt}}, b={self.gbell_b})"
                 parts.append(f"{feature_names[j]} is {mf_str}")

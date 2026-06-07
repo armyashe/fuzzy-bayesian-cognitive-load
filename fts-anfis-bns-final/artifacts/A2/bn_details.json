@@ -9,7 +9,7 @@
     "mf_sigma_scale": 0.4,
     "gbell_b": 2.0,
     "fts_norm": "row",
-    "anfis_mf_type": "",
+    "anfis_mf_type": "gaussian",
     "n_rules": 6,
     "sigma_scale": 1.3,
     "ridge_lambda": 0.01,

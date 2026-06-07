@@ -62,10 +62,10 @@ def render_overview_tab(results: dict) -> None:
         st.markdown(
             """
             `Raw physiological window`
-            → `FTS / fuzzy transition encoding`
-            → `4 per-signal ANFIS models`
-            → `Bayesian Network fusion`
-            → `Final cognitive-load prediction`
+            -> `FTS / fuzzy transition encoding`
+            -> `4 per-signal ANFIS models`
+            -> `Bayesian Network fusion`
+            -> `Final cognitive-load prediction`
             """
         )
 

@@ -1,7 +1,7 @@
 """
 Bayesian Network Fusion (Naive Bayes structure)
 ================================================
-DAG:   Task  →  E_Temp,  E_HR,  E_GSR,  E_RR
+DAG:   Task  ->  E_Temp,  E_HR,  E_GSR,  E_RR
 
 Each evidence node E_s is a **discretised** version of a per-signal
 continuous evidence score.  Depending on the ablation experiment, this
@@ -19,15 +19,15 @@ CPTs are estimated by counting with Laplace smoothing (alpha >= 0).
 Inference modes
 ---------------
 * Hard evidence (default):
-    P(Task=c | e) ∝ P(c) · ∏_s P(E_s = e_s | c)
+    P(Task=c | e) proportional to P(c) * prod_s P(E_s = e_s | c)
 
 * Soft evidence (soft=True):
-    P(Task=c | e) ∝ P(c) · ∏_s [ Σ_b  μ_b(v_s) · P(bin_b | c) ]
-    where μ_b is a Gaussian kernel membership over bin midpoints.
+    P(Task=c | e) proportional to P(c) * prod_s [ sum_b  mu_b(v_s) * P(bin_b | c) ]
+    where mu_b is a Gaussian kernel membership over bin midpoints.
 
 * Reliability weighting (signal_weights):
-    log P(c|e) ∝ log P(c) + Σ_s  w_s · log P(E_s | c)
-    w_s ∈ (0, 1] derived from per-signal AUC on the training fold.
+    log P(c|e) proportional to log P(c) + sum_s  w_s * log P(E_s | c)
+    w_s in (0, 1] derived from per-signal AUC on the training fold.
 """
 
 import numpy as np
@@ -125,7 +125,7 @@ class BNFusion:
     # Soft evidence helpers
     # ------------------------------------------------------------------
     def _compute_soft_params(self, probs: np.ndarray) -> None:
-        """Compute bin midpoints and Gaussian kernel σ for soft evidence."""
+        """Compute bin midpoints and Gaussian kernel sigma for soft evidence."""
         self.bin_mids_: list[np.ndarray] = []
         self.bin_sigmas_: list[float] = []
         for s in range(self.n_signals_):
@@ -137,7 +137,7 @@ class BNFusion:
             ext = np.concatenate([[p_min], edges, [p_max]])
             mids = 0.5 * (ext[:-1] + ext[1:])  # midpoint of each bin interval
 
-            # σ = half average bin width → decent overlap
+            # sigma = half average bin width -> decent overlap
             avg_width = (p_max - p_min) / self.n_bins if self.n_bins > 0 else 0.1
             sigma = max(avg_width * 0.5, 1e-6)
 
@@ -150,7 +150,7 @@ class BNFusion:
 
         Returns
         -------
-        mem : ndarray, shape (N, S, n_bins)   — row-normalised
+        mem : ndarray, shape (N, S, n_bins)   - row-normalised
         """
         N, S = probs.shape
         mem = np.zeros((N, S, self.n_bins))
@@ -227,7 +227,7 @@ class BNFusion:
         return posteriors
 
     def _predict_soft(self, probs: np.ndarray) -> np.ndarray:
-        """Soft-evidence Naive Bayes: Σ_b μ_b(p) · CPT[c, b]."""
+        """Soft-evidence Naive Bayes: sum_b mu_b(p) * CPT[c, b]."""
         mem = self._soft_membership(probs)
         N = probs.shape[0]
         posteriors = np.zeros(N)
@@ -238,7 +238,7 @@ class BNFusion:
             for c in range(2):
                 log_p[c] = np.log(self.prior_[c] + 1e-10)
                 for s in range(self.n_signals_):
-                    # Weighted CPT lookup: Σ_b μ_b · P(b|c)
+                    # Weighted CPT lookup: sum_b mu_b * P(b|c)
                     p_ev = np.dot(mem[i, s, :], self.cpts_[s][c, :])
                     log_p[c] += w[s] * np.log(p_ev + 1e-10)
             # Stable softmax
@@ -294,7 +294,7 @@ class BNFusion:
 
         Returns
         -------
-        dict — see _explain_sample_hard / _explain_sample_soft for keys.
+        dict - see _explain_sample_hard / _explain_sample_soft for keys.
         """
         if self.soft:
             return self._explain_sample_soft(probs_single)
@@ -336,7 +336,7 @@ class BNFusion:
 
     def _explain_sample_soft(self, probs_single: np.ndarray) -> dict:
         """
-        Soft-evidence inference trace — mirrors _predict_soft() exactly.
+        Soft-evidence inference trace - mirrors _predict_soft() exactly.
 
         Soft evidence mode:
         We do not use a single hard bin as evidence.
@@ -386,7 +386,7 @@ class BNFusion:
                 for b in range(self.n_bins)
             }
 
-        # Dominant bin — argmax of soft membership, for visualization only.
+        # Dominant bin - argmax of soft membership, for visualization only.
         # In soft mode, evidence_bins only means dominant bin for visualization.
         # Actual inference uses soft_memberships.
         dominant_bins = {
@@ -395,7 +395,7 @@ class BNFusion:
         }
 
         # log_likelihood_ratio[s] = LL_task(s) - LL_rest(s)
-        # Positive → supports TASK; negative → supports REST.
+        # Positive -> supports TASK; negative -> supports REST.
         log_likelihood_ratio = {
             (SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"): (
                 contribs[1][SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"]

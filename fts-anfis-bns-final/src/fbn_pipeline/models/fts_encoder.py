@@ -10,10 +10,10 @@ matrix features.  For each signal the encoder:
    Supported mf_type: "triangular", "gaussian", "trapezoid", "gbell".
 2. Fuzzifies every time point holistically (keeps all n_sets membership
    degrees).
-3. Builds an n_sets×n_sets transition matrix
-   T_ij = Σ_{t} μ_i(x_t) · μ_j(x_{t+1})
-   and normalises by total sum  →  n_sets² features per signal.
-4. Concatenates across signals  →  n_signals × n_sets²  features per window.
+3. Builds an n_setsxn_sets transition matrix
+   T_ij = sum_{t} mu_i(x_t) * mu_j(x_{t+1})
+   and normalises by total sum  ->  n_sets^2 features per signal.
+4. Concatenates across signals  ->  n_signals x n_sets^2  features per window.
 """
 
 import numpy as np
@@ -37,7 +37,7 @@ class FTSEncoder:
         )
         self.n_sets = n_sets
         self.mf_type = mf_type
-        self.mf_sigma_scale = mf_sigma_scale  # gaussian σ = spacing * this
+        self.mf_sigma_scale = mf_sigma_scale  # gaussian sigma = spacing * this
         self.gbell_b = gbell_b                # gbell shape exponent
         self.norm_mode = norm_mode            # total_sum | row
         self.robust = robust                  # percentile clipping + quantile centers
@@ -91,7 +91,7 @@ class FTSEncoder:
                     (q[2], q[3], q[4] + margin),
                 ])
             else:
-                # General: n+2 quantile reference points → n triangles
+                # General: n+2 quantile reference points -> n triangles
                 qs = np.quantile(vals, np.linspace(0, 1, n + 2))
                 margin = (qs[-1] - qs[0]) * 0.10
                 params = []
@@ -163,7 +163,7 @@ class FTSEncoder:
 
         Returns
         -------
-        features : ndarray, shape (N, n_signals * n_sets²)
+        features : ndarray, shape (N, n_signals * n_sets^2)
         """
         assert self.fitted_, "Call .fit() first"
         X = self._impute(X)
@@ -201,7 +201,7 @@ class FTSEncoder:
     def get_transition_matrix(self, X_single: np.ndarray,
                               signal_idx: int) -> np.ndarray:
         """
-        Return the n_sets × n_sets transition matrix for one sample / one signal.
+        Return the n_sets x n_sets transition matrix for one sample / one signal.
 
         Parameters
         ----------
@@ -252,7 +252,7 @@ class FTSEncoder:
 
     @staticmethod
     def _gaussian(x, center, sigma):
-        """Gaussian MF: exp(−0.5·((x−c)/σ)²)."""
+        """Gaussian MF: exp(-0.5*((x-c)/sigma)^2)."""
         return np.exp(-0.5 * ((x - center) / max(sigma, 1e-10)) ** 2)
 
     @staticmethod
@@ -265,13 +265,13 @@ class FTSEncoder:
 
     @staticmethod
     def _gbell(x, a, b, c):
-        """Generalized bell MF: 1 / (1 + |(x−c)/a|^(2b))."""
+        """Generalized bell MF: 1 / (1 + |(x-c)/a|^(2b))."""
         return 1.0 / (1.0 + np.abs((x - c) / max(a, 1e-10)) ** (2 * b))
 
     def _memberships(self, values: np.ndarray,
                      signal_idx: int) -> np.ndarray:
         """
-        Holistic fuzzification — keeps all n_sets µ values.
+        Holistic fuzzification - keeps all n_sets mu values.
 
         Parameters
         ----------

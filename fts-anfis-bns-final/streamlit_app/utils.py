@@ -14,7 +14,7 @@ def get_state_names(n_sets: int) -> list[str]:
 
 def get_transition_feature_names(n_sets: int) -> list[str]:
     states = get_state_names(n_sets)
-    return [f"{a}→{b}" for a in states for b in states]
+    return [f"{a}->{b}" for a in states for b in states]
 
 def signal_weights_are_uniform(signal_weights: dict) -> bool:
     if not signal_weights:

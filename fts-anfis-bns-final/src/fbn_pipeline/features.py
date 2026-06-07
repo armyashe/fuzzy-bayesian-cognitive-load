@@ -6,17 +6,17 @@ parts of the main pipeline are bypassed in ablation experiments.
 
 Stage mapping
 -------------
-  exp1 : FTSEncoder  →  ANFIS  →  BNFusion        (standard pipeline)
-  exp2 : FTSEncoder  →  ANFIS  →  mean/weighted   (no BN — uses pipeline.py)
-  exp3 : StatFeatures →  ANFIS  →  BNFusion        (no FTS — uses extract_stat_features)
-  exp4 : FTSEncoder  →  summarise  →  BNFusion     (no ANFIS — uses summarise_fts_per_signal)
+  exp1 : FTSEncoder  ->  ANFIS  ->  BNFusion        (standard pipeline)
+  exp2 : FTSEncoder  ->  ANFIS  ->  mean/weighted   (no BN - uses pipeline.py)
+  exp3 : FTSEncoder  ->  summarise  ->  BNFusion     (no ANFIS - uses summarise_fts_per_signal)
+  exp4 : StatFeatures ->  ANFIS  ->  BNFusion        (no FTS - uses extract_stat_features)
 
 Public API
 ----------
-  extract_stat_features(X)          -- (N,4,T) → (N, 4*N_STAT_FEATURES)
+  extract_stat_features(X)          -- (N,4,T) -> (N, 4*N_STAT_FEATURES)
   feature_names_stat(n_signals)     -- list of feature-name strings
-  split_features_per_signal(F, n)   -- (N, n*d) → list of n arrays (N, d)
-  summarise_fts_per_signal(F, n_sets, mode) -- (N, 4*n_sets²) → (N, 4)
+  split_features_per_signal(F, n)   -- (N, n*d) -> list of n arrays (N, d)
+  summarise_fts_per_signal(F, n_sets, mode) -- (N, 4*n_sets^2) -> (N, 4)
 """
 
 from __future__ import annotations
@@ -42,14 +42,14 @@ N_STAT_FEATURES: int = len(STAT_FEATURE_NAMES)  # 8
 
 
 # ------------------------------------------------------------------
-# exp3 helper: handcrafted statistical features
+# exp4 helper: handcrafted statistical features
 # ------------------------------------------------------------------
 
 def extract_stat_features(X: np.ndarray) -> np.ndarray:
     """
     Extract per-signal handcrafted statistical features from raw windows.
 
-    Used in **exp3** to replace FTSEncoder (Stage 1 bypass).
+    Used in **exp4** to replace FTSEncoder (Stage 1 bypass).
 
     Parameters
     ----------
@@ -127,7 +127,7 @@ def split_features_per_signal(
 
 
 # ------------------------------------------------------------------
-# exp4 helper: FTS summary scores per signal
+# exp3 helper: FTS summary scores per signal
 # ------------------------------------------------------------------
 
 _VALID_SUMMARY_MODES = frozenset({"diag", "high", "diag_high", "entropy"})
@@ -140,39 +140,39 @@ def summarise_fts_per_signal(
 ) -> np.ndarray:
     """
     Collapse FTS transition features into one continuous evidence score
-    per signal.  Used in **exp4** where ANFIS is bypassed.
+    per signal.  Used in **exp3** where ANFIS is bypassed.
 
     The output is intended for direct input to BNFusion, which uses quantile
-    binning on continuous values — not necessarily probabilities.
+    binning on continuous values - not necessarily probabilities.
 
     Parameters
     ----------
-    F : ndarray, shape (N, 4 * n_sets²)
+    F : ndarray, shape (N, 4 * n_sets^2)
         FTS transition features produced by FTSEncoder.  Each signal
-        contributes n_sets² normalised transition values (row-sum or
+        contributes n_sets^2 normalised transition values (row-sum or
         total-sum normalised, as configured by cfg.fts_norm).
     n_sets : int
-        Number of fuzzy sets per signal (e.g. 3 → 9 transitions/signal).
+        Number of fuzzy sets per signal (e.g. 3 -> 9 transitions/signal).
     mode : str
         Summary strategy per signal:
 
         ``"diag"``
             Sum of self-transition probabilities T[i, i].
-            High value ⟹ the signal stays in the same fuzzy state
+            High value => the signal stays in the same fuzzy state
             (low dynamics / stable).
 
         ``"high"``
             Sum of all transitions that involve the highest fuzzy state
-            (index n_sets-1), i.e. T[:, h] + T[h, :] − T[h, h].
-            High value ⟹ the signal frequently enters/exits high state.
+            (index n_sets-1), i.e. T[:, h] + T[h, :] - T[h, h].
+            High value => the signal frequently enters/exits high state.
 
         ``"diag_high"`` *(default)*
             Normalised average of ``"diag"`` and ``"high"`` scores.
             Balances stability and high-activation evidence.
 
         ``"entropy"``
-            ``1 − H(T) / log(n_sets²)`` where H is Shannon entropy of
-            the flattened transition vector.  High value ⟹ more
+            ``1 - H(T) / log(n_sets^2)`` where H is Shannon entropy of
+            the flattened transition vector.  High value => more
             concentrated (predictable) transition pattern.
 
     Returns
@@ -191,23 +191,23 @@ def summarise_fts_per_signal(
     n_trans = n_sets * n_sets
     if F.shape[1] % n_trans != 0:
         raise ValueError(
-            f"F.shape[1]={F.shape[1]} is not divisible by n_sets²={n_trans}"
+            f"F.shape[1]={F.shape[1]} is not divisible by n_sets^2={n_trans}"
         )
     n_signals = F.shape[1] // n_trans
     scores = np.zeros((N, n_signals), dtype=np.float64)
 
     for s in range(n_signals):
-        tm = F[:, s * n_trans : (s + 1) * n_trans]   # (N, n_sets²)
+        tm = F[:, s * n_trans : (s + 1) * n_trans]   # (N, n_sets^2)
         tm_3d = tm.reshape(N, n_sets, n_sets)          # (N, from_state, to_state)
 
         if mode == "diag":
-            # Σ_i  T[i, i]
+            # sum_i  T[i, i]
             scores[:, s] = np.einsum("nii->n", tm_3d)
 
         elif mode == "high":
             h = n_sets - 1
-            to_high = tm_3d[:, :, h].sum(axis=1)    # Σ_i T[i, h]
-            from_high = tm_3d[:, h, :].sum(axis=1)  # Σ_j T[h, j]
+            to_high = tm_3d[:, :, h].sum(axis=1)    # sum_i T[i, h]
+            from_high = tm_3d[:, h, :].sum(axis=1)  # sum_j T[h, j]
             # subtract double-counted T[h, h]
             scores[:, s] = to_high + from_high - tm_3d[:, h, h]
 
@@ -223,7 +223,7 @@ def summarise_fts_per_signal(
             scores[:, s] = 0.5 * diag_score + 0.5 * high_norm
 
         elif mode == "entropy":
-            # 1 − H_normalised  (more concentrated → higher score)
+            # 1 - H_normalised  (more concentrated -> higher score)
             eps = 1e-10
             tm_safe = np.clip(tm, eps, 1.0)
             h_vec = -np.sum(tm_safe * np.log(tm_safe), axis=1)  # (N,)

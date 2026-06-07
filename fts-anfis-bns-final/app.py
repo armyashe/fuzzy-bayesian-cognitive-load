@@ -15,8 +15,8 @@ from streamlit_app.tabs.results_tab import render_results_tab
 from streamlit_app.tabs.sample_explanation_tab import render_sample_explanation_tab
 
 
-st.set_page_config(page_title="Fuzzy–ANFIS–BN Dashboard", layout="wide")
-st.title("Fuzzy–ANFIS–Bayesian Network Dashboard")
+st.set_page_config(page_title="Fuzzy-ANFIS-BN Dashboard", layout="wide")
+st.title("Fuzzy-ANFIS-Bayesian Network Dashboard")
 
 render_sidebar(ROOT)
 

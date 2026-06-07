@@ -13,7 +13,7 @@ DAG structure (TAN):
       evidence node (default: "HR"), learned from training data only.
 
 Factorization:
-    P(c | e) ∝ P(c) × P(e_root | c) × ∏_{s ≠ root} P(e_s | c, e_parent(s))
+    P(c | e) proportional to P(c) x P(e_root | c) x prod_{s != root} P(e_s | c, e_parent(s))
 
 Structure learning:
     The tree over evidence nodes is the maximum spanning tree of the
@@ -211,7 +211,7 @@ class TANFusion:
         self,
         probs: np.ndarray,
         y: np.ndarray,
-        signal_weights: np.ndarray | None = None,  # ignored — see module docstring
+        signal_weights: np.ndarray | None = None,  # ignored - see module docstring
     ) -> "TANFusion":
         """
         Learn TAN structure and CPTs from training data only.
@@ -225,7 +225,7 @@ class TANFusion:
         N, S = probs.shape
         self.n_signals_ = S
 
-        # 1. Quantile bin edges (fit on training data only — no leakage)
+        # 1. Quantile bin edges (fit on training data only - no leakage)
         self.bin_edges_: list[np.ndarray] = []
         qs = np.linspace(0, 1, self.n_bins + 1)[1:-1]
         for s in range(S):
@@ -294,7 +294,7 @@ class TANFusion:
     ) -> np.ndarray:
         """
         P(E_child = b | Task = c, E_parent = p_val)
-        shape (2, n_bins, n_bins)  —  [class, parent_bin, child_bin]
+        shape (2, n_bins, n_bins)  -  [class, parent_bin, child_bin]
         """
         cpt = np.zeros((2, self.n_bins, self.n_bins))
         for c in range(2):
@@ -310,7 +310,7 @@ class TANFusion:
     # ------------------------------------------------------------------
 
     def _compute_soft_params(self, probs: np.ndarray) -> None:
-        """Compute bin midpoints and Gaussian kernel σ for soft evidence."""
+        """Compute bin midpoints and Gaussian kernel sigma for soft evidence."""
         self.bin_mids_: list[np.ndarray] = []
         self.bin_sigmas_: list[float] = []
         for s in range(self.n_signals_):
@@ -330,7 +330,7 @@ class TANFusion:
 
         Returns
         -------
-        mem : ndarray, shape (N, S, n_bins)  — row-normalised per signal
+        mem : ndarray, shape (N, S, n_bins)  - row-normalised per signal
         """
         N, S = probs.shape
         mem = np.zeros((N, S, self.n_bins))
@@ -371,12 +371,12 @@ class TANFusion:
         Dispatches to soft or hard evidence path based on self.soft.
 
         Factorization (hard):
-            P(c | e) ∝ P(c) × P(e_root | c)
-                           × ∏_{s ≠ root} P(e_s | c, e_parent(s))
+            P(c | e) proportional to P(c) x P(e_root | c)
+                           x prod_{s != root} P(e_s | c, e_parent(s))
 
         Factorization (soft):
-            L(c) = Σ_b [Π_s μ_{b_s}(v_s)] · P(b | c)  (TAN joint)
-            P(c | v) ∝ P(c) × L(c)
+            L(c) = sum_b [prod_s mu_{b_s}(v_s)] * P(b | c)  (TAN joint)
+            P(c | v) proportional to P(c) x L(c)
 
         Parameters
         ----------
@@ -426,7 +426,7 @@ class TANFusion:
         Soft-evidence TAN inference.
 
         Marginalises over all n_bins^S bin combinations:
-            L(c) = Σ_b [Π_s μ_{b_s}(v_s)] · P(b_root|c) · Π_{s≠root} P(b_s|c,b_pa(s))
+            L(c) = sum_b [prod_s mu_{b_s}(v_s)] * P(b_root|c) * prod_{s!=root} P(b_s|c,b_pa(s))
 
         The joint P(b|c) under the TAN factorisation sums to 1 for each c,
         so L(c) is a proper soft likelihood in (0, 1].
@@ -441,7 +441,7 @@ class TANFusion:
         b_combos = np.stack([g.ravel() for g in grids], axis=1)  # (K, S)
 
         # Precompute log P(b_combo | c) for each class: (2, K)
-        # P(b|c) = P(b_root|c) × Π_{s≠root} P(b_s|c, b_parent(s))
+        # P(b|c) = P(b_root|c) x prod_{s!=root} P(b_s|c, b_parent(s))
         log_p_b_c = np.zeros((2, b_combos.shape[0]))
         for c in range(2):
             log_p_b_c[c] = np.log(
@@ -464,7 +464,7 @@ class TANFusion:
         p_b_c /= p_b_c.sum(axis=1, keepdims=True)
 
         for i in range(N):
-            # Joint soft membership Π_s μ_{b_s}(v_s): shape (K,)
+            # Joint soft membership prod_s mu_{b_s}(v_s): shape (K,)
             joint_mem = np.ones(b_combos.shape[0])
             for s in range(S):
                 joint_mem *= mem[i, s, b_combos[:, s]]

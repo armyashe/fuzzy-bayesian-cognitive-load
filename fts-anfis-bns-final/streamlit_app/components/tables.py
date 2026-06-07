@@ -42,7 +42,12 @@ def compute_soft_influence_table(bn_trace: dict) -> pd.DataFrame | None:
 
     rows = []
     for class_id, class_name in [(0, "rest"), (1, "task")]:
-        for sig, value in bn_trace.get("log_likelihoods", {}).get(class_id, {}).items():
+        class_likelihoods = _trace_class_mapping(
+            bn_trace.get("log_likelihoods", {}),
+            class_id,
+            class_name,
+        )
+        for sig, value in class_likelihoods.items():
             rows.append(
                 {
                     "class": class_name,
@@ -64,7 +69,12 @@ def compute_soft_influence_table(bn_trace: dict) -> pd.DataFrame | None:
 def compute_hard_debug_contribution_table(bn_trace: dict) -> pd.DataFrame:
     contrib_rows = []
     for class_id, class_name in [(0, "rest"), (1, "task")]:
-        for sig, value in bn_trace.get("log_likelihoods", {}).get(class_id, {}).items():
+        class_likelihoods = _trace_class_mapping(
+            bn_trace.get("log_likelihoods", {}),
+            class_id,
+            class_name,
+        )
+        for sig, value in class_likelihoods.items():
             contrib_rows.append(
                 {
                     "class": class_name,
@@ -73,3 +83,12 @@ def compute_hard_debug_contribution_table(bn_trace: dict) -> pd.DataFrame:
                 }
             )
     return pd.DataFrame(contrib_rows)
+
+
+def _trace_class_mapping(mapping: dict, class_id: int, class_name: str) -> dict:
+    """Read live traces and JSON-loaded traces, whose integer keys become strings."""
+    for key in (class_id, str(class_id), class_name):
+        value = mapping.get(key)
+        if isinstance(value, dict):
+            return value
+    return {}
