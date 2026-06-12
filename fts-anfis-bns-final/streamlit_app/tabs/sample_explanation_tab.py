@@ -109,12 +109,13 @@ def render_sample_summary(sample: dict) -> None:
     true_label_text = "task" if sample["y_true"] == 1 else "rest"
     pred_label_text = "task" if sample["y_pred"] == 1 else "rest"
 
-    c1, c2, c3, c4, c5 = st.columns(5)
+    c1, c2, c3, c4, c5, c6 = st.columns(6)
     c1.metric("User", str(sample["user_id"]))
     c2.metric("True", true_label_text)
     c3.metric("Pred", pred_label_text)
     c4.metric("Posterior P(task)", f"{sample['posterior_task']:.4f}")
     c5.metric("Threshold", f"{sample['threshold']:.4f}")
+    c6.metric("Evidence mode", str(sample.get("evidence_mode", "unknown")))
 
 def render_stage1_raw_window(sample: dict) -> None:
     with st.expander("Stage 1 — Raw physiological window", expanded=True):
@@ -176,9 +177,12 @@ def render_stage4_bn(sample: dict) -> None:
         st.markdown("**ANFIS probabilities per signal**")
         st.dataframe(sample["signal_prob_df"], use_container_width=True, hide_index=True)
 
+        render_bn_score_summary(sample)
+
         if sample["soft_membership_df"] is not None:
             st.markdown("**Soft evidence membership**")
             st.dataframe(sample["soft_membership_df"], use_container_width=True, hide_index=True)
+            render_soft_evidence_trace_table(bn_trace)
             pred_label = "TASK" if sample["y_pred"] == 1 else "REST"
             render_soft_membership_heatmap(
                 sample["soft_membership_df"],
@@ -195,7 +199,7 @@ def render_stage4_bn(sample: dict) -> None:
                 "so no soft membership matrix is available."
             )
 
-        st.markdown("**Posterior from soft evidence BN inference**")
+        st.markdown("**Posterior from BN inference**")
         st.dataframe(post_df, use_container_width=True, hide_index=True)
         st.bar_chart(post_df.set_index("class"))
 
@@ -260,3 +264,60 @@ def render_stage4_bn(sample: dict) -> None:
                         use_container_width=True,
                         hide_index=True,
                     )
+
+
+def render_bn_score_summary(sample: dict) -> None:
+    bn_trace = sample["bn_trace"]
+    pred_label = "task" if sample["y_pred"] == 1 else "rest"
+    prior = bn_trace.get("prior", {})
+    total_scores = bn_trace.get("total_scores", {})
+    summary_df = pd.DataFrame(
+        [
+            {"item": "Prior REST", "value": prior.get("rest", np.nan)},
+            {"item": "Prior TASK", "value": prior.get("task", np.nan)},
+            {"item": "Total score REST", "value": total_scores.get("rest", np.nan)},
+            {"item": "Total score TASK", "value": total_scores.get("task", np.nan)},
+            {"item": "Normalized posterior P(task)", "value": sample["posterior_task"]},
+            {"item": "Selected threshold", "value": sample["threshold"]},
+            {"item": "Final prediction", "value": pred_label},
+            {"item": "Evidence mode", "value": sample.get("evidence_mode", "unknown")},
+        ]
+    )
+    st.markdown("**BN score summary**")
+    st.dataframe(summary_df, use_container_width=True, hide_index=True)
+    if not bn_trace.get("trace_matches_batch", True):
+        st.warning(
+            "The live BN trace posterior differs from the stored batch posterior. "
+            "The displayed decision uses the stored batch result from the current experiment."
+        )
+
+
+def render_soft_evidence_trace_table(bn_trace: dict) -> None:
+    rows = []
+    for item in bn_trace.get("soft_evidence_trace", []):
+        row = {
+            "signal": item["signal"],
+            "ANFIS probability": round(float(item["anfis_probability"]), 4),
+            "likelihood rest": round(float(item["likelihood_rest"]), 6),
+            "likelihood task": round(float(item["likelihood_task"]), 6),
+            "dominant bin for interpretation only": item.get(
+                "dominant_bin_for_interpretation_only", ""
+            ),
+        }
+        for bin_name, value in item.get("bin_memberships", {}).items():
+            row[f"mu {bin_name}"] = round(float(value), 4)
+        for bin_name, value in item.get("cpt_rest", {}).items():
+            row[f"P({bin_name}|rest)"] = round(float(value), 4)
+        for bin_name, value in item.get("cpt_task", {}).items():
+            row[f"P({bin_name}|task)"] = round(float(value), 4)
+        rows.append(row)
+
+    if not rows:
+        return
+
+    st.markdown("**Soft evidence inference trace by signal**")
+    st.caption(
+        "The dominant bin is displayed for interpretation only; soft BN inference uses "
+        "the full membership vector and all CPT columns."
+    )
+    st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)

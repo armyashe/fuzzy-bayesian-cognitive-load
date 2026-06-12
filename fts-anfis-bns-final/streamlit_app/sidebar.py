@@ -2,8 +2,8 @@ from pathlib import Path
 
 import streamlit as st
 
-from fbn_pipeline.presets import EXPERIMENT_PRESETS
 from streamlit_app.services.streamlit_support import (
+    A2_SOFT_PRESET,
     RULE_COUNT_OPTIONS,
     get_group1_default_variant,
     get_group2_default_base_preset,
@@ -25,21 +25,16 @@ def render_sidebar(root: Path) -> None:
     with st.sidebar:
         st.header("Experiment")
 
-        base_preset_keys = [
-            key for key in EXPERIMENT_PRESETS.keys()
-            if not key.startswith(("EXP1_", "EXP2_", "EXP3_"))
-        ]
         default_base_preset = get_group2_default_base_preset()
-        default_base_idx = (
-            base_preset_keys.index(default_base_preset)
-            if default_base_preset in base_preset_keys
-            else 0
-        )
+        if default_base_preset != A2_SOFT_PRESET:
+            raise ValueError("Streamlit dashboard requires the A2_soft preset.")
 
-        base_preset_name = st.selectbox(
+        base_preset_name = A2_SOFT_PRESET
+        st.selectbox(
             "Preset / Base configuration",
-            base_preset_keys,
-            index=default_base_idx,
+            [A2_SOFT_PRESET],
+            index=0,
+            disabled=True,
         )
 
         group_key = st.selectbox(
@@ -92,16 +87,19 @@ def render_sidebar(root: Path) -> None:
 
         run_btn = st.button("Run / refresh experiment", use_container_width=True)
 
-    if run_btn:
-        selection = resolve_selection(
-            group_key=group_key,
-            variant_key=variant_key,
-            base_preset_name=base_preset_name,
-            n_rules_override=n_rules_override,
-        )
-        with st.spinner(f"Running {selection.run_name}..."):
-            st.session_state["results"] = run_streamlit_experiment(
-                project_root=root,
-                data_path=data_path,
-                selection=selection,
+        if run_btn:
+            previous_key = st.session_state.get("results", {}).get("cache_key")
+            selection = resolve_selection(
+                group_key=group_key,
+                variant_key=variant_key,
+                base_preset_name=base_preset_name,
+                n_rules_override=n_rules_override,
             )
+            if previous_key is not None:
+                st.session_state.pop("results", None)
+            with st.spinner(f"Running {selection.run_name}..."):
+                st.session_state["results"] = run_streamlit_experiment(
+                    project_root=root,
+                    data_path=data_path,
+                    selection=selection,
+                )

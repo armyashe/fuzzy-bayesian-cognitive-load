@@ -18,6 +18,7 @@ def extract_sample_stage_outputs(results: dict, sample_idx: int) -> dict:
     fts = models["fts"]
     bn = models["bn"]
     anfis_list = models["anfis_list"]
+    test_evidence = models.get("te_probs")
 
     raw_df = build_raw_df(x_sample)
 
@@ -45,6 +46,10 @@ def extract_sample_stage_outputs(results: dict, sample_idx: int) -> dict:
             {"feature": feature_names, "value": np.round(f_sig, 4)}
         )
 
+    canonical_probs = None
+    if test_evidence is not None and sample_idx < len(test_evidence):
+        canonical_probs = np.asarray(test_evidence[sample_idx], dtype=float)
+
     signal_prob_rows = []
     firing_tables = {}
     top_rule_tables = {}
@@ -60,9 +65,18 @@ def extract_sample_stage_outputs(results: dict, sample_idx: int) -> dict:
         prob_s = float(anfis.predict_proba(f_sig)[0])
         firing = anfis._normalised_firing(f_sig)[0]
         te_probs_manual.append(prob_s)
+        display_prob_s = (
+            float(canonical_probs[s])
+            if canonical_probs is not None and s < len(canonical_probs)
+            else prob_s
+        )
 
         signal_prob_rows.append(
-            {"signal": signal_name, "anfis_p_task": round(prob_s, 4)}
+            {
+                "signal": signal_name,
+                "anfis_p_task": round(display_prob_s, 4),
+                "raw_model_p_task": round(prob_s, 4),
+            }
         )
 
         firing_tables[signal_name] = pd.DataFrame(
@@ -89,9 +103,17 @@ def extract_sample_stage_outputs(results: dict, sample_idx: int) -> dict:
         top_rule_tables[signal_name] = pd.DataFrame(top_rows)
 
     te_probs_manual = np.array(te_probs_manual)
-    posterior_task = float(bn.predict_proba(te_probs_manual.reshape(1, -1))[0])
-    bn_trace = bn.explain_sample(te_probs_manual)
-    soft_df = compute_soft_membership_table(bn, te_probs_manual)
+    bn_input_probs = canonical_probs if canonical_probs is not None else te_probs_manual
+    posterior_from_bn = float(bn.predict_proba(bn_input_probs.reshape(1, -1))[0])
+    posterior_task = (
+        float(results["test_post"][sample_idx])
+        if "test_post" in results and sample_idx < len(results["test_post"])
+        else posterior_from_bn
+    )
+    bn_trace = bn.explain_sample(bn_input_probs)
+    bn_trace["batch_posterior_task"] = posterior_task
+    bn_trace["trace_matches_batch"] = bool(np.isclose(bn_trace["posterior_task"], posterior_task, atol=1e-8))
+    soft_df = compute_soft_membership_table(bn, bn_input_probs)
 
     return {
         "sample_idx": sample_idx,
@@ -100,10 +122,14 @@ def extract_sample_stage_outputs(results: dict, sample_idx: int) -> dict:
         "y_pred": y_pred,
         "threshold": float(results["best_thr"]),
         "posterior_task": posterior_task,
+        "posterior_from_bn": posterior_from_bn,
+        "evidence_mode": bn_trace.get("evidence_mode", bn_trace.get("mode", "hard")),
         "raw_df": raw_df,
         "transition_tables": transition_tables,
         "fts_feature_tables": fts_feature_tables,
         "signal_prob_df": pd.DataFrame(signal_prob_rows),
+        "bn_input_probs": bn_input_probs,
+        "manual_anfis_probs": te_probs_manual,
         "firing_tables": firing_tables,
         "top_rule_tables": top_rule_tables,
         "bn_trace": bn_trace,

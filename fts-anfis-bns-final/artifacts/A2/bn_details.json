@@ -149,6 +149,19 @@
   },
   "sample_inference_trace": {
     "mode": "hard",
+    "evidence_mode": "hard",
+    "prior": {
+      "rest": 0.5015797788309637,
+      "task": 0.49842022116903634
+    },
+    "log_scores": {
+      "rest": -8.270937734425491,
+      "task": -6.357845082407564
+    },
+    "total_scores": {
+      "rest": 0.14762313291674867,
+      "task": 1.0
+    },
     "evidence_bins": {
       "Temp": "low",
       "HR": "very_high",
