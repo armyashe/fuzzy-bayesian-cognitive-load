@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 # ============================================================
-# USER SETTINGS — edit here when running as a notebook / plain script.
+# USER SETTINGS - edit here when running as a notebook / plain script.
 # CLI arguments (--ablation, --preset, etc.) override these values.
 # ============================================================
 MODE = "single"                    # "single"
@@ -45,24 +45,9 @@ SRC_PATH = PROJECT_ROOT / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
-from fbn_pipeline import ExperimentConfig, apply_preset, setup_seed
+from fbn_pipeline import ABLATION_CHOICES, ExperimentConfig, apply_preset
 from fbn_pipeline.data import load_dataset
-from fbn_pipeline.metrics import (
-    find_best_threshold,
-    per_subject_metrics,
-    print_config,
-    print_metrics,
-    print_per_subject_table,
-)
-from fbn_pipeline.pipeline import compute_oof_metrics, retrain_and_test, run_cv
-from fbn_pipeline.reporting import (
-    dump_anfis_rules,
-    dump_bn_cpt,
-    dump_fts_transitions,
-    log_to_csv,
-    make_result_row,
-)
-from fbn_pipeline.bn_dashboard import export_bn_dashboard_artifacts
+from fbn_pipeline.runner import run_one_experiment
 
 
 # ============================================================
@@ -76,13 +61,13 @@ def _parse_args() -> argparse.Namespace:
     (unknown kernel args are silently ignored via parse_known_args).
     """
     parser = argparse.ArgumentParser(
-        description="FBN Pipeline — ablation experiment runner",
+        description="FBN Pipeline - ablation experiment runner",
         formatter_class=argparse.RawTextHelpFormatter,
     )
 
     parser.add_argument(
         "--ablation",
-        choices=["exp1", "exp2", "exp3", "exp4"],
+        choices=ABLATION_CHOICES,
         default=None,
         help=(
             "Ablation experiment to run:\n"
@@ -147,6 +132,15 @@ def _parse_args() -> argparse.Namespace:
         help="(exp3 only) How to summarise FTS features into per-signal evidence.",
     )
     parser.add_argument(
+        "--anfis-mf-type",
+        dest="anfis_mf_type",
+        choices=["gaussian", "gbell"],
+        default=None,
+        help="MF type for ANFIS premise layer. Overrides the FTS mf_type for ANFIS only.\n"
+             "  gaussian = standard Gaussian (default, same as before)\n"
+             "  gbell    = generalized bell 1/(1+|(x-c)/\u03c3|^{2b})",
+    )
+    parser.add_argument(
         "--no-stage1-feature-mode",
         dest="no_stage1_feature_mode",
         choices=["stats"],
@@ -192,9 +186,9 @@ def _parse_args() -> argparse.Namespace:
 
 def build_config(args: argparse.Namespace | None = None) -> ExperimentConfig:
     """
-    Build ExperimentConfig by merging preset → script constants → CLI args.
+    Build ExperimentConfig by merging preset -> script constants -> CLI args.
 
-    Priority (high → low): CLI args > script-level constants > preset > defaults.
+    Priority (high -> low): CLI args > script-level constants > preset > defaults.
     """
     # Resolve effective values from constants (may be overridden by args below)
     preset_name = PRESET_NAME
@@ -218,6 +212,8 @@ def build_config(args: argparse.Namespace | None = None) -> ExperimentConfig:
         if args.dump_rules:
             dump_rules = True
 
+    anfis_mf_type_override = getattr(args, "anfis_mf_type", None) if args is not None else None
+
     cfg = ExperimentConfig(data_path=DATA_FOLDER)
     cfg = apply_preset(cfg, preset_name)
 
@@ -230,6 +226,7 @@ def build_config(args: argparse.Namespace | None = None) -> ExperimentConfig:
         no_stage1_feature_mode=no_stage1_feature_mode,
         fts_summary_mode=fts_summary_mode,
         dump_rules=dump_rules,
+        **(({"anfis_mf_type": anfis_mf_type_override}) if anfis_mf_type_override else {}),
     )
     return cfg
 
@@ -266,14 +263,13 @@ def run_single(args: argparse.Namespace | None = None) -> dict[str, Any]:
     ablation_part = getattr(cfg, "ablation", None) or "main"
     run_name = f"{preset_part}_{ablation_part}"
     
-    # ---- để experiment hiển thị đúng luôn theo preset + ablation ----
+    # Keep the displayed experiment name aligned with preset + ablation.
     exp_name = run_name
 
-    # thư mục lưu toàn bộ artifact (rules JSON, BN graph, CPTs, etc.) cho dashboard
+    # Store all dashboard artifacts for this run.
     artifacts_dir = PROJECT_ROOT / "artifacts" / run_name
     artifacts_dir.mkdir(parents=True, exist_ok=True)
 
-    setup_seed(cfg.seed)
     data_path = PROJECT_ROOT / data_folder
     dataset = load_dataset(data_path)
 
@@ -298,109 +294,21 @@ def run_single(args: argparse.Namespace | None = None) -> dict[str, Any]:
         f"Test : X={dataset.X_test.shape}, y={dataset.y_test.shape}, "
         f"users={dataset.user_test.shape}  user_ids={test_uids}"
     )
-    print_config(cfg.to_dict())
-
-    print("\n[1/3] Running GroupKFold CV...")
-    oof_post, oof_y, fold_indices = run_cv(
-        dataset.X_train,
-        dataset.y_train,
-        dataset.user_train,
+    result = run_one_experiment(
         cfg,
-    )
-    best_thr, thr_score = find_best_threshold(
-        oof_y,
-        oof_post,
-        metric=cfg.threshold_metric,
-        n_grid=cfg.threshold_grid,
-    )
-    oof_metrics = compute_oof_metrics(oof_y, oof_post, best_thr)
-    oof_pred = (oof_post >= best_thr).astype(int)
-
-    print(f"Best threshold ({cfg.threshold_metric}) = {best_thr:.4f}")
-    print(f"Best threshold score                = {thr_score:.4f}")
-    print_metrics(oof_y, oof_pred, oof_post, title="OOF / Cross-Validation")
-
-    print("\n[2/3] Retraining on full training set and evaluating on test set...")
-    test_pred, test_post, test_metrics, models = retrain_and_test(
-        dataset.X_train,
-        dataset.y_train,
-        dataset.X_test,
-        dataset.y_test,
-        best_thr,
-        cfg,
-    )
-    print_metrics(dataset.y_test, test_pred, test_post, title="Held-out Test")
-
-    print("\n[3/3] Reporting...")
-    subject_rows = None
-    if show_per_subject:
-        subject_rows = per_subject_metrics(
-            dataset.y_test,
-            test_pred,
-            test_post,
-            dataset.user_test,
-        )
-        print_per_subject_table(subject_rows)
-
-    if cfg.dump_rules:
-        if models["anfis_list"] is not None:
-            dump_anfis_rules(
-                models["anfis_list"],
-                n_sets=cfg.n_sets,
-                top_k=cfg.n_sets * cfg.n_sets
-            )
-        if models["fts"] is not None:
-            dump_fts_transitions(models["fts"], dataset.X_train[0])
-        if models["bn"] is not None and len(dataset.y_test) > 0:
-            dump_bn_cpt(models["bn"], sample_probs=models["te_probs"][0])
-
-    # Export BN dashboard artifacts (graph, JSON, rules)
-    print("\n[4/4] Exporting BN dashboard artifacts...")
-    artifact_results = export_bn_dashboard_artifacts(
-        models=models,
-        cfg=cfg.to_dict(),
+        dataset,
         exp_name=exp_name,
-        best_threshold=best_thr,
-        test_metrics=test_metrics,
-        test_probs=models["te_probs"],
-        y_test=dataset.y_test,
-        user_test=dataset.user_test,
-        artifacts_dir=artifacts_dir.parent,  # avoid double-nesting: parent/exp_name/exp_name
+        preset_name=preset_name or "",
+        run_name=run_name,
+        csv_path=(PROJECT_ROOT / csv_path_str) if save_csv else None,
+        show_per_subject=show_per_subject,
+        dump_rules=cfg.dump_rules,
+        export_artifacts=True,
+        artifacts_dir=artifacts_dir.parent,
+        print_configuration=True,
+        print_progress=True,
     )
-
-    if save_csv:
-        csv_path = PROJECT_ROOT / csv_path_str
-        row = make_result_row(
-            cfg.to_dict(),
-            exp_name=exp_name,
-            best_thr=best_thr,
-            oof=oof_metrics,
-            test=test_metrics,
-            eval_protocol="subject-independent hold-out + GroupKFold OOF",
-            rank_metric=cfg.rank_metric,
-            thr_metric=cfg.threshold_metric,
-        )
-        log_to_csv(str(csv_path), row)
-        print(f"Saved CSV row to: {csv_path}")
-
-    print("\nDone.")
-    return {
-        "config": cfg,
-        "dataset": dataset,
-        "fold_indices": fold_indices,
-        "best_threshold": best_thr,
-        "oof_post": oof_post,
-        "oof_pred": oof_pred,
-        "oof_metrics": oof_metrics,
-        "test_post": test_post,
-        "test_pred": test_pred,
-        "test_metrics": test_metrics,
-        "subject_rows": subject_rows,
-        "models": models,
-        "artifact_dir": str(artifacts_dir),
-        "run_name": run_name,
-        "artifact_results": artifact_results,
-    }
+    return result.as_dict()
 
 
 
@@ -452,20 +360,44 @@ def explain_test_sample(i: int) -> dict[str, Any]:
     for sig, p in result["anfis_probs"].items():
         print(f"  {sig:<5s}: {p:.4f}")
 
-    print("\nBN evidence bins:")
-    for sig, b in trace["evidence_bins"].items():
-        print(f"  {sig:<5s}: {b}")
+    mode = trace.get("mode", "hard")
+    if mode == "soft":
+        print("\nDominant bins (visualization only - not actual soft evidence):")
+        for sig, b in trace.get("dominant_bins", trace.get("evidence_bins", {})).items():
+            print(f"  {sig:<5s}: {b}")
 
-    print("\nBN posterior from explain_sample:")
-    print(f"  P(task | evidence): {trace['posterior_task']:.4f}")
-    print(f"  P(rest | evidence): {trace['posterior_rest']:.4f}")
+        sm = trace.get("soft_memberships", {})
+        if sm:
+            print("\nSoft memberships:")
+            for sig, bins in sm.items():
+                parts = ", ".join(f"{k}={v:.4f}" for k, v in bins.items())
+                print(f"  {sig:<5s}: {parts}")
 
-    print("\nLog-likelihood contributions:")
-    for cls_id, contrib in trace["log_likelihoods"].items():
-        cls_name = "rest" if int(cls_id) == 0 else "task"
-        print(f"  Class = {cls_name}")
-        for sig, val in contrib.items():
-            print(f"    {sig:<5s}: {val:.4f}")
+        llr = trace.get("log_likelihood_ratio", {})
+        if llr:
+            print("\nLog-likelihood ratio task/rest (+ supports TASK, - supports REST):")
+            for sig, val in llr.items():
+                print(f"  {sig:<5s}: {val:+.4f}")
+
+        print("\nBN posterior from explain_sample (soft evidence):")
+        print(f"  P(task | soft evidence): {trace['posterior_task']:.4f}")
+        print(f"  P(rest | soft evidence): {trace['posterior_rest']:.4f}")
+
+    else:
+        print("\nBN evidence bins:")
+        for sig, b in trace["evidence_bins"].items():
+            print(f"  {sig:<5s}: {b}")
+
+        print("\nBN posterior from explain_sample:")
+        print(f"  P(task | evidence): {trace['posterior_task']:.4f}")
+        print(f"  P(rest | evidence): {trace['posterior_rest']:.4f}")
+
+        print("\nLog-likelihood contributions:")
+        for cls_id, contrib in trace["log_likelihoods"].items():
+            cls_name = "rest" if int(cls_id) == 0 else "task"
+            print(f"  Class = {cls_name}")
+            for sig, val in contrib.items():
+                print(f"    {sig:<5s}: {val:.4f}")
 
     return result
 
@@ -512,7 +444,8 @@ def print_bn_details() -> dict[str, Any]:
             "evidence_nodes": ["Temp", "HR", "GSR", "RR"],
             "n_bins": int(bn.n_bins),
             "bin_names": list(bn.bin_names_),
-            "soft_evidence": bool(bn.soft),
+            "soft_evidence": bool(getattr(bn, "soft", False)),
+            "structure_type": getattr(cfg, "bn_structure", "naive"),
         },
         "prior": {
             "rest": round(float(bn.prior_[0]), 4),

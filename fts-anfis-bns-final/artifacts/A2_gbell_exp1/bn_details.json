@@ -1,0 +1,217 @@
+{
+  "experiment": "A2_gbell_exp1",
+  "configuration": {
+    "seed": 42,
+    "k_folds": 5,
+    "data_path": "last_30s_segments",
+    "n_sets": 3,
+    "mf_type": "gbell",
+    "mf_sigma_scale": 0.4,
+    "gbell_b": 2.0,
+    "fts_norm": "row",
+    "anfis_mf_type": "gbell",
+    "n_rules": 6,
+    "sigma_scale": 1.3,
+    "ridge_lambda": 0.01,
+    "n_epochs": 50,
+    "lr": 0.003,
+    "n_bins": 5,
+    "alpha": 0.5,
+    "rank_metric": "auc",
+    "threshold_metric": "balanced_accuracy",
+    "threshold_grid": 181,
+    "composite_score": false,
+    "scale_fts": false,
+    "robust_fts": false,
+    "bn_soft": true,
+    "bn_reliability": false,
+    "calibrate": "none",
+    "dump_rules": true,
+    "save_csv": "results_main.csv",
+    "ablation": "exp1",
+    "fusion_mode_when_no_bn": "mean",
+    "no_stage1_feature_mode": "stats",
+    "fts_summary_mode": "diag_high"
+  },
+  "threshold": 0.515,
+  "test_metrics": {
+    "acc": 0.5803,
+    "bal_acc": 0.5777,
+    "macro_f1": 0.5669,
+    "f1": 0.6432,
+    "auc": 0.6377
+  },
+  "bn_structure": {
+    "root": "CL",
+    "root_states": [
+      "rest",
+      "task"
+    ],
+    "evidence_nodes": [
+      "Temp",
+      "HR",
+      "GSR",
+      "RR"
+    ],
+    "n_bins": 5,
+    "bin_names": [
+      "very_low",
+      "low",
+      "med",
+      "high",
+      "very_high"
+    ],
+    "bin_mids": {
+      "Temp": [
+        0.5578090814357188,
+        0.6211164912261714,
+        0.6219996403561052,
+        0.6239613616425376,
+        0.6443772911558221
+      ],
+      "HR": [
+        0.5459880071798598,
+        0.612864306518089,
+        0.6243772755999393,
+        0.6332456236369612,
+        0.695178824128309
+      ],
+      "GSR": [
+        0.5340452602694565,
+        0.619374317663549,
+        0.6228776576659865,
+        0.6255527436436323,
+        0.679660580002017
+      ],
+      "RR": [
+        0.5333050151327401,
+        0.6139689572688287,
+        0.6308975733325419,
+        0.6414730327155649,
+        0.6607695375684186
+      ]
+    },
+    "bin_sigmas": {
+      "Temp": 0.016840112767508027,
+      "HR": 0.026731607068847314,
+      "GSR": 0.0281460375188761,
+      "RR": 0.021274354411950958
+    }
+  },
+  "prior": {
+    "rest": 0.5015797788309637,
+    "task": 0.49842022116903634
+  },
+  "signal_weights": {
+    "Temp": 1.0,
+    "HR": 1.0,
+    "GSR": 1.0,
+    "RR": 1.0
+  },
+  "cpt_tables": {
+    "Temp": {
+      "rest": {
+        "very_low": 0.2081,
+        "low": 0.2081,
+        "med": 0.1894,
+        "high": 0.2113,
+        "very_high": 0.1831
+      },
+      "task": {
+        "very_low": 0.1937,
+        "low": 0.1906,
+        "med": 0.2094,
+        "high": 0.1874,
+        "very_high": 0.2189
+      }
+    },
+    "HR": {
+      "rest": {
+        "very_low": 0.2613,
+        "low": 0.2207,
+        "med": 0.2019,
+        "high": 0.1706,
+        "very_high": 0.1455
+      },
+      "task": {
+        "very_low": 0.1402,
+        "low": 0.178,
+        "med": 0.1969,
+        "high": 0.2283,
+        "very_high": 0.2567
+      }
+    },
+    "GSR": {
+      "rest": {
+        "very_low": 0.2551,
+        "low": 0.18,
+        "med": 0.1987,
+        "high": 0.1862,
+        "very_high": 0.18
+      },
+      "task": {
+        "very_low": 0.1465,
+        "low": 0.2189,
+        "med": 0.2,
+        "high": 0.2126,
+        "very_high": 0.222
+      }
+    },
+    "RR": {
+      "rest": {
+        "very_low": 0.2739,
+        "low": 0.2363,
+        "med": 0.23,
+        "high": 0.1424,
+        "very_high": 0.1174
+      },
+      "task": {
+        "very_low": 0.1276,
+        "low": 0.1622,
+        "med": 0.1685,
+        "high": 0.2567,
+        "very_high": 0.285
+      }
+    }
+  },
+  "sample_inference_trace": {
+    "evidence_bins": {
+      "Temp": "low",
+      "HR": "very_high",
+      "GSR": "very_high",
+      "RR": "very_high"
+    },
+    "posterior_task": 0.8278160362750506,
+    "posterior_rest": 0.17218396372494937,
+    "log_likelihoods": {
+      "0": {
+        "Temp": -1.5695553256753298,
+        "HR": -1.9273049605371821,
+        "GSR": -1.7149723254586327,
+        "RR": -2.142416339989224
+      },
+      "1": {
+        "Temp": -1.657834452771157,
+        "HR": -1.3598747976963588,
+        "GSR": -1.5048651080641686,
+        "RR": -1.2551279672760371
+      }
+    },
+    "signal_weights": {
+      "Temp": 1.0,
+      "HR": 1.0,
+      "GSR": 1.0,
+      "RR": 1.0
+    },
+    "sample_index": 0,
+    "user_id": "3caqi",
+    "anfis_probs": {
+      "Temp": 0.62072713,
+      "HR": 0.65779319,
+      "GSR": 0.64749307,
+      "RR": 0.64710951
+    },
+    "final_posterior_task": 0.65134184,
+    "final_posterior_rest": 0.34865816
+  }
+}
