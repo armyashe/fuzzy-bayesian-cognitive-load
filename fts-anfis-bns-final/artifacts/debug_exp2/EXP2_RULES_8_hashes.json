@@ -22,11 +22,11 @@
       "theta": "8c29f546a58d38c85cc34b3ad86a5f194861b9bf0780736cb0798b9304d63b93"
     },
     {
-      "centers": "aaea3d91f3128481750db401c2822ffef8a7ae2fab2eafb4e4065f8f3ec2c2da",
+      "centers": "88bc0d1d9d38b18df30569a7cf1e9a3cd683cd8c3094d6e3732e1feefd2f3383",
       "random_state": 45,
-      "sigmas": "7ec247bc5ad23e7dc88f7fe89f994bd49fde98a81bd491660dbfbb1f7dbaf4f5",
+      "sigmas": "e3787c61c8866a90540659981f036848f14b7615d3e6ffd5dfd6d4c4576e7334",
       "signal_index": 3,
-      "theta": "abc7bfb89dd14891e58935c8a36f427d3a7068837ae6ea3712ae787b8f7f707f"
+      "theta": "c1d0a7ec1c647ce6283a930d38f73e3250592fa7dcc317ec4a713f72799a6410"
     }
   ],
   "anfis_random_states": [
@@ -35,13 +35,13 @@
     44,
     45
   ],
-  "bn_cpt": "09995c95be63e1452bc16bc7c57e70ec9cce2cdd886657f2604beecbd705c4e2",
+  "bn_cpt": "cf211daee9535aed2b05d92202620eed713b7645de5762e25ce527c0b9a110e6",
   "debug_npz": "artifacts\\debug_exp2\\EXP2_RULES_8_debug.npz",
-  "final_posterior": "20eaded500073dfddfebc656cf038557242e67958a6e5f93ea2b91e0b7af4182",
+  "final_posterior": "e6f1496f8693f0de398d173f6ed75dd6dd85f17dc84ee956dc0d2623c9fcf8ce",
   "final_seed_offset": 0,
   "fts_test_features": "f2f4294f5d26a494166c18f7324ba399257d5ba0ba644629f6aa39e4070d4e0a",
   "fts_train_features": "3a555a47489d5995dccc43b8f6d864610bdcb061b76898e40603d1bdb03ca433",
-  "test_signal_probs": "0134475c31bceeb65bcf2a6607729f09427c91341d483bd07587cccf8e9ee809",
-  "train_signal_probs": "ce9d7de6a3a40a6b6fbee85af2a1c89b866c128bbc2b541c4cfb0edb9f1e0c35",
+  "test_signal_probs": "9581d9c2044a4f50f38730a5e23b0b09344abc3da6db3435a661abb954b5aae1",
+  "train_signal_probs": "33700af169c9baca2d67c07f14586a4737e1a1fede67b3c363a5724746bff499",
   "variant": "EXP2_RULES_8"
 }

@@ -40,6 +40,12 @@ CSV_COLUMNS = [
     "test_accuracy", "test_precision", "test_recall", "test_f1", "test_auc",
     # --- Held-out test metrics (legacy) ---
     "test_acc", "test_bal_acc", "test_macro_f1",
+    # --- Report provenance and preserved recomputed metrics ---
+    "result_source",
+    "computed_test_acc", "computed_test_bal_acc", "computed_test_precision",
+    "computed_test_recall", "computed_test_f1", "computed_test_auc",
+    "reference_test_acc", "reference_test_bal_acc", "reference_test_precision",
+    "reference_test_recall", "reference_test_f1", "reference_test_auc",
 ]
 
 
@@ -59,6 +65,9 @@ def make_result_row(
     *,
     oof: dict[str, Any] | None = None,
     test: dict[str, Any] | None = None,
+    computed_test: dict[str, Any] | None = None,
+    reference_test: dict[str, Any] | None = None,
+    result_source: str = "computed",
     eval_protocol: str = "",
     rank_metric: str = "",
     thr_metric: str = "",
@@ -66,6 +75,8 @@ def make_result_row(
 ) -> dict[str, Any]:
     oof = oof or {}
     test = test or {}
+    computed_test = computed_test or test
+    reference_test = reference_test or {}
     variant = cfg.get("variant_name", "") or exp_name
     grp = cfg.get("experiment_group", "")
     return {
@@ -138,5 +149,19 @@ def make_result_row(
         "test_acc": test.get("acc", test.get("accuracy", "")),
         "test_bal_acc": test.get("bal_acc", ""),
         "test_macro_f1": test.get("macro_f1", ""),
+        # provenance and preserved recomputed metrics
+        "result_source": result_source,
+        "computed_test_acc": computed_test.get("acc", computed_test.get("accuracy", "")),
+        "computed_test_bal_acc": computed_test.get("bal_acc", ""),
+        "computed_test_precision": computed_test.get("precision", ""),
+        "computed_test_recall": computed_test.get("recall", ""),
+        "computed_test_f1": computed_test.get("f1", ""),
+        "computed_test_auc": computed_test.get("auc", ""),
+        "reference_test_acc": reference_test.get("acc", reference_test.get("accuracy", "")),
+        "reference_test_bal_acc": reference_test.get("bal_acc", ""),
+        "reference_test_precision": reference_test.get("precision", ""),
+        "reference_test_recall": reference_test.get("recall", ""),
+        "reference_test_f1": reference_test.get("f1", ""),
+        "reference_test_auc": reference_test.get("auc", ""),
     }
 

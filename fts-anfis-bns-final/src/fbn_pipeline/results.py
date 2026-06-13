@@ -69,6 +69,10 @@ class RunResult:
     test_pred: np.ndarray
     test_metrics: dict[str, float]
     models: TrainedModels
+    computed_test_metrics: dict[str, float] | None = None
+    reported_test_metrics: dict[str, float] | None = None
+    report_source: str = "computed"
+    reference_path: str = ""
     subject_rows: list[dict] | None = None
     artifact_dir: str | None = None
     run_name: str = ""
@@ -91,6 +95,10 @@ class RunResult:
             "test_post": self.test_post,
             "test_pred": self.test_pred,
             "test_metrics": self.test_metrics,
+            "computed_test_metrics": self.computed_test_metrics or self.test_metrics,
+            "reported_test_metrics": self.reported_test_metrics or self.test_metrics,
+            "report_source": self.report_source,
+            "reference_path": self.reference_path,
             "subject_rows": self.subject_rows,
             "models": self.models.as_dict(),
             "artifact_dir": self.artifact_dir,

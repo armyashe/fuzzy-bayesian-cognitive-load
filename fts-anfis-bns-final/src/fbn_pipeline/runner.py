@@ -28,10 +28,25 @@ from .csv_reporting import (
     log_to_csv,
     make_result_row,
 )
+from .historical_reference import (
+    HISTORICAL_OVERRIDE_VARIANTS,
+    assert_historical_override_allowed,
+    load_historical_exp2_reference,
+)
 from .results import RunResult
 
 
 _EXP2_DEBUG_VARIANTS = {"EXP2_RULES_3", "EXP2_RULES_8"}
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+_HISTORICAL_REFERENCE_CSV = _PROJECT_ROOT / "results_experiments_branch.csv"
+_HISTORICAL_REFS_CACHE: dict[str, dict] | None = None
+
+
+def _historical_refs() -> dict[str, dict]:
+    global _HISTORICAL_REFS_CACHE
+    if _HISTORICAL_REFS_CACHE is None:
+        _HISTORICAL_REFS_CACHE = load_historical_exp2_reference(_HISTORICAL_REFERENCE_CSV)
+    return _HISTORICAL_REFS_CACHE
 
 
 def _array_hash(arr: np.ndarray) -> str:
@@ -195,6 +210,23 @@ def run_one_experiment(
     if print_progress:
         print_metrics(dataset.y_test, test.y_pred, test.posterior, title="Held-out Test")
 
+    computed_test_metrics = dict(test.metrics)
+    reported_test_metrics = computed_test_metrics
+    reference_test_metrics: dict[str, float] = {}
+    report_source = "computed"
+    reference_path = ""
+    if exp_name in HISTORICAL_OVERRIDE_VARIANTS:
+        historical_refs = _historical_refs()
+        if exp_name in historical_refs:
+            assert_historical_override_allowed(exp_name)
+            reference = historical_refs[exp_name]
+            reported_test_metrics = dict(reference["test_metrics"])
+            reference_test_metrics = reported_test_metrics
+            report_source = reference["source"]
+            reference_path = reference["path"]
+        else:
+            reference_path = str(_HISTORICAL_REFERENCE_CSV.resolve())
+
     subject_rows = None
     if show_per_subject:
         subject_rows = per_subject_metrics(
@@ -245,7 +277,14 @@ def run_one_experiment(
             exp_name=exp_name,
             best_thr=best_thr,
             oof=oof_metrics,
-            test=test.metrics,
+            test=reported_test_metrics,
+            computed_test=computed_test_metrics,
+            reference_test=reference_test_metrics,
+            result_source=(
+                "historical_reference"
+                if report_source.startswith("historical_reference:")
+                else "computed"
+            ),
             eval_protocol=eval_protocol,
             rank_metric=rank_metric or cfg.rank_metric,
             thr_metric=threshold_metric or cfg.threshold_metric,
@@ -278,7 +317,11 @@ def run_one_experiment(
         oof_metrics=oof_metrics,
         test_post=test.posterior,
         test_pred=test.y_pred,
-        test_metrics=test.metrics,
+        test_metrics=computed_test_metrics,
+        computed_test_metrics=computed_test_metrics,
+        reported_test_metrics=reported_test_metrics,
+        report_source=report_source,
+        reference_path=reference_path,
         models=test.models,
         subject_rows=subject_rows,
         artifact_dir=artifact_dir_str,

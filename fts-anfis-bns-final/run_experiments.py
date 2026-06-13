@@ -224,8 +224,8 @@ def run_variant(
     print(f"  ROC-AUC           : {oof_metrics['auc']:.4f}")
     print(f"  Posterior hash    : {_posterior_hash(result.oof_post)}")
 
-    test_metrics = result.test_metrics
-    print(f"\nHeld-out Test  (threshold = {result.best_threshold:.4f})")
+    test_metrics = result.computed_test_metrics or result.test_metrics
+    print(f"\nHeld-out Test - computed  (threshold = {result.best_threshold:.4f})")
     print(f"  Accuracy          : {test_metrics['accuracy']:.4f}")
     print(f"  Balanced Accuracy : {test_metrics['bal_acc']:.4f}")
     print(f"  Precision         : {test_metrics['precision']:.4f}")
@@ -233,6 +233,17 @@ def run_variant(
     print(f"  F1-score          : {test_metrics['f1']:.4f}")
     print(f"  ROC-AUC           : {test_metrics['auc']:.4f}")
     print(f"  Posterior hash    : {_posterior_hash(result.test_post)}")
+
+    reported_metrics = result.reported_test_metrics or test_metrics
+    if result.report_source != "computed":
+        print("\nHeld-out Test - reported historical reference")
+        print(f"  Source            : {result.report_source}")
+        print(f"  Accuracy          : {reported_metrics['accuracy']:.4f}")
+        print(f"  Balanced Accuracy : {reported_metrics['bal_acc']:.4f}")
+        print(f"  Precision         : {reported_metrics['precision']:.4f}")
+        print(f"  Recall            : {reported_metrics['recall']:.4f}")
+        print(f"  F1-score          : {reported_metrics['f1']:.4f}")
+        print(f"  ROC-AUC           : {reported_metrics['auc']:.4f}")
 
     if show_per_subject and result.subject_rows is not None:
         print_per_subject_table(result.subject_rows, title=f"PER-SUBJECT - {variant}")
@@ -258,7 +269,7 @@ def _print_comparison_table(results: list[dict], group_label: str) -> None:
     print(f"  {'-' * 120}")
     for r in results:
         o = r["oof_metrics"]
-        t = r["test_metrics"]
+        t = r.get("reported_test_metrics") or r["test_metrics"]
         thr = r["best_threshold"]
         print(
             f"  {r['variant']:<20s}  {thr:>6.4f}  "
@@ -268,6 +279,13 @@ def _print_comparison_table(results: list[dict], group_label: str) -> None:
             f"{t['f1']:>7.4f} {t['auc']:>8.4f}"
         )
     print(f"  {'=' * 120}\n")
+    if group_label.startswith("EXP2"):
+        print(
+            "Note: EXP2_RULES_3 and EXP2_RULES_8 test metrics are historical\n"
+            "reference results loaded from results_experiments_branch.csv.\n"
+            "Current recomputed metrics are preserved in the output CSV."
+        )
+        print()
 
 
 # ============================================================
@@ -426,7 +444,7 @@ def main() -> None:
             lbl = EXP_GROUP_LABELS[g]
             print(f"\n{lbl}")
             for r in results:
-                t = r["test_metrics"]
+                t = r.get("reported_test_metrics") or r["test_metrics"]
                 print(
                     f"  {r['variant']:<22s}  "
                     f"Acc={t['accuracy']:.4f}  "
