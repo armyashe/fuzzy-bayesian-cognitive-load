@@ -38,10 +38,20 @@ The test set is NEVER used for:
 """
 from __future__ import annotations
 
+import os
+
+os.environ.setdefault("PYTHONHASHSEED", "42")
 import argparse
+import hashlib
+import random
 import sys
 from pathlib import Path
 from typing import Any
+
+import numpy as np
+
+random.seed(42)
+np.random.seed(42)
 
 # ============================================================
 # USER SETTINGS - edit EXPERIMENT_GROUP to choose which group to run.
@@ -82,6 +92,11 @@ from fbn_pipeline.data import load_dataset
 from fbn_pipeline.metrics import print_per_subject_table
 from fbn_pipeline.runner import run_one_experiment
 
+
+def _posterior_hash(values: np.ndarray) -> str:
+    arr = np.ascontiguousarray(values, dtype=np.float64)
+    return hashlib.sha256(arr.tobytes()).hexdigest()[:16]
+
 # ============================================================
 # Experiment group -> ordered list of preset names
 # ============================================================
@@ -115,8 +130,8 @@ EXP_GROUP_LABELS: dict[str, str] = {
 
 # Short pipeline description for each EXP3 variant
 _EXP3_PIPELINE_DESC: dict[str, str] = {
-    "EXP3_FULL":      "FTS({mf_type}) -> ANFIS({n_rules} rules) -> Naive BN(soft evidence)",
-    "EXP3_NO_BN":     "FTS({mf_type}) -> ANFIS({n_rules} rules) -> Mean Fusion (no BN)",
+    "EXP3_FULL":      "FTS({mf_type}) -> ANFIS({anfis_mf_type}, {n_rules} rules) -> Naive BN(soft evidence)",
+    "EXP3_NO_BN":     "FTS({mf_type}) -> ANFIS({anfis_mf_type}, {n_rules} rules) -> Mean Fusion (no BN)",
     "EXP3_NO_ANFIS":  "FTS({mf_type}) summary({fts_summary}) -> Naive BN(soft evidence)",
 }
 
@@ -147,12 +162,16 @@ def run_variant(
 
     Returns a results dict identical to main.py's run_single output.
     """
+    random.seed(42)
+    np.random.seed(42)
+
     cfg = ExperimentConfig(data_path=DATA_FOLDER)
     cfg = apply_preset(cfg, preset_name)
 
     # Derive pipeline description for the banner
     variant = cfg.variant_name or preset_name
     mf_type = cfg.mf_type
+    anfis_mf_type = cfg.anfis_mf_type
     n_rules = cfg.n_rules
     bn_soft_label = "soft evidence" if cfg.bn_soft else "hard evidence"
     bn_structure = cfg.bn_structure
@@ -160,17 +179,18 @@ def run_variant(
     if preset_name.startswith("EXP3"):
         template = _EXP3_PIPELINE_DESC.get(
             preset_name,
-            "FTS({mf_type}) -> ANFIS({n_rules} rules) -> {bn_structure} BN({bn_soft})",
+            "FTS({mf_type}) -> ANFIS({anfis_mf_type}, {n_rules} rules) -> {bn_structure} BN({bn_soft})",
         )
         pipeline_desc = template.format(
             mf_type=mf_type,
+            anfis_mf_type=anfis_mf_type,
             n_rules=n_rules,
             fts_summary=cfg.fts_summary_mode,
             bn_soft=bn_soft_label,
         )
     else:
         pipeline_desc = (
-            f"FTS({mf_type}) -> ANFIS({n_rules} rules) -> "
+            f"FTS({mf_type}) -> ANFIS({anfis_mf_type}, {n_rules} rules) -> "
             f"{bn_structure.capitalize()} BN({bn_soft_label})"
         )
 
@@ -202,6 +222,7 @@ def run_variant(
     print(f"  Recall            : {oof_metrics['recall']:.4f}")
     print(f"  F1-score          : {oof_metrics['f1']:.4f}")
     print(f"  ROC-AUC           : {oof_metrics['auc']:.4f}")
+    print(f"  Posterior hash    : {_posterior_hash(result.oof_post)}")
 
     test_metrics = result.test_metrics
     print(f"\nHeld-out Test  (threshold = {result.best_threshold:.4f})")
@@ -211,6 +232,7 @@ def run_variant(
     print(f"  Recall            : {test_metrics['recall']:.4f}")
     print(f"  F1-score          : {test_metrics['f1']:.4f}")
     print(f"  ROC-AUC           : {test_metrics['auc']:.4f}")
+    print(f"  Posterior hash    : {_posterior_hash(result.test_post)}")
 
     if show_per_subject and result.subject_rows is not None:
         print_per_subject_table(result.subject_rows, title=f"PER-SUBJECT - {variant}")
@@ -340,6 +362,9 @@ def _parse_args() -> argparse.Namespace:
 # ============================================================
 
 def main() -> None:
+    random.seed(42)
+    np.random.seed(42)
+
     args = _parse_args()
 
     # Resolve settings: CLI > script constants
@@ -351,6 +376,8 @@ def main() -> None:
     dump_rules = args.dump_rules or DUMP_RULES
 
     csv_path = (PROJECT_ROOT / csv_path_str) if save_csv else None
+    if csv_path is not None and csv_path.exists():
+        csv_path.unlink()
 
     print("=" * 72)
     print("FBN PIPELINE - EXPERIMENT RUNNER")
@@ -366,9 +393,8 @@ def main() -> None:
     data_path = PROJECT_ROOT / data_folder
     dataset = load_dataset(data_path)
 
-    import numpy as _np
-    train_uids = sorted(_np.unique(dataset.user_train).tolist())
-    test_uids  = sorted(_np.unique(dataset.user_test).tolist())
+    train_uids = sorted(np.unique(dataset.user_train).tolist())
+    test_uids  = sorted(np.unique(dataset.user_test).tolist())
     print(
         f"Train: X={dataset.X_train.shape}, y={dataset.y_train.shape}  "
         f"subjects={train_uids}"

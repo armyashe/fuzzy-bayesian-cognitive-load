@@ -16,6 +16,7 @@ class TrainedModels:
     bn: Any | None
     anfis_list: list[Any] | None
     test_evidence: np.ndarray
+    train_evidence: np.ndarray | None = None
 
     def as_dict(self) -> dict[str, Any]:
         """Return the legacy model dict shape used by dashboard/reporting code."""
@@ -24,6 +25,7 @@ class TrainedModels:
             "bn": self.bn,
             "anfis_list": self.anfis_list,
             "te_probs": self.test_evidence,
+            "tr_probs": self.train_evidence,
         }
 
 

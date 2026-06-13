@@ -76,6 +76,9 @@ class ANFIS_TSK:
             n_clusters=actual_rules,
             random_state=self.random_state,
             n_init=10,
+            algorithm="lloyd",
+            max_iter=300,
+            tol=1e-4,
         )
         km.fit(X)
         self.centers_ = km.cluster_centers_.copy()  # (R, d)
@@ -119,7 +122,8 @@ class ANFIS_TSK:
         if self.mf_type == "gaussian":
             log_mu = -0.5 * (diff / sig) ** 2                        # L1 Gaussian
         else:  # gbell
-            u_b = ((diff / sig) ** 2) ** self.gbell_b                # |d/sigma|^{2b}
+            ratio = np.abs(diff / sig)
+            u_b = ratio ** (2.0 * self.gbell_b)                     # |d/sigma|^{2b}
             log_mu = -np.log1p(u_b)                                  # L1 Gbell
 
         log_w = log_mu.sum(axis=2)                                    # L2
@@ -222,7 +226,8 @@ class ANFIS_TSK:
             else:  # gbell
                 # d(log mu)/dc = 2b(1-mu)/d,   d(log mu)/dsigma = 2b(1-mu)/sigma
                 # where mu = 1/(1+|d/sigma|^{2b}),  1-mu = |d/sigma|^{2b}/(1+|d/sigma|^{2b})
-                u_b   = ((diff / sig) ** 2) ** self.gbell_b              # (N,R,d)
+                ratio = np.abs(diff / sig)
+                u_b   = ratio ** (2.0 * self.gbell_b)                   # (N,R,d)
                 one_m = u_b / (1.0 + u_b)                               # 1 - mu per dim
                 fac   = 2.0 * self.gbell_b * one_m                      # 2b(1-mu)
                 # Safe division by diff: limit is 0 when diff->0

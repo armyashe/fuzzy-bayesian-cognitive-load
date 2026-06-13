@@ -27,6 +27,9 @@ def extract_features_for_ablation(
             gbell_b=cfg.gbell_b,
             norm_mode=cfg.fts_norm,
             robust=cfg.robust_fts,
+            trap_plateau_scale=cfg.trap_plateau_scale,
+            trap_width_scale=cfg.trap_width_scale,
+            grid_margin_scale=cfg.grid_margin_scale,
         )
         F_train = fts.fit_transform(X_train)
         F_valid = fts.transform(X_valid)

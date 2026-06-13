@@ -17,12 +17,16 @@ class ExperimentConfig:
     mf_sigma_scale: float = 0.5
     gbell_b: float = 2.0
     fts_norm: str = "total_sum"
+    trap_plateau_scale: float = 0.15
+    trap_width_scale: float = 1.0
+    grid_margin_scale: float = 0.05
 
     # MF type for ANFIS premise layer (Stage 2).
     # This is intentionally separate from mf_type, which belongs to the
     # FTS encoder and may be triangular / gaussian / trapezoid / gbell.
     # ANFIS_TSK currently supports only gaussian or gbell premise MFs.
     anfis_mf_type: str = "gaussian"
+    anfis_gbell_b: float = 2.0
 
     n_rules: int = 8
     sigma_scale: float = 1.5
@@ -43,6 +47,7 @@ class ExperimentConfig:
     bn_soft: bool = False
     bn_reliability: bool = False
     calibrate: str = "none"
+    final_seed_offset: int = 0
 
     dump_rules: bool = False
     save_csv: str = "results_main.csv"
@@ -100,10 +105,41 @@ class ExperimentConfig:
 
 
 def setup_seed(seed: int) -> None:
+    import random
+
     import numpy as np
 
+    random.seed(seed)
     np.random.seed(seed)
     os.environ["PYTHONHASHSEED"] = str(seed)
+
+
+THESIS_CONFIG_EXPECTED = {
+    "bn_soft": True,
+    "anfis_mf_type": "gaussian",
+    "anfis_gbell_b": 2.0,
+    "mf_type": "gaussian",
+    "n_rules": 6,
+    "n_bins": 5,
+    "alpha": 0.5,
+    "calibrate": "none",
+    "bn_reliability": False,
+    "scale_fts": False,
+    "robust_fts": False,
+}
+
+
+def assert_thesis_config(cfg: ExperimentConfig) -> None:
+    """Fail fast if the locked thesis run drifts from the published config."""
+    mismatches: list[str] = []
+    for key, expected in THESIS_CONFIG_EXPECTED.items():
+        actual = getattr(cfg, key)
+        if actual != expected:
+            mismatches.append(f"{key}={actual!r} (expected {expected!r})")
+
+    if mismatches:
+        joined = "; ".join(mismatches)
+        raise ValueError(f"THESIS_FINAL configuration mismatch: {joined}")
 
 
 from .presets import EXPERIMENT_PRESETS, apply_preset  # noqa: E402

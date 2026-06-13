@@ -11,8 +11,10 @@ CSV_COLUMNS = [
     "eval_protocol",
     "ablation", "seed", "k_folds",
     # --- FTS / Stage 1 ---
-    "n_sets", "mf_type", "mf_sigma_scale", "gbell_b", "fts_norm",
+    "n_sets", "mf_type", "fts_mf_type", "mf_sigma_scale", "gbell_b", "fts_norm",
+    "trap_plateau_scale", "trap_width_scale", "grid_margin_scale",
     # --- ANFIS / Stage 2 ---
+    "anfis_mf_type", "anfis_gbell_b",
     "n_rules",
     "sigma_scale",       # required name
     "anfis_sigma_scale", # legacy alias
@@ -23,6 +25,7 @@ CSV_COLUMNS = [
     "scale_fts", "robust_fts",
     # --- Ablation metadata ---
     "fusion_mode_when_no_bn", "no_stage1_feature_mode", "fts_summary_mode",
+    "final_seed_offset",
     # --- Threshold selection ---
     "threshold_metric",  # required name
     "thr_metric",        # legacy alias
@@ -78,10 +81,16 @@ def make_result_row(
         # FTS
         "n_sets": cfg["n_sets"],
         "mf_type": cfg["mf_type"],
+        "fts_mf_type": cfg["mf_type"],
         "mf_sigma_scale": cfg["mf_sigma_scale"],
         "gbell_b": cfg["gbell_b"],
         "fts_norm": cfg["fts_norm"],
+        "trap_plateau_scale": cfg.get("trap_plateau_scale", 0.15),
+        "trap_width_scale": cfg.get("trap_width_scale", 1.0),
+        "grid_margin_scale": cfg.get("grid_margin_scale", 0.05),
         # ANFIS
+        "anfis_mf_type": cfg.get("anfis_mf_type", "gaussian"),
+        "anfis_gbell_b": cfg.get("anfis_gbell_b", 2.0),
         "n_rules": cfg["n_rules"],
         "sigma_scale": cfg["sigma_scale"],
         "anfis_sigma_scale": cfg["sigma_scale"],  # legacy alias
@@ -102,6 +111,7 @@ def make_result_row(
         "fusion_mode_when_no_bn": cfg.get("fusion_mode_when_no_bn", "mean"),
         "no_stage1_feature_mode": cfg.get("no_stage1_feature_mode", "stats"),
         "fts_summary_mode": cfg.get("fts_summary_mode", "diag_high"),
+        "final_seed_offset": cfg.get("final_seed_offset", 0),
         # threshold
         "threshold_metric": thr_metric,
         "thr_metric": thr_metric,

@@ -14,7 +14,8 @@ from fbn_pipeline.presets import EXPERIMENT_PRESETS, apply_preset
 from fbn_pipeline.runner import run_one_experiment
 
 
-A2_SOFT_PRESET = "A2_soft"
+THESIS_FINAL_PRESET = "THESIS_FINAL"
+A2_SOFT_PRESET = THESIS_FINAL_PRESET
 
 
 @dataclass(frozen=True, slots=True)
@@ -59,7 +60,7 @@ GROUP_OPTIONS: tuple[ExperimentOption, ...] = (
 
 GROUP1_VARIANTS: tuple[ExperimentOption, ...] = (
     ExperimentOption("EXP1_MF_TRI", "Triangular FTS MF"),
-    ExperimentOption("EXP1_MF_GAUSS", "Gaussian FTS MF (A2_soft baseline)"),
+    ExperimentOption("EXP1_MF_GAUSS", "Gaussian FTS MF (THESIS_FINAL baseline)"),
     ExperimentOption("EXP1_MF_TRAP", "Trapezoid FTS MF"),
     ExperimentOption("EXP1_MF_GBELL", "Generalized bell FTS MF"),
 )
@@ -89,7 +90,7 @@ STREAMLIT_EXPERIMENT_MAP: dict[str, tuple[str, ...]] = {
 
 def get_a2_soft_config(data_path: str = "last_30s_segments") -> ExperimentConfig:
     if A2_SOFT_PRESET not in EXPERIMENT_PRESETS:
-        raise ValueError("Required preset A2_soft is not defined in EXPERIMENT_PRESETS.")
+        raise ValueError(f"Required preset {A2_SOFT_PRESET} is not defined in EXPERIMENT_PRESETS.")
     return apply_preset(ExperimentConfig(data_path=data_path), A2_SOFT_PRESET)
 
 

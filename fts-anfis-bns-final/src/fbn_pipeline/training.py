@@ -72,7 +72,7 @@ def fit_signal_models(
             lr=cfg.lr,
             random_state=cfg.seed + seed_offset + s,
             mf_type=cfg.anfis_mf_type,
-            gbell_b=cfg.gbell_b,
+            gbell_b=cfg.anfis_gbell_b,
         )
         model.fit(F_train[:, col_s:col_e], y_train)
         train_probs[:, s] = model.predict_proba(F_train[:, col_s:col_e])

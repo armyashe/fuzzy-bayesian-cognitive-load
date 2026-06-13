@@ -27,7 +27,7 @@ def render_sidebar(root: Path) -> None:
 
         default_base_preset = get_group2_default_base_preset()
         if default_base_preset != A2_SOFT_PRESET:
-            raise ValueError("Streamlit dashboard requires the A2_soft preset.")
+            raise ValueError(f"Streamlit dashboard requires the {A2_SOFT_PRESET} preset.")
 
         base_preset_name = A2_SOFT_PRESET
         st.selectbox(

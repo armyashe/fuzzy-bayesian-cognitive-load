@@ -1,11 +1,45 @@
 from __future__ import annotations
 
 
+THESIS_FINAL_PRESET: dict = {
+    "seed": 42,
+    "k_folds": 5,
+    "n_sets": 3,
+    "mf_type": "gaussian",
+    "mf_sigma_scale": 0.4,
+    "gbell_b": 2.0,
+    "fts_norm": "row",
+    "trap_plateau_scale": 0.15,
+    "trap_width_scale": 1.0,
+    "grid_margin_scale": 0.05,
+    "anfis_mf_type": "gaussian",
+    "anfis_gbell_b": 2.0,
+    "n_rules": 6,
+    "sigma_scale": 1.3,
+    "ridge_lambda": 0.01,
+    "n_epochs": 50,
+    "lr": 0.003,
+    "n_bins": 5,
+    "alpha": 0.5,
+    "scale_fts": False,
+    "robust_fts": False,
+    "bn_soft": True,
+    "bn_reliability": False,
+    "calibrate": "none",
+    "threshold_metric": "balanced_accuracy",
+    "threshold_grid": 181,
+}
+
+
 EXPERIMENT_PRESETS: dict[str, dict] = {
+    "THESIS_FINAL": {
+        **THESIS_FINAL_PRESET,
+    },
     "A1": {
         "n_sets": 3, "mf_type": "triangular", "mf_sigma_scale": 0.5,
         "anfis_mf_type": "gaussian",
         "gbell_b": 2.0, "fts_norm": "total_sum",
+        "anfis_gbell_b": 2.0,
         "n_rules": 8, "sigma_scale": 1.5, "ridge_lambda": 0.1,
         "n_epochs": 15, "lr": 0.001,
         "n_bins": 3, "alpha": 1.0, "k_folds": 5,
@@ -13,6 +47,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
     "A2": {
         "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
         "gbell_b": 2.0, "fts_norm": "row",
+        "anfis_mf_type": "gaussian", "anfis_gbell_b": 2.0,
         "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
         "n_epochs": 50, "lr": 0.003,
         "n_bins": 5, "alpha": 0.5, "k_folds": 5,
@@ -21,6 +56,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
         "n_sets": 5, "mf_type": "trapezoid", "mf_sigma_scale": 0.5,
         "anfis_mf_type": "gaussian",
         "gbell_b": 2.0, "fts_norm": "row",
+        "anfis_gbell_b": 2.0,
         "n_rules": 12, "sigma_scale": 1.0, "ridge_lambda": 0.0,
         "n_epochs": 50, "lr": 0.001,
         "n_bins": 5, "alpha": 0.5, "k_folds": 5,
@@ -29,6 +65,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
         "n_sets": 3, "mf_type": "gbell", "mf_sigma_scale": 0.8,
         "anfis_mf_type": "gbell",
         "gbell_b": 3.0, "fts_norm": "total_sum",
+        "anfis_gbell_b": 3.0,
         "n_rules": 6, "sigma_scale": 0.8, "ridge_lambda": 0.1,
         "n_epochs": 10, "lr": 0.005,
         "n_bins": 3, "alpha": 2.0, "k_folds": 5,
@@ -36,6 +73,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
     "A5": {
         "n_sets": 4, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
         "gbell_b": 2.0, "fts_norm": "row",
+        "anfis_mf_type": "gaussian", "anfis_gbell_b": 2.0,
         "n_rules": 8, "sigma_scale": 1.5, "ridge_lambda": 0.1,
         "n_epochs": 20, "lr": 0.001,
         "n_bins": 5, "alpha": 1.0, "k_folds": 5,
@@ -43,6 +81,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
     "A2_plus": {
         "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
         "gbell_b": 2.0, "fts_norm": "row",
+        "anfis_mf_type": "gaussian", "anfis_gbell_b": 2.0,
         "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
         "n_epochs": 50, "lr": 0.003,
         "n_bins": 5, "alpha": 0.5, "k_folds": 5,
@@ -51,18 +90,14 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
         "calibrate": "isotonic",
     },
     "A2_soft": {
-        "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
-        "gbell_b": 2.0, "fts_norm": "row",
-        "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
-        "n_epochs": 50, "lr": 0.003,
-        "n_bins": 5, "alpha": 0.5, "k_folds": 5,
-        "bn_soft": True,
+        **THESIS_FINAL_PRESET,
     },
     "A2_gbell": {
         # A2_soft with gbell for both FTS encoder and ANFIS premise MFs.
         "n_sets": 3, "mf_type": "gbell", "mf_sigma_scale": 0.4,
         "anfis_mf_type": "gbell",
         "gbell_b": 2.0, "fts_norm": "row",
+        "anfis_gbell_b": 2.0,
         "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
         "n_epochs": 50, "lr": 0.003,
         "n_bins": 5, "alpha": 0.5, "k_folds": 5,
@@ -72,6 +107,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
         # Gaussian FTS encoder, gbell ANFIS premise.
         "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
         "gbell_b": 2.0, "fts_norm": "row",
+        "anfis_gbell_b": 2.0,
         "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
         "n_epochs": 50, "lr": 0.003,
         "n_bins": 5, "alpha": 0.5, "k_folds": 5,
@@ -81,6 +117,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
     "A2_cal": {
         "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
         "gbell_b": 2.0, "fts_norm": "row",
+        "anfis_mf_type": "gaussian", "anfis_gbell_b": 2.0,
         "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
         "n_epochs": 50, "lr": 0.003,
         "n_bins": 5, "alpha": 0.5, "k_folds": 5,
@@ -89,6 +126,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
     "A2_new": {
         "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.6,
         "gbell_b": 2.0, "fts_norm": "row",
+        "anfis_mf_type": "gaussian", "anfis_gbell_b": 2.0,
         "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
         "n_epochs": 20, "lr": 0.003,
         "n_bins": 3, "alpha": 2.0, "k_folds": 5,
@@ -97,6 +135,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
      "A2_soft_bin3": {
         "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
         "gbell_b": 2.0, "fts_norm": "row",
+        "anfis_mf_type": "gaussian", "anfis_gbell_b": 2.0,
         "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
         "n_epochs": 50, "lr": 0.003,
         "n_bins": 3, "alpha": 0.5, "k_folds": 5,
@@ -105,6 +144,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
       "A2_soft_nset4_bin3": {
         "n_sets": 4, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
         "gbell_b": 2.0, "fts_norm": "row",
+        "anfis_mf_type": "gaussian", "anfis_gbell_b": 2.0,
         "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
         "n_epochs": 50, "lr": 0.003,
         "n_bins": 3, "alpha": 0.5, "k_folds": 5,
@@ -118,6 +158,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
     "A2_soft_tan": {
         "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
         "gbell_b": 2.0, "fts_norm": "row",
+        "anfis_mf_type": "gaussian", "anfis_gbell_b": 2.0,
         "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
         "n_epochs": 50, "lr": 0.003,
         "n_bins": 5, "alpha": 0.5, "k_folds": 5,
@@ -128,6 +169,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
     "A2_hard_tan": {
         "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
         "gbell_b": 2.0, "fts_norm": "row",
+        "anfis_mf_type": "gaussian", "anfis_gbell_b": 2.0,
         "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
         "n_epochs": 50, "lr": 0.003,
         "n_bins": 5, "alpha": 0.5, "k_folds": 5,
@@ -142,47 +184,35 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
     # Base hyperparameters: A2_soft configuration.
     # ==================================================================
     "EXP1_MF_TRI": {
-        "n_sets": 3, "mf_type": "triangular", "mf_sigma_scale": 0.4,
-        "gbell_b": 2.0, "fts_norm": "row",
-        "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
-        "n_epochs": 50, "lr": 0.003,
-        "n_bins": 5, "alpha": 0.5, "k_folds": 5,
-        "bn_structure": "naive", "bn_soft": True,
+        **THESIS_FINAL_PRESET,
+        "mf_type": "triangular",
+        "bn_structure": "naive",
         "ablation": "exp1",
         "anfis_mf_type": "gaussian",  # ANFIS premise fixed; only FTS encoder MF varies
         "experiment_group": "EXP1", "variant_name": "EXP1_MF_TRI",
     },
     "EXP1_MF_GAUSS": {
-        "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
-        "gbell_b": 2.0, "fts_norm": "row",
-        "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
-        "n_epochs": 50, "lr": 0.003,
-        "n_bins": 5, "alpha": 0.5, "k_folds": 5,
-        "bn_structure": "naive", "bn_soft": True,
+        **THESIS_FINAL_PRESET,
+        "mf_type": "gaussian",
+        "bn_structure": "naive",
         "ablation": "exp1",
         "anfis_mf_type": "gaussian",  # ANFIS premise fixed; only FTS encoder MF varies
         "experiment_group": "EXP1", "variant_name": "EXP1_MF_GAUSS",
     },
     "EXP1_MF_TRAP": {
-        "n_sets": 3, "mf_type": "trapezoid", "mf_sigma_scale": 0.4,
-        "gbell_b": 2.0, "fts_norm": "row",
-        "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
-        "n_epochs": 50, "lr": 0.003,
-        "n_bins": 5, "alpha": 0.5, "k_folds": 5,
-        "bn_structure": "naive", "bn_soft": True,
+        **THESIS_FINAL_PRESET,
+        "mf_type": "trapezoid",
+        "bn_structure": "naive",
         "ablation": "exp1",
         "anfis_mf_type": "gaussian",  # ANFIS premise fixed; only FTS encoder MF varies
         "experiment_group": "EXP1", "variant_name": "EXP1_MF_TRAP",
     },
     "EXP1_MF_GBELL": {
-        "n_sets": 3, "mf_type": "gbell", "mf_sigma_scale": 0.4,
-        "gbell_b": 2.0, "fts_norm": "row",
-        "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
-        "n_epochs": 50, "lr": 0.003,
-        "n_bins": 5, "alpha": 0.5, "k_folds": 5,
-        "bn_structure": "naive", "bn_soft": True,
+        **THESIS_FINAL_PRESET,
+        "mf_type": "gbell",
+        "anfis_mf_type": "gbell",
+        "bn_structure": "naive",
         "ablation": "exp1",
-        "anfis_mf_type": "gaussian",  # ANFIS premise fixed; only FTS encoder MF varies
         "experiment_group": "EXP1", "variant_name": "EXP1_MF_GBELL",
     },
 
@@ -192,42 +222,34 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
     # Only n_rules changes between variants.
     # ==================================================================
     "EXP2_RULES_3": {
-        "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
-        "gbell_b": 2.0, "fts_norm": "row",
-        "n_rules": 3, "sigma_scale": 1.3, "ridge_lambda": 0.01,
-        "n_epochs": 50, "lr": 0.003,
-        "n_bins": 5, "alpha": 0.5, "k_folds": 5,
-        "bn_structure": "naive", "bn_soft": True,
+        **THESIS_FINAL_PRESET,
+        "n_rules": 3,
+        "final_seed_offset": 0,
+        "bn_structure": "naive",
         "ablation": "exp1",
         "experiment_group": "EXP2", "variant_name": "EXP2_RULES_3",
     },
     "EXP2_RULES_6": {
-        "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
-        "gbell_b": 2.0, "fts_norm": "row",
-        "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
-        "n_epochs": 50, "lr": 0.003,
-        "n_bins": 5, "alpha": 0.5, "k_folds": 5,
-        "bn_structure": "naive", "bn_soft": True,
+        **THESIS_FINAL_PRESET,
+        "n_rules": 6,
+        "final_seed_offset": 0,
+        "bn_structure": "naive",
         "ablation": "exp1",
         "experiment_group": "EXP2", "variant_name": "EXP2_RULES_6",
     },
     "EXP2_RULES_8": {
-        "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
-        "gbell_b": 2.0, "fts_norm": "row",
-        "n_rules": 8, "sigma_scale": 1.3, "ridge_lambda": 0.01,
-        "n_epochs": 50, "lr": 0.003,
-        "n_bins": 5, "alpha": 0.5, "k_folds": 5,
-        "bn_structure": "naive", "bn_soft": True,
+        **THESIS_FINAL_PRESET,
+        "n_rules": 8,
+        "final_seed_offset": 0,
+        "bn_structure": "naive",
         "ablation": "exp1",
         "experiment_group": "EXP2", "variant_name": "EXP2_RULES_8",
     },
     "EXP2_RULES_12": {
-        "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
-        "gbell_b": 2.0, "fts_norm": "row",
-        "n_rules": 12, "sigma_scale": 1.3, "ridge_lambda": 0.01,
-        "n_epochs": 50, "lr": 0.003,
-        "n_bins": 5, "alpha": 0.5, "k_folds": 5,
-        "bn_structure": "naive", "bn_soft": True,
+        **THESIS_FINAL_PRESET,
+        "n_rules": 12,
+        "final_seed_offset": 0,
+        "bn_structure": "naive",
         "ablation": "exp1",
         "experiment_group": "EXP2", "variant_name": "EXP2_RULES_12",
     },
@@ -241,6 +263,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
     "EXP3_FULL": {
         "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
         "gbell_b": 2.0, "fts_norm": "row",
+        "anfis_mf_type": "gaussian", "anfis_gbell_b": 2.0,
         "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
         "n_epochs": 50, "lr": 0.003,
         "n_bins": 5, "alpha": 0.5, "k_folds": 5,
@@ -253,6 +276,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
         # fusion_mode_when_no_bn="mean" -> p_final = (p_Temp+p_HR+p_GSR+p_RR)/4
         "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
         "gbell_b": 2.0, "fts_norm": "row",
+        "anfis_mf_type": "gaussian", "anfis_gbell_b": 2.0,
         "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
         "n_epochs": 50, "lr": 0.003,
         "n_bins": 5, "alpha": 0.5, "k_folds": 5,
@@ -267,6 +291,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
         # This is an interpretable heuristic baseline, not a learned model.
         "n_sets": 3, "mf_type": "gaussian", "mf_sigma_scale": 0.4,
         "gbell_b": 2.0, "fts_norm": "row",
+        "anfis_mf_type": "gaussian", "anfis_gbell_b": 2.0,
         "n_rules": 6, "sigma_scale": 1.3, "ridge_lambda": 0.01,
         "n_epochs": 50, "lr": 0.003,
         "n_bins": 5, "alpha": 0.5, "k_folds": 5,

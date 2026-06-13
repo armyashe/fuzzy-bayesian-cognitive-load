@@ -30,7 +30,10 @@ class FTSEncoder:
 
     def __init__(self, n_sets: int = 3, mf_type: str = "triangular",
                  mf_sigma_scale: float = 0.5, gbell_b: float = 2.0,
-                 norm_mode: str = "total_sum", robust: bool = False):
+                 norm_mode: str = "total_sum", robust: bool = False,
+                 trap_plateau_scale: float = 0.15,
+                 trap_width_scale: float = 1.0,
+                 grid_margin_scale: float = 0.05):
         assert mf_type in self.VALID_MF, (
             f"mf_type must be one of {self.VALID_MF}, got '{mf_type}'"
         )
@@ -43,6 +46,9 @@ class FTSEncoder:
         self.gbell_b = gbell_b                # gbell shape exponent
         self.norm_mode = norm_mode            # total_sum | row
         self.robust = robust                  # percentile clipping + quantile centers
+        self.trap_plateau_scale = trap_plateau_scale
+        self.trap_width_scale = trap_width_scale
+        self.grid_margin_scale = grid_margin_scale
         self.fitted_ = False
 
     # ------------------------------------------------------------------
@@ -141,7 +147,7 @@ class FTSEncoder:
                 rng = vmax - vmin
                 if rng < 1e-10:
                     rng = 1.0
-                margin = rng * 0.05
+                margin = rng * self.grid_margin_scale
                 vmin_e, vmax_e = vmin - margin, vmax + margin
                 centers = np.linspace(vmin_e, vmax_e, self.n_sets)
                 spacing = ((vmax_e - vmin_e) / (self.n_sets - 1)
@@ -157,10 +163,12 @@ class FTSEncoder:
 
             # Pre-compute trapezoid (a,b,c,d) tuples
             if self.mf_type == "trapezoid":
-                half_p = spacing * 0.15          # narrow plateau
+                half_p = spacing * self.trap_plateau_scale
+                left_width = spacing * self.trap_width_scale
+                right_width = spacing * self.trap_width_scale
                 g["trap_params"] = [
-                    (centers[k] - spacing, centers[k] - half_p,
-                     centers[k] + half_p, centers[k] + spacing)
+                    (centers[k] - left_width, centers[k] - half_p,
+                     centers[k] + half_p, centers[k] + right_width)
                     for k in range(self.n_sets)
                 ]
 

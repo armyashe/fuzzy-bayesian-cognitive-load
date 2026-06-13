@@ -1,0 +1,47 @@
+{
+  "anfis": [
+    {
+      "centers": "9275e31252a28e3eeefde0dd349a96c64ad846e3b5ccdb352df0e6a657ef775e",
+      "random_state": 42,
+      "sigmas": "763973a7a7f4455e3c064bb29e3ff0758c04a3f3fa96fa09a353583fe65eeb6e",
+      "signal_index": 0,
+      "theta": "36dc073fef750c86a8cce9421bdc70ec2dba431b47c8beb557857250c9ca542a"
+    },
+    {
+      "centers": "2c0956be641d975969d8353427a517c991567b0f6c888ba1974cea35e5b8973b",
+      "random_state": 43,
+      "sigmas": "9566d642b2ebd28dc78a2bbd5cf3442e983568d35b3e419a87afd043f8e39b49",
+      "signal_index": 1,
+      "theta": "104c1c2daa4ab3dceb1825001cb79178f184dee7ced478f7b267970e467b72b1"
+    },
+    {
+      "centers": "24518990ebb162fec759efa4c17313dfadcb84493934d7a4e58fb83127463971",
+      "random_state": 44,
+      "sigmas": "2b1cb7991031b8ebe1843d9f2ea57cc2fe1cc1b4d9f2134d5881cc02faa0c270",
+      "signal_index": 2,
+      "theta": "67239878e95d41e289bb1d2ba232470f293a524f2f305d300d4a01984c41163d"
+    },
+    {
+      "centers": "da09a8c85f38a1bf270da7a5f8b52485c20b51ae9370cccaf8517785f6050969",
+      "random_state": 45,
+      "sigmas": "2f4fa345566c6fead7d94856f132af540bcfd642cc6e3d20578f9faeba1f37cf",
+      "signal_index": 3,
+      "theta": "fec3fe18b54e538e9f3a794e7f4c0fcdc05e8713941d5793c6d860b2fb59de30"
+    }
+  ],
+  "anfis_random_states": [
+    42,
+    43,
+    44,
+    45
+  ],
+  "bn_cpt": "05a246299948d1c550a579965f2dc93e05bae20dc021dafde8e927cdb47f7d21",
+  "debug_npz": "artifacts\\debug_exp2\\EXP2_RULES_8_debug.npz",
+  "final_posterior": "16e73511bf708ff0e290d4a2622f7f8c0225c2ce58c3d4842865cc468c2699c9",
+  "final_seed_offset": 0,
+  "fts_test_features": "f2f4294f5d26a494166c18f7324ba399257d5ba0ba644629f6aa39e4070d4e0a",
+  "fts_train_features": "3a555a47489d5995dccc43b8f6d864610bdcb061b76898e40603d1bdb03ca433",
+  "test_signal_probs": "e5112b692c6f8f5e9de1e5257f1c93e04dadbb7acdee066d2635d030f2a93ab7",
+  "train_signal_probs": "3687a140110c4f1f3fe71742fd8e78f2a82a61c566af81aad5a5221b5e06cf8b",
+  "variant": "EXP2_RULES_8"
+}

@@ -202,7 +202,7 @@ def print_config(config: dict) -> None:
     print("  PIPELINE CONFIGURATION")
     print("=" * 58)
     for k, v in config.items():
-        print(f"  {k:35s}: {v}")
+        print(f"  {k} = {v}")
 
 
 def compute_oof_metrics(
