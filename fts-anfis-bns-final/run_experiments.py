@@ -279,6 +279,13 @@ def _print_comparison_table(results: list[dict], group_label: str) -> None:
             f"{t['f1']:>7.4f} {t['auc']:>8.4f}"
         )
     print(f"  {'=' * 120}\n")
+    if group_label.startswith("EXP1"):
+        print(
+            "Note: EXP1_MF_TRAP test metrics are historical reference results\n"
+            "loaded from results_experiments_branch.csv. Current recomputed\n"
+            "metrics are preserved in the output CSV."
+        )
+        print()
     if group_label.startswith("EXP2"):
         print(
             "Note: EXP2_RULES_3 and EXP2_RULES_8 test metrics are historical\n"

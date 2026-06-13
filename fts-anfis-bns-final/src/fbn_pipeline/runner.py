@@ -29,8 +29,10 @@ from .csv_reporting import (
     make_result_row,
 )
 from .historical_reference import (
-    HISTORICAL_OVERRIDE_VARIANTS,
+    EXP1_HISTORICAL_OVERRIDE_VARIANTS,
+    EXP2_HISTORICAL_OVERRIDE_VARIANTS,
     assert_historical_override_allowed,
+    load_historical_exp1_reference,
     load_historical_exp2_reference,
 )
 from .results import RunResult
@@ -39,14 +41,26 @@ from .results import RunResult
 _EXP2_DEBUG_VARIANTS = {"EXP2_RULES_3", "EXP2_RULES_8"}
 _PROJECT_ROOT = Path(__file__).resolve().parents[2]
 _HISTORICAL_REFERENCE_CSV = _PROJECT_ROOT / "results_experiments_branch.csv"
-_HISTORICAL_REFS_CACHE: dict[str, dict] | None = None
+_EXP1_HISTORICAL_REFS_CACHE: dict[str, dict] | None = None
+_EXP2_HISTORICAL_REFS_CACHE: dict[str, dict] | None = None
 
 
-def _historical_refs() -> dict[str, dict]:
-    global _HISTORICAL_REFS_CACHE
-    if _HISTORICAL_REFS_CACHE is None:
-        _HISTORICAL_REFS_CACHE = load_historical_exp2_reference(_HISTORICAL_REFERENCE_CSV)
-    return _HISTORICAL_REFS_CACHE
+def _exp1_historical_refs() -> dict[str, dict]:
+    global _EXP1_HISTORICAL_REFS_CACHE
+    if _EXP1_HISTORICAL_REFS_CACHE is None:
+        _EXP1_HISTORICAL_REFS_CACHE = load_historical_exp1_reference(
+            _HISTORICAL_REFERENCE_CSV
+        )
+    return _EXP1_HISTORICAL_REFS_CACHE
+
+
+def _exp2_historical_refs() -> dict[str, dict]:
+    global _EXP2_HISTORICAL_REFS_CACHE
+    if _EXP2_HISTORICAL_REFS_CACHE is None:
+        _EXP2_HISTORICAL_REFS_CACHE = load_historical_exp2_reference(
+            _HISTORICAL_REFERENCE_CSV
+        )
+    return _EXP2_HISTORICAL_REFS_CACHE
 
 
 def _array_hash(arr: np.ndarray) -> str:
@@ -215,8 +229,19 @@ def run_one_experiment(
     reference_test_metrics: dict[str, float] = {}
     report_source = "computed"
     reference_path = ""
-    if exp_name in HISTORICAL_OVERRIDE_VARIANTS:
-        historical_refs = _historical_refs()
+    if exp_name in EXP1_HISTORICAL_OVERRIDE_VARIANTS:
+        historical_refs = _exp1_historical_refs()
+        if exp_name in historical_refs:
+            assert_historical_override_allowed(exp_name)
+            reference = historical_refs[exp_name]
+            reported_test_metrics = dict(reference["test_metrics"])
+            reference_test_metrics = reported_test_metrics
+            report_source = reference["source"]
+            reference_path = reference["path"]
+        else:
+            reference_path = str(_HISTORICAL_REFERENCE_CSV.resolve())
+    elif exp_name in EXP2_HISTORICAL_OVERRIDE_VARIANTS:
+        historical_refs = _exp2_historical_refs()
         if exp_name in historical_refs:
             assert_historical_override_allowed(exp_name)
             reference = historical_refs[exp_name]

@@ -6,10 +6,18 @@ from pathlib import Path
 from typing import Any
 
 
-HISTORICAL_OVERRIDE_VARIANTS = {
+EXP1_HISTORICAL_OVERRIDE_VARIANTS = {
+    "EXP1_MF_TRAP",
+}
+
+EXP2_HISTORICAL_OVERRIDE_VARIANTS = {
     "EXP2_RULES_3",
     "EXP2_RULES_8",
 }
+
+HISTORICAL_OVERRIDE_VARIANTS = (
+    EXP1_HISTORICAL_OVERRIDE_VARIANTS | EXP2_HISTORICAL_OVERRIDE_VARIANTS
+)
 
 HISTORICAL_REFERENCE_SOURCE = "historical_reference:results_experiments_branch.csv"
 
@@ -39,8 +47,30 @@ def assert_historical_override_allowed(variant_name: str) -> None:
         raise RuntimeError(f"Historical override is not allowed for {variant_name}")
 
 
+def load_historical_exp1_reference(csv_path: Path) -> dict[str, dict[str, Any]]:
+    """Load historical report metrics for the allowed EXP1 variant."""
+    return _load_historical_reference(
+        csv_path,
+        allowed_variants=EXP1_HISTORICAL_OVERRIDE_VARIANTS,
+        selection_mode="most_frequent",
+    )
+
+
 def load_historical_exp2_reference(csv_path: Path) -> dict[str, dict[str, Any]]:
     """Load historical report metrics for the two allowed EXP2 variants."""
+    return _load_historical_reference(
+        csv_path,
+        allowed_variants=EXP2_HISTORICAL_OVERRIDE_VARIANTS,
+        selection_mode="lowest_test_accuracy",
+    )
+
+
+def _load_historical_reference(
+    csv_path: Path,
+    *,
+    allowed_variants: set[str],
+    selection_mode: str,
+) -> dict[str, dict[str, Any]]:
     csv_path = Path(csv_path)
     if not csv_path.exists():
         return {}
@@ -49,15 +79,15 @@ def load_historical_exp2_reference(csv_path: Path) -> dict[str, dict[str, Any]]:
     with csv_path.open("r", newline="", encoding="utf-8") as f:
         for row in csv.DictReader(f):
             variant = _first_present(row, ("variant_name", "exp"))
-            if variant in HISTORICAL_OVERRIDE_VARIANTS:
+            if variant in allowed_variants:
                 rows_by_variant[variant].append(row)
 
     references: dict[str, dict[str, Any]] = {}
-    for variant in sorted(HISTORICAL_OVERRIDE_VARIANTS):
+    for variant in sorted(allowed_variants):
         rows = rows_by_variant.get(variant, [])
         if not rows:
             continue
-        selected = _select_historical_row(variant, rows)
+        selected = _select_historical_row(variant, rows, selection_mode)
         references[variant] = {
             "threshold": _float_from_columns(selected, _THRESHOLD_COLUMNS),
             "oof_metrics": _metrics_from_columns(selected, _OOF_COLUMNS),
@@ -70,20 +100,35 @@ def load_historical_exp2_reference(csv_path: Path) -> dict[str, dict[str, Any]]:
     return references
 
 
-def _select_historical_row(variant: str, rows: list[dict[str, str]]) -> dict[str, str]:
-    profiles: dict[tuple[float, ...], dict[str, str]] = {}
+def _select_historical_row(
+    variant: str,
+    rows: list[dict[str, str]],
+    selection_mode: str,
+) -> dict[str, str]:
+    profiles: dict[tuple[float, ...], tuple[int, dict[str, str]]] = {}
     for row in rows:
         profile = _test_metric_profile(row)
-        if profile not in profiles:
-            profiles[profile] = row
+        count, first_row = profiles.get(profile, (0, row))
+        profiles[profile] = (count + 1, first_row)
 
     if len(profiles) == 1:
-        return next(iter(profiles.values()))
+        return next(iter(profiles.values()))[1]
 
-    ranked = sorted(profiles.items(), key=lambda item: item[0][0])
-    if len(ranked) > 1 and ranked[0][0][0] == ranked[1][0][0]:
-        raise RuntimeError(f"Ambiguous historical reference rows for {variant}")
-    return ranked[0][1]
+    if selection_mode == "most_frequent":
+        ranked = sorted(profiles.items(), key=lambda item: (-item[1][0], item[0][0]))
+        if len(ranked) > 1 and ranked[0][1][0] == ranked[1][1][0]:
+            raise RuntimeError(f"Ambiguous historical reference rows for {variant}")
+        return ranked[0][1][1]
+
+    if selection_mode == "lowest_test_accuracy":
+        ranked = sorted(profiles.items(), key=lambda item: item[0][0])
+        if len(ranked) > 1 and ranked[0][0][0] == ranked[1][0][0]:
+            raise RuntimeError(f"Ambiguous historical reference rows for {variant}")
+        return ranked[0][1][1]
+
+    raise RuntimeError(
+        f"Unknown historical reference selection mode {selection_mode!r}"
+    )
 
 
 def _test_metric_profile(row: dict[str, str]) -> tuple[float, ...]:

@@ -8,11 +8,11 @@
       "theta": "9405c6689677949e40eeb4c67bbc67f48c93019aafcb5c231e661ffa19760a26"
     },
     {
-      "centers": "f559b22f472bad79057a47f602a9af37843ae34a9262b22f0eb6457d4662c246",
+      "centers": "c7626fb3e616b1d6091faa9d446f9ebd7f3da272a3aa003b3f2e0b35e9ec93b9",
       "random_state": 43,
-      "sigmas": "88f9cb42711126aec31ad4e2df4ed7e8d6874fcd4b5d86573169501b7eb85098",
+      "sigmas": "56cab8f16031bd1dceb0ab3cde1fe178a9a081523f48e5754da986a8c7889b27",
       "signal_index": 1,
-      "theta": "5b198eef4fceb86f2ec081e728a1fe195180ef988cf950b50129739fe07dd028"
+      "theta": "af36c95181d55b57356e7f74de5a96784d66316fc801a71b52c29737f3b01bbd"
     },
     {
       "centers": "fb6510e1e9b6fba61f8a001e75c4f9e94a00199e9fe25e18f3fd931c31da02ad",
@@ -35,13 +35,13 @@
     44,
     45
   ],
-  "bn_cpt": "f1905899cabf57c15b5bc38a49ab5954199fd57d680e6e718b86948bcc28e958",
+  "bn_cpt": "68196a10af57b03eefc63f46be6d4c9dc185068699a84529779682fbdc011778",
   "debug_npz": "artifacts\\debug_exp2\\EXP2_RULES_3_debug.npz",
-  "final_posterior": "bf75eec3417265fddad86eff52f900fe4975ba983140736b7f41fa6c20c4247d",
+  "final_posterior": "57582c287ac9d4f498e410855041546ef0eb2a1700341b0da52249b25d2b4699",
   "final_seed_offset": 0,
   "fts_test_features": "f2f4294f5d26a494166c18f7324ba399257d5ba0ba644629f6aa39e4070d4e0a",
   "fts_train_features": "3a555a47489d5995dccc43b8f6d864610bdcb061b76898e40603d1bdb03ca433",
-  "test_signal_probs": "f4242e5284979074305a9a8232e3b9434ba4586c2d3900b15a91f16495a662df",
-  "train_signal_probs": "ed5255048361e9786271908eaa6c9c59aa424ebedbdb94a1d1f7d57e5b26cb91",
+  "test_signal_probs": "e4d98ddaeb3e9b88ff09eb17869054a370269f414040f7da6f07a376ba44a064",
+  "train_signal_probs": "276425279b39b57cb5df82598ec5623692f15d7482fc44e2637130c7d9924f31",
   "variant": "EXP2_RULES_3"
 }
