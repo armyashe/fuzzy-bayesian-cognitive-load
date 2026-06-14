@@ -56,6 +56,9 @@ CSV_COLUMNS = [
 
 
 def log_to_csv(filepath: str, row: dict[str, Any]) -> None:
+    parent = os.path.dirname(filepath)
+    if parent:
+        os.makedirs(parent, exist_ok=True)
     file_exists = os.path.isfile(filepath)
     with open(filepath, "a", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=CSV_COLUMNS)

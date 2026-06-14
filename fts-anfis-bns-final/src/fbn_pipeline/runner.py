@@ -44,7 +44,9 @@ from .results import RunResult
 
 _EXP2_DEBUG_VARIANTS = {"EXP2_RULES_3", "EXP2_RULES_8", "EXP2_RULES_12"}
 _PROJECT_ROOT = Path(__file__).resolve().parents[2]
-_HISTORICAL_REFERENCE_CSV = _PROJECT_ROOT / "results_experiments_branch.csv"
+_HISTORICAL_REFERENCE_CSV = (
+    _PROJECT_ROOT / "artifacts" / "A2_soft_results" / "results_experiments_branch.csv"
+)
 _EXP1_HISTORICAL_REFS_CACHE: dict[str, dict] | None = None
 _EXP2_HISTORICAL_REFS_CACHE: dict[str, dict] | None = None
 _EXP2_RULES12_HISTORICAL_REFS_CACHE: dict[str, dict] | None = None

@@ -363,14 +363,14 @@ def _print_comparison_table(
     if group_label.startswith("EXP1"):
         print(
             "Note: EXP1_MF_TRAP reported metrics use an archived experiment record\n"
-            "loaded from results_experiments_branch.csv. Current-run\n"
+            "loaded from artifacts/A2_soft_results/results_experiments_branch.csv. Current-run\n"
             "metrics are preserved in the output CSV."
         )
         print()
     if group_label.startswith("EXP2"):
         print(
             "Note: EXP2_RULES_3, EXP2_RULES_8, and EXP2_RULES_12 reported metrics\n"
-            "use archived experiment records loaded from results_experiments_branch.csv.\n"
+            "use archived experiment records loaded from artifacts/A2_soft_results/results_experiments_branch.csv.\n"
             "Current-run metrics are preserved in the output CSV."
         )
         print()

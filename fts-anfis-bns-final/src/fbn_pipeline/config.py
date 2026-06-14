@@ -50,7 +50,7 @@ class ExperimentConfig:
     final_seed_offset: int = 0
 
     dump_rules: bool = False
-    save_csv: str = "results_main.csv"
+    save_csv: str = "artifacts/A2_soft_results/results_main.csv"
 
     # ------------------------------------------------------------------
     # Bayesian Network structure variant

@@ -25,7 +25,9 @@ HISTORICAL_OVERRIDE_VARIANTS = (
     | EXP2_RULES_12_HISTORICAL_OVERRIDE
 )
 
-HISTORICAL_REFERENCE_SOURCE = "historical_reference:results_experiments_branch.csv"
+HISTORICAL_REFERENCE_SOURCE = (
+    "historical_reference:artifacts/A2_soft_results/results_experiments_branch.csv"
+)
 
 _THRESHOLD_COLUMNS = ("best_thr", "best_threshold")
 _METRIC_COLUMNS = {
