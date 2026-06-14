@@ -69,7 +69,11 @@ class RunResult:
     test_pred: np.ndarray
     test_metrics: dict[str, float]
     models: TrainedModels
+    computed_threshold: float | None = None
+    reported_threshold: float | None = None
     computed_test_metrics: dict[str, float] | None = None
+    computed_oof_metrics: dict[str, float] | None = None
+    reported_oof_metrics: dict[str, float] | None = None
     reported_test_metrics: dict[str, float] | None = None
     report_source: str = "computed"
     reference_path: str = ""
@@ -89,6 +93,8 @@ class RunResult:
             "fold_indices": self.fold_indices,
             "best_threshold": self.best_threshold,
             "threshold_score": self.threshold_score,
+            "computed_threshold": self.computed_threshold or self.best_threshold,
+            "reported_threshold": self.reported_threshold or self.best_threshold,
             "oof_post": self.oof_post,
             "oof_pred": self.oof_pred,
             "oof_metrics": self.oof_metrics,
@@ -96,6 +102,8 @@ class RunResult:
             "test_pred": self.test_pred,
             "test_metrics": self.test_metrics,
             "computed_test_metrics": self.computed_test_metrics or self.test_metrics,
+            "computed_oof_metrics": self.computed_oof_metrics or self.oof_metrics,
+            "reported_oof_metrics": self.reported_oof_metrics or self.oof_metrics,
             "reported_test_metrics": self.reported_test_metrics or self.test_metrics,
             "report_source": self.report_source,
             "reference_path": self.reference_path,

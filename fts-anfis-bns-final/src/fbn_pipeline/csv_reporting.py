@@ -42,8 +42,14 @@ CSV_COLUMNS = [
     "test_acc", "test_bal_acc", "test_macro_f1",
     # --- Report provenance and preserved recomputed metrics ---
     "result_source",
+    "computed_threshold",
+    "computed_oof_acc", "computed_oof_bal_acc", "computed_oof_precision",
+    "computed_oof_recall", "computed_oof_f1", "computed_oof_auc",
     "computed_test_acc", "computed_test_bal_acc", "computed_test_precision",
     "computed_test_recall", "computed_test_f1", "computed_test_auc",
+    "reference_threshold",
+    "reference_oof_acc", "reference_oof_bal_acc", "reference_oof_precision",
+    "reference_oof_recall", "reference_oof_f1", "reference_oof_auc",
     "reference_test_acc", "reference_test_bal_acc", "reference_test_precision",
     "reference_test_recall", "reference_test_f1", "reference_test_auc",
 ]
@@ -65,6 +71,10 @@ def make_result_row(
     *,
     oof: dict[str, Any] | None = None,
     test: dict[str, Any] | None = None,
+    computed_threshold: float | str | None = None,
+    reference_threshold: float | str | None = None,
+    computed_oof: dict[str, Any] | None = None,
+    reference_oof: dict[str, Any] | None = None,
     computed_test: dict[str, Any] | None = None,
     reference_test: dict[str, Any] | None = None,
     result_source: str = "computed",
@@ -75,6 +85,8 @@ def make_result_row(
 ) -> dict[str, Any]:
     oof = oof or {}
     test = test or {}
+    computed_oof = computed_oof or oof
+    reference_oof = reference_oof or {}
     computed_test = computed_test or test
     reference_test = reference_test or {}
     variant = cfg.get("variant_name", "") or exp_name
@@ -151,12 +163,26 @@ def make_result_row(
         "test_macro_f1": test.get("macro_f1", ""),
         # provenance and preserved recomputed metrics
         "result_source": result_source,
+        "computed_threshold": computed_threshold if computed_threshold is not None else best_thr,
+        "computed_oof_acc": computed_oof.get("acc", computed_oof.get("accuracy", "")),
+        "computed_oof_bal_acc": computed_oof.get("bal_acc", ""),
+        "computed_oof_precision": computed_oof.get("precision", ""),
+        "computed_oof_recall": computed_oof.get("recall", ""),
+        "computed_oof_f1": computed_oof.get("f1", ""),
+        "computed_oof_auc": computed_oof.get("auc", ""),
         "computed_test_acc": computed_test.get("acc", computed_test.get("accuracy", "")),
         "computed_test_bal_acc": computed_test.get("bal_acc", ""),
         "computed_test_precision": computed_test.get("precision", ""),
         "computed_test_recall": computed_test.get("recall", ""),
         "computed_test_f1": computed_test.get("f1", ""),
         "computed_test_auc": computed_test.get("auc", ""),
+        "reference_threshold": reference_threshold if reference_threshold is not None else "",
+        "reference_oof_acc": reference_oof.get("acc", reference_oof.get("accuracy", "")),
+        "reference_oof_bal_acc": reference_oof.get("bal_acc", ""),
+        "reference_oof_precision": reference_oof.get("precision", ""),
+        "reference_oof_recall": reference_oof.get("recall", ""),
+        "reference_oof_f1": reference_oof.get("f1", ""),
+        "reference_oof_auc": reference_oof.get("auc", ""),
         "reference_test_acc": reference_test.get("acc", reference_test.get("accuracy", "")),
         "reference_test_bal_acc": reference_test.get("bal_acc", ""),
         "reference_test_precision": reference_test.get("precision", ""),

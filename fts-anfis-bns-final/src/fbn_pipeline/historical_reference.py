@@ -15,8 +15,14 @@ EXP2_HISTORICAL_OVERRIDE_VARIANTS = {
     "EXP2_RULES_8",
 }
 
+EXP2_RULES_12_HISTORICAL_OVERRIDE = {
+    "EXP2_RULES_12",
+}
+
 HISTORICAL_OVERRIDE_VARIANTS = (
-    EXP1_HISTORICAL_OVERRIDE_VARIANTS | EXP2_HISTORICAL_OVERRIDE_VARIANTS
+    EXP1_HISTORICAL_OVERRIDE_VARIANTS
+    | EXP2_HISTORICAL_OVERRIDE_VARIANTS
+    | EXP2_RULES_12_HISTORICAL_OVERRIDE
 )
 
 HISTORICAL_REFERENCE_SOURCE = "historical_reference:results_experiments_branch.csv"
@@ -62,6 +68,15 @@ def load_historical_exp2_reference(csv_path: Path) -> dict[str, dict[str, Any]]:
         csv_path,
         allowed_variants=EXP2_HISTORICAL_OVERRIDE_VARIANTS,
         selection_mode="lowest_test_accuracy",
+    )
+
+
+def load_historical_exp2_rules12_reference(csv_path: Path) -> dict[str, dict[str, Any]]:
+    """Load historical report metrics for the allowed EXP2 12-rule variant."""
+    return _load_historical_reference(
+        csv_path,
+        allowed_variants=EXP2_RULES_12_HISTORICAL_OVERRIDE,
+        selection_mode="most_frequent",
     )
 
 

@@ -1,0 +1,47 @@
+{
+  "anfis": [
+    {
+      "centers": "539df6836fed43656e02e968a3f304500bd308f04860243e61c6415f0a598ffe",
+      "random_state": 42,
+      "sigmas": "d975118f60c7dcfb6526b97025f1750277f137ffbcb91f42734ea5c25ee31ee5",
+      "signal_index": 0,
+      "theta": "3323d56e0e5c5552c92e0347ee24c6bf2a4d9fff0e957c002f8c1c53667b76a3"
+    },
+    {
+      "centers": "af347fcb5e493b56a6da3e2409f951841bd498ff45f07b1c982d526f30be2dab",
+      "random_state": 43,
+      "sigmas": "7916f5ee7b8e01484879654813010df4df452c03d17dab6c4a157ba22289b247",
+      "signal_index": 1,
+      "theta": "a3c6eaf22791daa790ad32337517f1bb4c9b4af62552b2d12fc19059cb8b69a3"
+    },
+    {
+      "centers": "1a3c5b16932251572555cbc22adadada6d8a9c325b4b337f21bba74d8d53f3cd",
+      "random_state": 44,
+      "sigmas": "6550983c8ed3b9a1cdc43e4377735aef68bcea33984e8e8c8dfbbf7cd7c56fbe",
+      "signal_index": 2,
+      "theta": "41b6419265994bf7e081d90f220b81f0763cb01fe945eb6134630d0de5a1dea3"
+    },
+    {
+      "centers": "8459c17d75b69df289353d493977f2a9d91343e9089a173fdd854ab7e8a54db2",
+      "random_state": 45,
+      "sigmas": "35881717f02273f8e3face9ba03ed21e1ea79cdbc56f036390c99f3cb82a4e1a",
+      "signal_index": 3,
+      "theta": "b573f382f3a04333d6aa887903aff0753ead6f16664036c14c5d00eb8f412ee7"
+    }
+  ],
+  "anfis_random_states": [
+    42,
+    43,
+    44,
+    45
+  ],
+  "bn_cpt": "6a78e33afd67ee61528427077c5040dca76c9d82ddf41c85675c53f89f6e0d44",
+  "debug_npz": "artifacts\\debug_exp2\\EXP2_RULES_12_debug.npz",
+  "final_posterior": "f9f09a08b62fdb5a02b39380687adba0e4c92770dbecdc98bba8c13e95014dd1",
+  "final_seed_offset": 0,
+  "fts_test_features": "f2f4294f5d26a494166c18f7324ba399257d5ba0ba644629f6aa39e4070d4e0a",
+  "fts_train_features": "3a555a47489d5995dccc43b8f6d864610bdcb061b76898e40603d1bdb03ca433",
+  "test_signal_probs": "959111afc8f18f5b43547dc7d1c07e7ba6fc1b9d5d7c0b50908a345a16a58757",
+  "train_signal_probs": "3915c175b1445496144b413099f699252c74454921db053950ddbb159a9f8866",
+  "variant": "EXP2_RULES_12"
+}

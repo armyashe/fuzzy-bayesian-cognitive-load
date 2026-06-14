@@ -1,32 +1,32 @@
 {
   "anfis": [
     {
-      "centers": "0e581bb32efe9368c51363db87849da35ddeb9dd753d93b9c145871a5daed679",
+      "centers": "ecabc5e1cbe5d988af2a107003266e245ca2de63e852a081df4f962716939b71",
       "random_state": 42,
-      "sigmas": "f828952996012a8f0fee2024a4c6beaa76ccf8338c17c897d81141b0c95f6f3b",
+      "sigmas": "e4dac6cc7da2dbfd6531069d7546003f9209c7b9122286a1fe1bd0924ff7db45",
       "signal_index": 0,
-      "theta": "9405c6689677949e40eeb4c67bbc67f48c93019aafcb5c231e661ffa19760a26"
+      "theta": "a2a4082637267a9640269e9380f9bf96b074ae86e720d83f44fbd96e2cd26e5d"
     },
     {
-      "centers": "38a29c7cea3fed151169529eb65b270c9027d8fca0114ab8d6634daf69769272",
+      "centers": "c7626fb3e616b1d6091faa9d446f9ebd7f3da272a3aa003b3f2e0b35e9ec93b9",
       "random_state": 43,
-      "sigmas": "28065b66e1ca86d4c765284b6197a0b0b86de87482b79e20d7cac912002848e3",
+      "sigmas": "56cab8f16031bd1dceb0ab3cde1fe178a9a081523f48e5754da986a8c7889b27",
       "signal_index": 1,
-      "theta": "486bbb4f95a2a88fad1f32e1c202f29557ea6ec6f6eb245b9245b009c07b516f"
+      "theta": "af36c95181d55b57356e7f74de5a96784d66316fc801a71b52c29737f3b01bbd"
     },
     {
-      "centers": "7de77b9d0e46254e7930afdae85b52ff956040667fbf3b9a8296417ea42e607b",
+      "centers": "fb6510e1e9b6fba61f8a001e75c4f9e94a00199e9fe25e18f3fd931c31da02ad",
       "random_state": 44,
-      "sigmas": "613002062d6c1fa552615b07a05ff905810e31aa56d8f7ffcb165eaa96bd1b77",
+      "sigmas": "2dd24e437464644295fc331da0e2d396e0c17b68c7566b10510a086ba9082f0c",
       "signal_index": 2,
-      "theta": "635edfc0821b09ae9eb5c927c5589d46622acc8368a95ee1c6b47340b2abc550"
+      "theta": "13b8e210e9c21d1d1d7a1357a2cc3db2a1cde23ea205d1cf0214492638943c6f"
     },
     {
-      "centers": "8aa40298d421db5f51fda55b4e33b657d15dc93fb985ceaf9c9cfb089df4bad4",
+      "centers": "1b105a528c6052d33ec78c43ce24da8a7e903e464f6e44f81b56ee5e6bd12741",
       "random_state": 45,
-      "sigmas": "41ee45aa34ff61e61173cd57530c98bc022c67335bea130e7df0eed33bc5f2ce",
+      "sigmas": "a2223ccd7785b40f65f7a98ae71a4783c0d013540763a78d720f00d4ef56a064",
       "signal_index": 3,
-      "theta": "a0f39dfb490bc334278770be34e579b89d0918d0550db6a0aac43ec4ec742be5"
+      "theta": "b52407b763bcf7c4e066f879729e92f3439b67af22d5054a0a8a15d923cb8e04"
     }
   ],
   "anfis_random_states": [
@@ -35,13 +35,13 @@
     44,
     45
   ],
-  "bn_cpt": "967d4ca5200f87dba7117f8c6a7e27a69ac22a097096e40a065f4cfbb26665d2",
+  "bn_cpt": "c915ab2a409601928951365a60403b7caffedbf0f26817f9d5643cfd687372b1",
   "debug_npz": "artifacts\\debug_exp2\\EXP2_RULES_3_debug.npz",
-  "final_posterior": "8f4b6bc953554322239d47a7cef51f52423d5e618c6aa3d1f6c8eb3d1983158c",
+  "final_posterior": "0dbcbd215c784fbc3af2ec1ceee52782f8e5f39ed9a5cb563880e56e2ab6c311",
   "final_seed_offset": 0,
   "fts_test_features": "f2f4294f5d26a494166c18f7324ba399257d5ba0ba644629f6aa39e4070d4e0a",
   "fts_train_features": "3a555a47489d5995dccc43b8f6d864610bdcb061b76898e40603d1bdb03ca433",
-  "test_signal_probs": "0094aff636661cb616e24f0afc55d23c90d0a5a3ec266c122368c24a8f00c1ea",
-  "train_signal_probs": "f6d2c707c1f4dd7e641a69276c7a4e30cea2787956cbf0f8f84362f189e8485c",
+  "test_signal_probs": "34c9da5ab05e0134734d73df6d0c47811e2bf1285fae612195df6149e7c365d9",
+  "train_signal_probs": "efcbbc7a0cb04f13c4010cb86a8fbbf00c4cac145cec20bed1d7986fd316ab3c",
   "variant": "EXP2_RULES_3"
 }

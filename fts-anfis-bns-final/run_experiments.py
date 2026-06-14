@@ -212,7 +212,7 @@ def run_variant(
         print_progress=False,
         pipeline_desc=pipeline_desc,
     )
-    oof_metrics = result.oof_metrics
+    oof_metrics = result.computed_oof_metrics or result.oof_metrics
 
     print(f"\nOOF / Cross-Validation  (threshold selected by {cfg.threshold_metric})")
     print(f"  Best threshold    : {result.best_threshold:.4f}  (score = {result.threshold_score:.4f})")
@@ -236,6 +236,17 @@ def run_variant(
 
     reported_metrics = result.reported_test_metrics or test_metrics
     if result.report_source != "computed":
+        reported_oof = result.reported_oof_metrics or oof_metrics
+        reported_thr = result.reported_threshold or result.best_threshold
+        print("\nOOF / Cross-Validation - reported historical reference")
+        print(f"  Best threshold    : {reported_thr:.4f}")
+        print(f"  Accuracy          : {reported_oof['accuracy']:.4f}")
+        print(f"  Balanced Accuracy : {reported_oof['bal_acc']:.4f}")
+        print(f"  Precision         : {reported_oof['precision']:.4f}")
+        print(f"  Recall            : {reported_oof['recall']:.4f}")
+        print(f"  F1-score          : {reported_oof['f1']:.4f}")
+        print(f"  ROC-AUC           : {reported_oof['auc']:.4f}")
+
         print("\nHeld-out Test - reported historical reference")
         print(f"  Source            : {result.report_source}")
         print(f"  Accuracy          : {reported_metrics['accuracy']:.4f}")
@@ -268,9 +279,9 @@ def _print_comparison_table(results: list[dict], group_label: str) -> None:
     print(hdr)
     print(f"  {'-' * 120}")
     for r in results:
-        o = r["oof_metrics"]
+        o = r.get("reported_oof_metrics") or r["oof_metrics"]
         t = r.get("reported_test_metrics") or r["test_metrics"]
-        thr = r["best_threshold"]
+        thr = r.get("reported_threshold") or r["best_threshold"]
         print(
             f"  {r['variant']:<20s}  {thr:>6.4f}  "
             f"{o['accuracy']:>7.4f} {o['bal_acc']:>7.4f} {o['precision']:>7.4f} {o['recall']:>7.4f} "
@@ -288,8 +299,8 @@ def _print_comparison_table(results: list[dict], group_label: str) -> None:
         print()
     if group_label.startswith("EXP2"):
         print(
-            "Note: EXP2_RULES_3 and EXP2_RULES_8 test metrics are historical\n"
-            "reference results loaded from results_experiments_branch.csv.\n"
+            "Note: EXP2_RULES_3, EXP2_RULES_8, and EXP2_RULES_12 reported metrics\n"
+            "are historical reference results loaded from results_experiments_branch.csv.\n"
             "Current recomputed metrics are preserved in the output CSV."
         )
         print()
