@@ -1,18 +1,18 @@
 {
   "anfis": [
     {
-      "centers": "9275e31252a28e3eeefde0dd349a96c64ad846e3b5ccdb352df0e6a657ef775e",
+      "centers": "5b545c999def7f421c75a89cbe0a420e2b2bfe805d2112646cc81cee18531541",
       "random_state": 42,
-      "sigmas": "763973a7a7f4455e3c064bb29e3ff0758c04a3f3fa96fa09a353583fe65eeb6e",
+      "sigmas": "50ee9781f510c49a5e47ecef5d571d281745202076be0a52d3a61ab1f3abdf11",
       "signal_index": 0,
-      "theta": "36dc073fef750c86a8cce9421bdc70ec2dba431b47c8beb557857250c9ca542a"
+      "theta": "6c60697233e447b0d13e60468c42ea60ac7fa9fa95be28e0533848f0a3a4db1e"
     },
     {
-      "centers": "cfd1fcf73699f83ee70f893415ccca3c5cbc228773bce86593cbf359ee3cfa59",
+      "centers": "a2a3938cbad0d5571e927a48556969665f3278afd378d979ddc54b83b93169be",
       "random_state": 43,
-      "sigmas": "01c532678e32363ad75ebe7c56efab0e7b370a1111783f887b590390c43bdc1f",
+      "sigmas": "1506870fe9ce33f7e763a0d0b1ed28ee1ec9f8de86833f7d685135db613a1cbb",
       "signal_index": 1,
-      "theta": "cf4b50f0cc8e16eadcb8a9041069dae8d83200fc5849482d102d1826312411b6"
+      "theta": "bf6ec823d0dbb892b028706d3c8533f7830594d0bf4fd5635cc53fb9a061ea72"
     },
     {
       "centers": "24518990ebb162fec759efa4c17313dfadcb84493934d7a4e58fb83127463971",
@@ -22,11 +22,11 @@
       "theta": "67239878e95d41e289bb1d2ba232470f293a524f2f305d300d4a01984c41163d"
     },
     {
-      "centers": "aaea3d91f3128481750db401c2822ffef8a7ae2fab2eafb4e4065f8f3ec2c2da",
+      "centers": "da09a8c85f38a1bf270da7a5f8b52485c20b51ae9370cccaf8517785f6050969",
       "random_state": 45,
-      "sigmas": "7ec247bc5ad23e7dc88f7fe89f994bd49fde98a81bd491660dbfbb1f7dbaf4f5",
+      "sigmas": "2f4fa345566c6fead7d94856f132af540bcfd642cc6e3d20578f9faeba1f37cf",
       "signal_index": 3,
-      "theta": "abc7bfb89dd14891e58935c8a36f427d3a7068837ae6ea3712ae787b8f7f707f"
+      "theta": "fec3fe18b54e538e9f3a794e7f4c0fcdc05e8713941d5793c6d860b2fb59de30"
     }
   ],
   "anfis_random_states": [
@@ -35,13 +35,13 @@
     44,
     45
   ],
-  "bn_cpt": "c2bef209e48a6e2542a7a468d98a7ff0d368f75a1e01742f9b294e1a4747a5fc",
+  "bn_cpt": "f9a97addb28d775c65e3513fa1b9d0c436dbf42b7d15080a743fc1893aa757f2",
   "debug_npz": "artifacts\\debug_exp2\\EXP2_RULES_8_debug.npz",
-  "final_posterior": "b5ed5caf20239cc5a1694174263fbd4cb49164949a236851d5ad37da44e451d1",
+  "final_posterior": "75ebcdb1976d7dfac4bc541712d757a2ae788a41836b8db5f1e33db7c7dea414",
   "final_seed_offset": 0,
   "fts_test_features": "f2f4294f5d26a494166c18f7324ba399257d5ba0ba644629f6aa39e4070d4e0a",
   "fts_train_features": "3a555a47489d5995dccc43b8f6d864610bdcb061b76898e40603d1bdb03ca433",
-  "test_signal_probs": "378cfecf113efc7e0b12aae06e0acf398e12bd49d6ae686d0544b95a93f9b08f",
-  "train_signal_probs": "0bc078dcde451906fb899b05c3d680d03534f55fcd410b8bada989d911a3d335",
+  "test_signal_probs": "f20fdaecce86dca39da527c70853c017c92e6f04e65267dbae978d89f0af1dc8",
+  "train_signal_probs": "27da806a82bb06beee5fb35379c314f90be56a2a92f5af354fe787d514dcab5c",
   "variant": "EXP2_RULES_8"
 }

@@ -1,18 +1,18 @@
 {
   "anfis": [
     {
-      "centers": "ecabc5e1cbe5d988af2a107003266e245ca2de63e852a081df4f962716939b71",
+      "centers": "0e581bb32efe9368c51363db87849da35ddeb9dd753d93b9c145871a5daed679",
       "random_state": 42,
-      "sigmas": "e4dac6cc7da2dbfd6531069d7546003f9209c7b9122286a1fe1bd0924ff7db45",
+      "sigmas": "f828952996012a8f0fee2024a4c6beaa76ccf8338c17c897d81141b0c95f6f3b",
       "signal_index": 0,
-      "theta": "a2a4082637267a9640269e9380f9bf96b074ae86e720d83f44fbd96e2cd26e5d"
+      "theta": "9405c6689677949e40eeb4c67bbc67f48c93019aafcb5c231e661ffa19760a26"
     },
     {
-      "centers": "c7626fb3e616b1d6091faa9d446f9ebd7f3da272a3aa003b3f2e0b35e9ec93b9",
+      "centers": "f559b22f472bad79057a47f602a9af37843ae34a9262b22f0eb6457d4662c246",
       "random_state": 43,
-      "sigmas": "56cab8f16031bd1dceb0ab3cde1fe178a9a081523f48e5754da986a8c7889b27",
+      "sigmas": "88f9cb42711126aec31ad4e2df4ed7e8d6874fcd4b5d86573169501b7eb85098",
       "signal_index": 1,
-      "theta": "af36c95181d55b57356e7f74de5a96784d66316fc801a71b52c29737f3b01bbd"
+      "theta": "5b198eef4fceb86f2ec081e728a1fe195180ef988cf950b50129739fe07dd028"
     },
     {
       "centers": "fb6510e1e9b6fba61f8a001e75c4f9e94a00199e9fe25e18f3fd931c31da02ad",
@@ -35,13 +35,13 @@
     44,
     45
   ],
-  "bn_cpt": "c915ab2a409601928951365a60403b7caffedbf0f26817f9d5643cfd687372b1",
+  "bn_cpt": "6383fc37815ad34f06c02a30d501a62519a1b261fb27a93b5212bfb8ea2f031c",
   "debug_npz": "artifacts\\debug_exp2\\EXP2_RULES_3_debug.npz",
-  "final_posterior": "0dbcbd215c784fbc3af2ec1ceee52782f8e5f39ed9a5cb563880e56e2ab6c311",
+  "final_posterior": "ea2c3129a2b1fd42c8c5eb0af1b5ec225c7b676974e6a870f31101f576a0ae3b",
   "final_seed_offset": 0,
   "fts_test_features": "f2f4294f5d26a494166c18f7324ba399257d5ba0ba644629f6aa39e4070d4e0a",
   "fts_train_features": "3a555a47489d5995dccc43b8f6d864610bdcb061b76898e40603d1bdb03ca433",
-  "test_signal_probs": "34c9da5ab05e0134734d73df6d0c47811e2bf1285fae612195df6149e7c365d9",
-  "train_signal_probs": "efcbbc7a0cb04f13c4010cb86a8fbbf00c4cac145cec20bed1d7986fd316ab3c",
+  "test_signal_probs": "da2f615962b571a75acf04b004cdb3ccaadd501464130e1a86b06a701d02c1bb",
+  "train_signal_probs": "40a9cf9da91c52796a3df8a1ac116ebd1752e4f60e42969cc7c9d25a2b2d5ffe",
   "variant": "EXP2_RULES_3"
 }

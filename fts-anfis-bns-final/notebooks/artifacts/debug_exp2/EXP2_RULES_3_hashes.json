@@ -8,18 +8,18 @@
       "theta": "9405c6689677949e40eeb4c67bbc67f48c93019aafcb5c231e661ffa19760a26"
     },
     {
-      "centers": "c7626fb3e616b1d6091faa9d446f9ebd7f3da272a3aa003b3f2e0b35e9ec93b9",
+      "centers": "38a29c7cea3fed151169529eb65b270c9027d8fca0114ab8d6634daf69769272",
       "random_state": 43,
-      "sigmas": "56cab8f16031bd1dceb0ab3cde1fe178a9a081523f48e5754da986a8c7889b27",
+      "sigmas": "28065b66e1ca86d4c765284b6197a0b0b86de87482b79e20d7cac912002848e3",
       "signal_index": 1,
-      "theta": "af36c95181d55b57356e7f74de5a96784d66316fc801a71b52c29737f3b01bbd"
+      "theta": "486bbb4f95a2a88fad1f32e1c202f29557ea6ec6f6eb245b9245b009c07b516f"
     },
     {
-      "centers": "fb6510e1e9b6fba61f8a001e75c4f9e94a00199e9fe25e18f3fd931c31da02ad",
+      "centers": "7de77b9d0e46254e7930afdae85b52ff956040667fbf3b9a8296417ea42e607b",
       "random_state": 44,
-      "sigmas": "2dd24e437464644295fc331da0e2d396e0c17b68c7566b10510a086ba9082f0c",
+      "sigmas": "613002062d6c1fa552615b07a05ff905810e31aa56d8f7ffcb165eaa96bd1b77",
       "signal_index": 2,
-      "theta": "13b8e210e9c21d1d1d7a1357a2cc3db2a1cde23ea205d1cf0214492638943c6f"
+      "theta": "635edfc0821b09ae9eb5c927c5589d46622acc8368a95ee1c6b47340b2abc550"
     },
     {
       "centers": "8aa40298d421db5f51fda55b4e33b657d15dc93fb985ceaf9c9cfb089df4bad4",
@@ -35,13 +35,13 @@
     44,
     45
   ],
-  "bn_cpt": "3fc043753786d85f561093ab03a0c0867c692c9bc7bc9488f2ba936bec041502",
+  "bn_cpt": "967d4ca5200f87dba7117f8c6a7e27a69ac22a097096e40a065f4cfbb26665d2",
   "debug_npz": "artifacts\\debug_exp2\\EXP2_RULES_3_debug.npz",
-  "final_posterior": "5fc86ac0cc9e4bca93e70f4f72e951476b1dd1ed97850e440a52eda408f43769",
+  "final_posterior": "8f4b6bc953554322239d47a7cef51f52423d5e618c6aa3d1f6c8eb3d1983158c",
   "final_seed_offset": 0,
   "fts_test_features": "f2f4294f5d26a494166c18f7324ba399257d5ba0ba644629f6aa39e4070d4e0a",
   "fts_train_features": "3a555a47489d5995dccc43b8f6d864610bdcb061b76898e40603d1bdb03ca433",
-  "test_signal_probs": "ab5d1a18eb3000c3a944679199a808825186f810ff7c14c28a51e90210cf57e6",
-  "train_signal_probs": "be9bd874750014ff3a27c84af5901ceacf61c8cf885867bbdecf5ccdba67e9aa",
+  "test_signal_probs": "0094aff636661cb616e24f0afc55d23c90d0a5a3ec266c122368c24a8f00c1ea",
+  "train_signal_probs": "f6d2c707c1f4dd7e641a69276c7a4e30cea2787956cbf0f8f84362f189e8485c",
   "variant": "EXP2_RULES_3"
 }

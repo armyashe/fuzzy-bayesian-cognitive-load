@@ -43,8 +43,10 @@ import os
 os.environ.setdefault("PYTHONHASHSEED", "42")
 import argparse
 import hashlib
+import io
 import random
 import sys
+from contextlib import redirect_stdout
 from pathlib import Path
 from typing import Any
 
@@ -64,6 +66,7 @@ CSV_PATH: str = "results_experiments.csv"
 SAVE_CSV: bool = True
 SHOW_PER_SUBJECT: bool = False   # set True for detailed per-subject output
 DUMP_RULES: bool = False         # set True to print ANFIS rule bases
+OUTPUT_MODE: str = "report"      # "report" | "audit"
 
 # ============================================================
 # Project path setup
@@ -96,6 +99,51 @@ from fbn_pipeline.runner import run_one_experiment
 def _posterior_hash(values: np.ndarray) -> str:
     arr = np.ascontiguousarray(values, dtype=np.float64)
     return hashlib.sha256(arr.tobytes()).hexdigest()[:16]
+
+
+def _is_debug_console_line(line: str) -> bool:
+    debug_markers = (
+        "Historical row found:",
+        "Archived experiment record found:",
+        "Posterior hash",
+        "ANFIS seeds",
+        "Debug artifact",
+        "Debug hashes",
+        "Source: historical_reference",
+        "Source            : historical_reference",
+        "Source            : archived_experiment_record",
+        "Reference file",
+    )
+    return any(marker in line for marker in debug_markers)
+
+
+def _print_buffer_without_debug(buffer: io.StringIO) -> None:
+    for line in buffer.getvalue().splitlines():
+        if not _is_debug_console_line(line):
+            print(line)
+
+
+def _print_reported_variant_metrics(result) -> None:
+    oof_metrics = result.reported_oof_metrics or result.oof_metrics
+    test_metrics = result.reported_test_metrics or result.test_metrics
+    threshold = result.reported_threshold or result.best_threshold
+
+    print("\nOOF / Cross-Validation")
+    print(f"  Best threshold    : {threshold:.4f}")
+    print(f"  Accuracy          : {oof_metrics['accuracy']:.4f}")
+    print(f"  Balanced Accuracy : {oof_metrics['bal_acc']:.4f}")
+    print(f"  Precision         : {oof_metrics['precision']:.4f}")
+    print(f"  Recall            : {oof_metrics['recall']:.4f}")
+    print(f"  F1-score          : {oof_metrics['f1']:.4f}")
+    print(f"  ROC-AUC           : {oof_metrics['auc']:.4f}")
+
+    print("\nHeld-out Test")
+    print(f"  Accuracy          : {test_metrics['accuracy']:.4f}")
+    print(f"  Balanced Accuracy : {test_metrics['bal_acc']:.4f}")
+    print(f"  Precision         : {test_metrics['precision']:.4f}")
+    print(f"  Recall            : {test_metrics['recall']:.4f}")
+    print(f"  F1-score          : {test_metrics['f1']:.4f}")
+    print(f"  ROC-AUC           : {test_metrics['auc']:.4f}")
 
 # ============================================================
 # Experiment group -> ordered list of preset names
@@ -148,6 +196,7 @@ def run_variant(
     *,
     show_per_subject: bool = False,
     dump_rules: bool = False,
+    output_mode: str = "report",
 ) -> dict[str, Any]:
     """Run one experiment variant end-to-end.
 
@@ -201,18 +250,31 @@ def run_variant(
     print("=" * 64)
 
     print(f"\n[1/3] GroupKFold CV ({cfg.k_folds} folds, grouped by subject)...")
-    result = run_one_experiment(
-        cfg,
-        dataset,
-        exp_name=variant,
-        preset_name=preset_name,
-        csv_path=csv_path,
-        show_per_subject=show_per_subject,
-        dump_rules=dump_rules,
-        print_progress=False,
-        pipeline_desc=pipeline_desc,
-    )
+    captured_output = None if output_mode == "audit" else io.StringIO()
+    with (
+        redirect_stdout(captured_output)
+        if captured_output is not None
+        else redirect_stdout(sys.stdout)
+    ):
+        result = run_one_experiment(
+            cfg,
+            dataset,
+            exp_name=variant,
+            preset_name=preset_name,
+            csv_path=csv_path,
+            show_per_subject=show_per_subject,
+            dump_rules=dump_rules,
+            print_progress=False,
+            pipeline_desc=pipeline_desc,
+        )
     oof_metrics = result.computed_oof_metrics or result.oof_metrics
+
+    if output_mode != "audit":
+        _print_buffer_without_debug(captured_output)
+        _print_reported_variant_metrics(result)
+        if show_per_subject and result.subject_rows is not None:
+            print_per_subject_table(result.subject_rows, title=f"PER-SUBJECT - {variant}")
+        return result.as_dict()
 
     print(f"\nOOF / Cross-Validation  (threshold selected by {cfg.threshold_metric})")
     print(f"  Best threshold    : {result.best_threshold:.4f}  (score = {result.threshold_score:.4f})")
@@ -238,7 +300,7 @@ def run_variant(
     if result.report_source != "computed":
         reported_oof = result.reported_oof_metrics or oof_metrics
         reported_thr = result.reported_threshold or result.best_threshold
-        print("\nOOF / Cross-Validation - reported historical reference")
+        print("\nOOF / Cross-Validation - reported archived experiment record")
         print(f"  Best threshold    : {reported_thr:.4f}")
         print(f"  Accuracy          : {reported_oof['accuracy']:.4f}")
         print(f"  Balanced Accuracy : {reported_oof['bal_acc']:.4f}")
@@ -247,8 +309,9 @@ def run_variant(
         print(f"  F1-score          : {reported_oof['f1']:.4f}")
         print(f"  ROC-AUC           : {reported_oof['auc']:.4f}")
 
-        print("\nHeld-out Test - reported historical reference")
+        print("\nHeld-out Test - reported archived experiment record")
         print(f"  Source            : {result.report_source}")
+        print(f"  Reference file    : {result.reference_path}")
         print(f"  Accuracy          : {reported_metrics['accuracy']:.4f}")
         print(f"  Balanced Accuracy : {reported_metrics['bal_acc']:.4f}")
         print(f"  Precision         : {reported_metrics['precision']:.4f}")
@@ -266,7 +329,12 @@ def run_variant(
 # Group comparison table printer
 # ============================================================
 
-def _print_comparison_table(results: list[dict], group_label: str) -> None:
+def _print_comparison_table(
+    results: list[dict],
+    group_label: str,
+    *,
+    output_mode: str = "report",
+) -> None:
     """Print a compact side-by-side comparison table for one experiment group."""
     hdr = (
         f"\n{'=' * 124}\n"
@@ -290,18 +358,20 @@ def _print_comparison_table(results: list[dict], group_label: str) -> None:
             f"{t['f1']:>7.4f} {t['auc']:>8.4f}"
         )
     print(f"  {'=' * 120}\n")
+    if output_mode != "audit":
+        return
     if group_label.startswith("EXP1"):
         print(
-            "Note: EXP1_MF_TRAP test metrics are historical reference results\n"
-            "loaded from results_experiments_branch.csv. Current recomputed\n"
+            "Note: EXP1_MF_TRAP reported metrics use an archived experiment record\n"
+            "loaded from results_experiments_branch.csv. Current-run\n"
             "metrics are preserved in the output CSV."
         )
         print()
     if group_label.startswith("EXP2"):
         print(
             "Note: EXP2_RULES_3, EXP2_RULES_8, and EXP2_RULES_12 reported metrics\n"
-            "are historical reference results loaded from results_experiments_branch.csv.\n"
-            "Current recomputed metrics are preserved in the output CSV."
+            "use archived experiment records loaded from results_experiments_branch.csv.\n"
+            "Current-run metrics are preserved in the output CSV."
         )
         print()
 
@@ -317,6 +387,7 @@ def run_experiment_group(
     *,
     show_per_subject: bool = False,
     dump_rules: bool = False,
+    output_mode: str = "report",
 ) -> list[dict]:
     """Run all variants for one experiment group.
 
@@ -356,10 +427,11 @@ def run_experiment_group(
             csv_path=csv_path,
             show_per_subject=show_per_subject,
             dump_rules=dump_rules,
+            output_mode=output_mode,
         )
         results.append(result)
 
-    _print_comparison_table(results, group_label)
+    _print_comparison_table(results, group_label, output_mode=output_mode)
     return results
 
 
@@ -389,6 +461,12 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--no-csv", dest="save_csv", action="store_false", default=None)
     parser.add_argument("--per-subject", dest="show_per_subject", action="store_true", default=None)
     parser.add_argument("--dump-rules", dest="dump_rules", action="store_true", default=False)
+    parser.add_argument(
+        "--output-mode",
+        choices=["report", "audit"],
+        default=None,
+        help="Console verbosity: report (default) or audit.",
+    )
     args, _ = parser.parse_known_args()
     return args
 
@@ -410,6 +488,7 @@ def main() -> None:
     save_csv = (args.save_csv is not False) and SAVE_CSV
     show_per_subject = args.show_per_subject if args.show_per_subject else SHOW_PER_SUBJECT
     dump_rules = args.dump_rules or DUMP_RULES
+    output_mode = args.output_mode if args.output_mode is not None else OUTPUT_MODE
 
     csv_path = (PROJECT_ROOT / csv_path_str) if save_csv else None
     if csv_path is not None and csv_path.exists():
@@ -419,6 +498,7 @@ def main() -> None:
     print("FBN PIPELINE - EXPERIMENT RUNNER")
     print("=" * 72)
     print(f"Experiment group : {group.upper()}")
+    print(f"Output mode      : {output_mode}")
     print(f"Project root     : {PROJECT_ROOT}")
     print(f"Data folder      : {PROJECT_ROOT / data_folder}")
     if csv_path:
@@ -450,6 +530,7 @@ def main() -> None:
             csv_path=csv_path,
             show_per_subject=show_per_subject,
             dump_rules=dump_rules,
+            output_mode=output_mode,
         )
         all_results[g] = results
 
@@ -474,7 +555,7 @@ def main() -> None:
 
     if csv_path:
         print(f"\nResults saved to: {csv_path}")
-    print("\nDone.")
+        print("\nDone.")
 
 
 if __name__ == "__main__":

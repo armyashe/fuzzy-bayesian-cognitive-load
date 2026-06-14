@@ -22,11 +22,11 @@
       "theta": "67239878e95d41e289bb1d2ba232470f293a524f2f305d300d4a01984c41163d"
     },
     {
-      "centers": "aaea3d91f3128481750db401c2822ffef8a7ae2fab2eafb4e4065f8f3ec2c2da",
+      "centers": "88bc0d1d9d38b18df30569a7cf1e9a3cd683cd8c3094d6e3732e1feefd2f3383",
       "random_state": 45,
-      "sigmas": "7ec247bc5ad23e7dc88f7fe89f994bd49fde98a81bd491660dbfbb1f7dbaf4f5",
+      "sigmas": "e3787c61c8866a90540659981f036848f14b7615d3e6ffd5dfd6d4c4576e7334",
       "signal_index": 3,
-      "theta": "abc7bfb89dd14891e58935c8a36f427d3a7068837ae6ea3712ae787b8f7f707f"
+      "theta": "c1d0a7ec1c647ce6283a930d38f73e3250592fa7dcc317ec4a713f72799a6410"
     }
   ],
   "anfis_random_states": [
@@ -35,13 +35,13 @@
     44,
     45
   ],
-  "bn_cpt": "c2bef209e48a6e2542a7a468d98a7ff0d368f75a1e01742f9b294e1a4747a5fc",
+  "bn_cpt": "c37be4d0ad485d48c0a96773a68c40443e3e48d83a1467143a34b56d9c55b3ee",
   "debug_npz": "artifacts\\debug_exp2\\EXP2_RULES_8_debug.npz",
-  "final_posterior": "b5ed5caf20239cc5a1694174263fbd4cb49164949a236851d5ad37da44e451d1",
+  "final_posterior": "33900050f704bc044c99b605f28d17f217bacaeadb97f8795d1cececbec7c836",
   "final_seed_offset": 0,
   "fts_test_features": "f2f4294f5d26a494166c18f7324ba399257d5ba0ba644629f6aa39e4070d4e0a",
   "fts_train_features": "3a555a47489d5995dccc43b8f6d864610bdcb061b76898e40603d1bdb03ca433",
-  "test_signal_probs": "378cfecf113efc7e0b12aae06e0acf398e12bd49d6ae686d0544b95a93f9b08f",
-  "train_signal_probs": "0bc078dcde451906fb899b05c3d680d03534f55fcd410b8bada989d911a3d335",
+  "test_signal_probs": "8145ea4a8dd38bbbd7c1677b38525960a50a5b33abd4377300d9a8b36d3a0baa",
+  "train_signal_probs": "008319cbc037460e002fa1b4189143d18e0aa94a8d7667c8cda6121eea8d40bd",
   "variant": "EXP2_RULES_8"
 }
