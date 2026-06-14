@@ -21,7 +21,7 @@ st.title("Fuzzy-ANFIS-Bayesian Network Dashboard")
 render_sidebar(ROOT)
 
 if "results" not in st.session_state:
-    st.info("Select an experiment group and run the pipeline from the sidebar.")
+    st.info("Select an ablation variant and click 'Run / refresh experiment' in the sidebar.")
     st.stop()
 
 results = st.session_state["results"]
