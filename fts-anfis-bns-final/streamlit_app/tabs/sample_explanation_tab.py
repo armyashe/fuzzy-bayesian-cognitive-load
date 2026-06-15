@@ -8,7 +8,6 @@ from fbn_pipeline.models.bn_fusion import SIGNAL_NAMES
 from streamlit_app.components.charts import plot_rule_firing, plot_signal_window
 from streamlit_app.components.soft_evidence import render_soft_membership_heatmap
 from streamlit_app.components.tables import (
-    compute_hard_debug_contribution_table,
     compute_soft_influence_table,
     signal_weights_df,
 )
@@ -216,54 +215,6 @@ def render_stage4_bn(sample: dict) -> None:
                 "log(sum over evidence levels of membership * P(level | class)), with signal weighting applied."
             )
             st.dataframe(influence_df, use_container_width=True, hide_index=True)
-
-        debug_items = []
-        if bn_trace.get("dominant_bins"):
-            debug_items.append("dominant_bins")
-        if bn_trace.get("evidence_bins") and bn_trace.get("mode") != "soft":
-            debug_items.append("hard_evidence_bins")
-        if bn_trace.get("signal_weights") and signal_weights_are_uniform(bn_trace["signal_weights"]):
-            debug_items.append("uniform_signal_weights")
-        if bn_trace.get("mode") != "soft" and bn_trace.get("log_likelihoods"):
-            debug_items.append("hard_contributions")
-
-        if debug_items:
-            with st.expander("Debug: hard-bin approximation", expanded=False):
-                st.caption(
-                    "This section is only a debug approximation and is not the inference mechanism "
-                    "used in the main soft-evidence experiment."
-                )
-                if "dominant_bins" in debug_items:
-                    st.markdown("**Dominant evidence level for visualization only**")
-                    st.dataframe(
-                        pd.DataFrame(
-                            [
-                                {"signal": k, "dominant_evidence_level": v}
-                                for k, v in bn_trace["dominant_bins"].items()
-                            ]
-                        ),
-                        use_container_width=True,
-                        hide_index=True,
-                    )
-                if "hard_evidence_bins" in debug_items:
-                    st.markdown("**Hard evidence bins for non-soft variants**")
-                    st.dataframe(
-                        pd.DataFrame(
-                            [{"signal": k, "hard_bin": v} for k, v in bn_trace["evidence_bins"].items()]
-                        ),
-                        use_container_width=True,
-                        hide_index=True,
-                    )
-                if "uniform_signal_weights" in debug_items:
-                    st.markdown("**Uniform signal weights**")
-                    st.dataframe(signal_weights_df(bn_trace["signal_weights"]), use_container_width=True, hide_index=True)
-                if "hard_contributions" in debug_items:
-                    st.markdown("**Hard-bin log-likelihood contributions**")
-                    st.dataframe(
-                        compute_hard_debug_contribution_table(bn_trace),
-                        use_container_width=True,
-                        hide_index=True,
-                    )
 
 
 def render_bn_score_summary(sample: dict) -> None:

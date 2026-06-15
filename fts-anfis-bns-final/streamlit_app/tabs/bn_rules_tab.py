@@ -92,97 +92,6 @@ def render_fts_encoder_section(results: dict, fts) -> None:
                         use_container_width=True,
                     )
 
-    render_sample_fts_trace(results, fts, summary)
-
-
-def render_sample_fts_trace(results: dict, fts, summary: list[dict]) -> None:
-    dataset = results.get("dataset")
-    if dataset is None or not hasattr(dataset, "X_test"):
-        return
-
-    with st.expander("Sample FTS Encoding Trace", expanded=False):
-        test_users = sorted(pd.unique(dataset.user_test))
-        selected_user = st.selectbox(
-            "Trace test user",
-            test_users,
-            index=0,
-            key="bn_rules_trace_user",
-        )
-        user_indices = np.where(dataset.user_test == selected_user)[0]
-        local_idx = st.number_input(
-            f"Trace sample index within user {selected_user}",
-            min_value=0,
-            max_value=len(user_indices) - 1,
-            value=0,
-            step=1,
-            key=f"bn_rules_trace_local_idx_{selected_user}",
-        )
-        sample_idx = int(user_indices[int(local_idx)])
-        x_sample = dataset.X_test[sample_idx]
-        st.caption(
-            f"Selected user = `{selected_user}` | global test index = `{sample_idx}`. "
-            "This sample is transformed with the already-fitted full-train encoder."
-        )
-
-        max_steps = min(10, x_sample.shape[1])
-        if max_steps <= 5:
-            timesteps = max_steps
-        else:
-            timesteps = st.slider(
-                "Timesteps to show",
-                min_value=5,
-                max_value=max_steps,
-                value=5,
-                step=1,
-                key="bn_rules_trace_timesteps",
-            )
-
-        state_names = list(summary[0]["fuzzy_sets"].keys()) if summary else []
-        feature_names = get_transition_feature_names(fts.n_sets)
-        for s, signal in enumerate(SIGNAL_NAMES):
-            trace = fts.get_encoding_trace(x_sample, s, n_timesteps=int(timesteps))
-            with st.expander(f"{signal} trace", expanded=False):
-                st.markdown("**Raw signal values**")
-                st.dataframe(
-                    pd.DataFrame(
-                        {
-                            "t": list(range(len(trace["raw_values"]))),
-                            "value": np.round(trace["raw_values"], 4),
-                        }
-                    ),
-                    use_container_width=True,
-                    hide_index=True,
-                )
-
-                st.markdown("**Membership degrees**")
-                st.dataframe(
-                    pd.DataFrame(trace["membership_degrees"]).round(4),
-                    use_container_width=True,
-                    hide_index=True,
-                )
-
-                st.markdown("**Transition matrix**")
-                st.dataframe(
-                    pd.DataFrame(
-                        trace["transition_matrix"],
-                        index=[f"From {name}" for name in state_names],
-                        columns=[f"To {name}" for name in state_names],
-                    ).round(4),
-                    use_container_width=True,
-                )
-
-                st.markdown("**Flattened vector passed to the corresponding ANFIS input**")
-                st.dataframe(
-                    pd.DataFrame(
-                        {
-                            "feature": feature_names,
-                            "value": np.round(trace["flattened_vector"], 4),
-                        }
-                    ),
-                    use_container_width=True,
-                    hide_index=True,
-                )
-
 
 def render_bn_section(bn, has_bn: bool, bn_details: dict | None, bn_graph_path: Path | None) -> None:
 
@@ -220,13 +129,7 @@ def render_bn_section(bn, has_bn: bool, bn_details: dict | None, bn_graph_path: 
         else:
             weights_df = signal_weights_df(bn.get_signal_weights())
         weights_dict = dict(zip(weights_df["signal"], weights_df["weight"]))
-        if signal_weights_are_uniform(weights_dict):
-            with st.expander("Debug: uniform BN signal weights", expanded=False):
-                st.caption(
-                    "Uniform weights are shown for completeness; they do not change the relative signal weighting."
-                )
-                st.dataframe(weights_df, use_container_width=True, hide_index=True)
-        else:
+        if not signal_weights_are_uniform(weights_dict):
             st.markdown("**BN Signal Weights Used in Soft Evidence Fusion**")
             st.dataframe(weights_df, use_container_width=True, hide_index=True)
 
@@ -264,13 +167,6 @@ def render_bn_section(bn, has_bn: bool, bn_details: dict | None, bn_graph_path: 
                             use_container_width=True,
                             hide_index=True,
                         )
-                    elif trace.get("evidence_bins"):
-                        with st.expander("Debug: hard-bin approximation", expanded=False):
-                            st.caption(
-                                "This is only a debug approximation and is not the inference mechanism "
-                                "used in the main soft-evidence experiment."
-                            )
-                            st.json(trace.get("evidence_bins", {}))
 
                     col1, col2 = st.columns(2)
                     with col1:
