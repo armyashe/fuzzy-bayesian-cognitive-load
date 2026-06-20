@@ -210,7 +210,7 @@ EXPERIMENT_PRESETS: dict[str, dict] = {
     "EXP1_MF_GBELL": {
         **THESIS_FINAL_PRESET,
         "mf_type": "gbell",
-        "anfis_mf_type": "gbell",
+        "anfis_mf_type": "gaussian",
         "bn_structure": "naive",
         "ablation": "exp1",
         "experiment_group": "EXP1", "variant_name": "EXP1_MF_GBELL",
