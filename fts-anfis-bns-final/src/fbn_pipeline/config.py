@@ -50,6 +50,8 @@ class ExperimentConfig:
     final_seed_offset: int = 0
 
     dump_rules: bool = False
+    dump_exp2_debug: bool = False
+    exp2_debug_dir: str = "artifacts/debug_exp2"
     save_csv: str = "artifacts/A2_soft_results/results_main.csv"
 
     # ------------------------------------------------------------------
@@ -105,13 +107,20 @@ class ExperimentConfig:
 
 
 def setup_seed(seed: int) -> None:
+    os.environ["PYTHONHASHSEED"] = str(seed)
+    os.environ.setdefault("OMP_NUM_THREADS", "1")
+    os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
+    os.environ.setdefault("MKL_NUM_THREADS", "1")
+    os.environ.setdefault("VECLIB_MAXIMUM_THREADS", "1")
+    os.environ.setdefault("NUMEXPR_NUM_THREADS", "1")
+    os.environ.setdefault("LOKY_MAX_CPU_COUNT", "1")
+
     import random
 
     import numpy as np
 
     random.seed(seed)
     np.random.seed(seed)
-    os.environ["PYTHONHASHSEED"] = str(seed)
 
 
 THESIS_CONFIG_EXPECTED = {

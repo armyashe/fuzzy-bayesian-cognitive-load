@@ -32,7 +32,7 @@
     "calibrate": "none",
     "final_seed_offset": 0,
     "dump_rules": false,
-    "save_csv": "results_main.csv",
+    "save_csv": "artifacts/A2_soft_results/results_main.csv",
     "bn_structure": "naive",
     "ablation": "exp3",
     "fusion_mode_when_no_bn": "mean",

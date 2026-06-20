@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-from contextlib import nullcontext
 from pathlib import Path
 
 import numpy as np
@@ -30,53 +29,10 @@ from .csv_reporting import (
     log_to_csv,
     make_result_row,
 )
-from .historical_reference import (
-    EXP1_HISTORICAL_OVERRIDE_VARIANTS,
-    EXP2_HISTORICAL_OVERRIDE_VARIANTS,
-    EXP2_RULES_12_HISTORICAL_OVERRIDE,
-    assert_historical_override_allowed,
-    load_historical_exp1_reference,
-    load_historical_exp2_reference,
-    load_historical_exp2_rules12_reference,
-)
 from .results import RunResult
 
 
 _EXP2_DEBUG_VARIANTS = {"EXP2_RULES_3", "EXP2_RULES_8", "EXP2_RULES_12"}
-_PROJECT_ROOT = Path(__file__).resolve().parents[2]
-_HISTORICAL_REFERENCE_CSV = (
-    _PROJECT_ROOT / "artifacts" / "A2_soft_results" / "results_experiments_branch.csv"
-)
-_EXP1_HISTORICAL_REFS_CACHE: dict[str, dict] | None = None
-_EXP2_HISTORICAL_REFS_CACHE: dict[str, dict] | None = None
-_EXP2_RULES12_HISTORICAL_REFS_CACHE: dict[str, dict] | None = None
-
-
-def _exp1_historical_refs() -> dict[str, dict]:
-    global _EXP1_HISTORICAL_REFS_CACHE
-    if _EXP1_HISTORICAL_REFS_CACHE is None:
-        _EXP1_HISTORICAL_REFS_CACHE = load_historical_exp1_reference(
-            _HISTORICAL_REFERENCE_CSV
-        )
-    return _EXP1_HISTORICAL_REFS_CACHE
-
-
-def _exp2_historical_refs() -> dict[str, dict]:
-    global _EXP2_HISTORICAL_REFS_CACHE
-    if _EXP2_HISTORICAL_REFS_CACHE is None:
-        _EXP2_HISTORICAL_REFS_CACHE = load_historical_exp2_reference(
-            _HISTORICAL_REFERENCE_CSV
-        )
-    return _EXP2_HISTORICAL_REFS_CACHE
-
-
-def _exp2_rules12_historical_refs() -> dict[str, dict]:
-    global _EXP2_RULES12_HISTORICAL_REFS_CACHE
-    if _EXP2_RULES12_HISTORICAL_REFS_CACHE is None:
-        _EXP2_RULES12_HISTORICAL_REFS_CACHE = load_historical_exp2_rules12_reference(
-            _HISTORICAL_REFERENCE_CSV
-        )
-    return _EXP2_RULES12_HISTORICAL_REFS_CACHE
 
 
 def _array_hash(arr: np.ndarray) -> str:
@@ -84,10 +40,9 @@ def _array_hash(arr: np.ndarray) -> str:
     return hashlib.sha256(data.tobytes()).hexdigest()
 
 
-def _rules12_thread_context(exp_name: str):
-    if exp_name in EXP2_RULES_12_HISTORICAL_OVERRIDE:
-        return threadpool_limits(limits=1)
-    return nullcontext()
+def _deterministic_thread_context():
+    """Force deterministic linear algebra/KMeans reductions for experiments."""
+    return threadpool_limits(limits=1)
 
 
 def _json_hash(obj) -> str:
@@ -126,10 +81,10 @@ def _write_exp2_debug_artifact(
     test,
     best_threshold: float,
 ) -> None:
-    if exp_name not in _EXP2_DEBUG_VARIANTS:
+    if not cfg.dump_exp2_debug or exp_name not in _EXP2_DEBUG_VARIANTS:
         return
 
-    out_dir = Path("artifacts") / "debug_exp2"
+    out_dir = Path(cfg.exp2_debug_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     artifact_path = out_dir / f"{exp_name}_debug.npz"
     hash_path = out_dir / f"{exp_name}_hashes.json"
@@ -218,7 +173,7 @@ def run_one_experiment(
 
     if print_progress:
         print("\n[1/3] Running GroupKFold CV...")
-    with _rules12_thread_context(exp_name):
+    with _deterministic_thread_context():
         cv = run_cv_result(dataset.X_train, dataset.y_train, dataset.user_train, cfg)
 
     best_thr, thr_score = find_best_threshold(
@@ -228,12 +183,6 @@ def run_one_experiment(
         n_grid=cfg.threshold_grid,
     )
     oof_metrics = compute_oof_metrics(cv.oof_y, cv.oof_post, best_thr)
-    computed_threshold = best_thr
-    reported_threshold = best_thr
-    reference_threshold: float | None = None
-    computed_oof_metrics = dict(oof_metrics)
-    reported_oof_metrics = computed_oof_metrics
-    reference_oof_metrics: dict[str, float] = {}
     oof_pred = (cv.oof_post >= best_thr).astype(int)
 
     if print_progress:
@@ -244,7 +193,7 @@ def run_one_experiment(
     if print_progress:
         print("\n[2/3] Retraining on full training set and evaluating on test set...")
     setup_seed(cfg.seed)
-    with _rules12_thread_context(exp_name):
+    with _deterministic_thread_context():
         test = retrain_and_test_result(
             dataset.X_train,
             dataset.y_train,
@@ -256,57 +205,6 @@ def run_one_experiment(
 
     if print_progress:
         print_metrics(dataset.y_test, test.y_pred, test.posterior, title="Held-out Test")
-
-    computed_test_metrics = dict(test.metrics)
-    reported_test_metrics = computed_test_metrics
-    reference_test_metrics: dict[str, float] = {}
-    report_source = "computed"
-    reference_path = ""
-    if exp_name in EXP1_HISTORICAL_OVERRIDE_VARIANTS:
-        historical_refs = _exp1_historical_refs()
-        if exp_name in historical_refs:
-            assert_historical_override_allowed(exp_name)
-            reference = historical_refs[exp_name]
-            reported_threshold = float(reference["threshold"])
-            reference_threshold = reported_threshold
-            reported_oof_metrics = dict(reference["oof_metrics"])
-            reference_oof_metrics = reported_oof_metrics
-            reported_test_metrics = dict(reference["test_metrics"])
-            reference_test_metrics = reported_test_metrics
-            report_source = reference["source"]
-            reference_path = reference["path"]
-        else:
-            reference_path = str(_HISTORICAL_REFERENCE_CSV.resolve())
-    elif exp_name in EXP2_HISTORICAL_OVERRIDE_VARIANTS:
-        historical_refs = _exp2_historical_refs()
-        if exp_name in historical_refs:
-            assert_historical_override_allowed(exp_name)
-            reference = historical_refs[exp_name]
-            reported_threshold = float(reference["threshold"])
-            reference_threshold = reported_threshold
-            reported_oof_metrics = dict(reference["oof_metrics"])
-            reference_oof_metrics = reported_oof_metrics
-            reported_test_metrics = dict(reference["test_metrics"])
-            reference_test_metrics = reported_test_metrics
-            report_source = reference["source"]
-            reference_path = reference["path"]
-        else:
-            reference_path = str(_HISTORICAL_REFERENCE_CSV.resolve())
-    elif exp_name in EXP2_RULES_12_HISTORICAL_OVERRIDE:
-        historical_refs = _exp2_rules12_historical_refs()
-        if exp_name in historical_refs:
-            assert_historical_override_allowed(exp_name)
-            reference = historical_refs[exp_name]
-            reported_threshold = float(reference["threshold"])
-            reference_threshold = reported_threshold
-            reported_oof_metrics = dict(reference["oof_metrics"])
-            reference_oof_metrics = reported_oof_metrics
-            reported_test_metrics = dict(reference["test_metrics"])
-            reference_test_metrics = reported_test_metrics
-            report_source = reference["source"]
-            reference_path = reference["path"]
-        else:
-            reference_path = str(_HISTORICAL_REFERENCE_CSV.resolve())
 
     subject_rows = None
     if show_per_subject:
@@ -356,20 +254,9 @@ def run_one_experiment(
         row = make_result_row(
             cfg.to_dict(),
             exp_name=exp_name,
-            best_thr=reported_threshold,
-            oof=reported_oof_metrics,
-            test=reported_test_metrics,
-            computed_threshold=computed_threshold,
-            reference_threshold=reference_threshold,
-            computed_oof=computed_oof_metrics,
-            reference_oof=reference_oof_metrics,
-            computed_test=computed_test_metrics,
-            reference_test=reference_test_metrics,
-            result_source=(
-                "historical_reference"
-                if report_source.startswith("historical_reference:")
-                else "computed"
-            ),
+            best_thr=best_thr,
+            oof=oof_metrics,
+            test=test.metrics,
             eval_protocol=eval_protocol,
             rank_metric=rank_metric or cfg.rank_metric,
             thr_metric=threshold_metric or cfg.threshold_metric,
@@ -400,19 +287,11 @@ def run_one_experiment(
         threshold_score=float(thr_score),
         oof_post=cv.oof_post,
         oof_pred=oof_pred,
-        oof_metrics=computed_oof_metrics,
+        oof_metrics=dict(oof_metrics),
         test_post=test.posterior,
         test_pred=test.y_pred,
-        test_metrics=computed_test_metrics,
+        test_metrics=dict(test.metrics),
         models=test.models,
-        computed_threshold=computed_threshold,
-        reported_threshold=reported_threshold,
-        computed_oof_metrics=computed_oof_metrics,
-        reported_oof_metrics=reported_oof_metrics,
-        computed_test_metrics=computed_test_metrics,
-        reported_test_metrics=reported_test_metrics,
-        report_source=report_source,
-        reference_path=reference_path,
         subject_rows=subject_rows,
         artifact_dir=artifact_dir_str,
         run_name=run_name or exp_name,

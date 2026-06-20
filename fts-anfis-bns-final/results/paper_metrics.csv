@@ -1,4 +1,0 @@
-Experiment,Configuration,OOF Accuracy,Test Accuracy,Test Precision,Test Recall,Test F1-score,Test AUC
-Exp1,FTS-ANFIS-BN,0.6234,0.7513,0.7778,0.7143,0.7447,0.7734
-Exp2,FTS-ANFIS Mean fusion,0.6013,0.6891,0.6583,0.8061,0.7248,0.7158
-Exp3,FTS Summary-BN,0.568,0.5389,0.5446,0.5612,0.5528,0.5709

@@ -103,16 +103,10 @@ def _posterior_hash(values: np.ndarray) -> str:
 
 def _is_debug_console_line(line: str) -> bool:
     debug_markers = (
-        "Historical row found:",
-        "Archived experiment record found:",
         "Posterior hash",
         "ANFIS seeds",
         "Debug artifact",
         "Debug hashes",
-        "Source: historical_reference",
-        "Source            : historical_reference",
-        "Source            : archived_experiment_record",
-        "Reference file",
     )
     return any(marker in line for marker in debug_markers)
 
@@ -123,27 +117,23 @@ def _print_buffer_without_debug(buffer: io.StringIO) -> None:
             print(line)
 
 
-def _print_reported_variant_metrics(result) -> None:
-    oof_metrics = result.reported_oof_metrics or result.oof_metrics
-    test_metrics = result.reported_test_metrics or result.test_metrics
-    threshold = result.reported_threshold or result.best_threshold
-
+def _print_variant_metrics(result) -> None:
     print("\nOOF / Cross-Validation")
-    print(f"  Best threshold    : {threshold:.4f}")
-    print(f"  Accuracy          : {oof_metrics['accuracy']:.4f}")
-    print(f"  Balanced Accuracy : {oof_metrics['bal_acc']:.4f}")
-    print(f"  Precision         : {oof_metrics['precision']:.4f}")
-    print(f"  Recall            : {oof_metrics['recall']:.4f}")
-    print(f"  F1-score          : {oof_metrics['f1']:.4f}")
-    print(f"  ROC-AUC           : {oof_metrics['auc']:.4f}")
+    print(f"  Best threshold    : {result.best_threshold:.4f}")
+    print(f"  Accuracy          : {result.oof_metrics['accuracy']:.4f}")
+    print(f"  Balanced Accuracy : {result.oof_metrics['bal_acc']:.4f}")
+    print(f"  Precision         : {result.oof_metrics['precision']:.4f}")
+    print(f"  Recall            : {result.oof_metrics['recall']:.4f}")
+    print(f"  F1-score          : {result.oof_metrics['f1']:.4f}")
+    print(f"  ROC-AUC           : {result.oof_metrics['auc']:.4f}")
 
     print("\nHeld-out Test")
-    print(f"  Accuracy          : {test_metrics['accuracy']:.4f}")
-    print(f"  Balanced Accuracy : {test_metrics['bal_acc']:.4f}")
-    print(f"  Precision         : {test_metrics['precision']:.4f}")
-    print(f"  Recall            : {test_metrics['recall']:.4f}")
-    print(f"  F1-score          : {test_metrics['f1']:.4f}")
-    print(f"  ROC-AUC           : {test_metrics['auc']:.4f}")
+    print(f"  Accuracy          : {result.test_metrics['accuracy']:.4f}")
+    print(f"  Balanced Accuracy : {result.test_metrics['bal_acc']:.4f}")
+    print(f"  Precision         : {result.test_metrics['precision']:.4f}")
+    print(f"  Recall            : {result.test_metrics['recall']:.4f}")
+    print(f"  F1-score          : {result.test_metrics['f1']:.4f}")
+    print(f"  ROC-AUC           : {result.test_metrics['auc']:.4f}")
 
 # ============================================================
 # Experiment group -> ordered list of preset names
@@ -267,11 +257,11 @@ def run_variant(
             print_progress=False,
             pipeline_desc=pipeline_desc,
         )
-    oof_metrics = result.computed_oof_metrics or result.oof_metrics
+    oof_metrics = result.oof_metrics
 
     if output_mode != "audit":
         _print_buffer_without_debug(captured_output)
-        _print_reported_variant_metrics(result)
+        _print_variant_metrics(result)
         if show_per_subject and result.subject_rows is not None:
             print_per_subject_table(result.subject_rows, title=f"PER-SUBJECT - {variant}")
         return result.as_dict()
@@ -286,7 +276,7 @@ def run_variant(
     print(f"  ROC-AUC           : {oof_metrics['auc']:.4f}")
     print(f"  Posterior hash    : {_posterior_hash(result.oof_post)}")
 
-    test_metrics = result.computed_test_metrics or result.test_metrics
+    test_metrics = result.test_metrics
     print(f"\nHeld-out Test - computed  (threshold = {result.best_threshold:.4f})")
     print(f"  Accuracy          : {test_metrics['accuracy']:.4f}")
     print(f"  Balanced Accuracy : {test_metrics['bal_acc']:.4f}")
@@ -295,29 +285,6 @@ def run_variant(
     print(f"  F1-score          : {test_metrics['f1']:.4f}")
     print(f"  ROC-AUC           : {test_metrics['auc']:.4f}")
     print(f"  Posterior hash    : {_posterior_hash(result.test_post)}")
-
-    reported_metrics = result.reported_test_metrics or test_metrics
-    if result.report_source != "computed":
-        reported_oof = result.reported_oof_metrics or oof_metrics
-        reported_thr = result.reported_threshold or result.best_threshold
-        print("\nOOF / Cross-Validation - reported archived experiment record")
-        print(f"  Best threshold    : {reported_thr:.4f}")
-        print(f"  Accuracy          : {reported_oof['accuracy']:.4f}")
-        print(f"  Balanced Accuracy : {reported_oof['bal_acc']:.4f}")
-        print(f"  Precision         : {reported_oof['precision']:.4f}")
-        print(f"  Recall            : {reported_oof['recall']:.4f}")
-        print(f"  F1-score          : {reported_oof['f1']:.4f}")
-        print(f"  ROC-AUC           : {reported_oof['auc']:.4f}")
-
-        print("\nHeld-out Test - reported archived experiment record")
-        print(f"  Source            : {result.report_source}")
-        print(f"  Reference file    : {result.reference_path}")
-        print(f"  Accuracy          : {reported_metrics['accuracy']:.4f}")
-        print(f"  Balanced Accuracy : {reported_metrics['bal_acc']:.4f}")
-        print(f"  Precision         : {reported_metrics['precision']:.4f}")
-        print(f"  Recall            : {reported_metrics['recall']:.4f}")
-        print(f"  F1-score          : {reported_metrics['f1']:.4f}")
-        print(f"  ROC-AUC           : {reported_metrics['auc']:.4f}")
 
     if show_per_subject and result.subject_rows is not None:
         print_per_subject_table(result.subject_rows, title=f"PER-SUBJECT - {variant}")
@@ -347,9 +314,9 @@ def _print_comparison_table(
     print(hdr)
     print(f"  {'-' * 120}")
     for r in results:
-        o = r.get("reported_oof_metrics") or r["oof_metrics"]
-        t = r.get("reported_test_metrics") or r["test_metrics"]
-        thr = r.get("reported_threshold") or r["best_threshold"]
+        o = r["oof_metrics"]
+        t = r["test_metrics"]
+        thr = r["best_threshold"]
         print(
             f"  {r['variant']:<20s}  {thr:>6.4f}  "
             f"{o['accuracy']:>7.4f} {o['bal_acc']:>7.4f} {o['precision']:>7.4f} {o['recall']:>7.4f} "
@@ -543,7 +510,7 @@ def main() -> None:
             lbl = EXP_GROUP_LABELS[g]
             print(f"\n{lbl}")
             for r in results:
-                t = r.get("reported_test_metrics") or r["test_metrics"]
+                t = r["test_metrics"]
                 print(
                     f"  {r['variant']:<22s}  "
                     f"Acc={t['accuracy']:.4f}  "
