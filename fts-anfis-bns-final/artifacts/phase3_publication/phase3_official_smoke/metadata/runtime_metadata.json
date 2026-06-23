@@ -1,0 +1,42 @@
+{
+  "allow_partial_outer_folds": true,
+  "command": "scripts\\run_nested_publication.py --run-name phase3_official_smoke --mode smoke --train-subject-limit 4 --test-subject-limit 2 --inner-folds 2 --include-xgboost --include-cnn --include-ablations --overwrite",
+  "complete_coverage": false,
+  "configuration_hash": "proposed_gbell_3",
+  "dataset_order_hash": "a194891ea71c00974a82116aff2e628befd7377c6273475bcad904ce1cf4ef1b",
+  "git_commit_hash": "28672b90744769bcaf432a97a3e19853126adf76",
+  "git_worktree_dirty": true,
+  "groupkfold_split_count": 2,
+  "mode": "smoke",
+  "model_selection_metric": "balanced_accuracy",
+  "package_versions": {
+    "numpy": "2.4.4",
+    "openpyxl": "3.1.5",
+    "pandas": "3.0.2",
+    "pytest": "9.1.1",
+    "scikit-learn": "1.8.0",
+    "scipy": "1.17.1",
+    "torch": "2.12.1+cpu",
+    "xgboost": "3.2.0"
+  },
+  "protocol": "official_holdout_smoke",
+  "python_version": "3.12.10",
+  "run_name": "phase3_official_smoke",
+  "seed": 42,
+  "test_sample_count": 78,
+  "test_subject_count": 2,
+  "test_subject_ids": [
+    "3caqi",
+    "6frz4"
+  ],
+  "threshold_selection_metric": "balanced_accuracy",
+  "timestamp_utc": "2026-06-23T11:52:14.760699+00:00",
+  "train_sample_count": 154,
+  "train_subject_count": 4,
+  "training_subject_ids": [
+    "1mpau",
+    "2nxs5",
+    "5gpsc",
+    "7swyk"
+  ]
+}

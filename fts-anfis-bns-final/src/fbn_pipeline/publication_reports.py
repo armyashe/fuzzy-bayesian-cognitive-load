@@ -14,6 +14,7 @@ def generate_tables_from_run(run_root: Path | str) -> list[Path]:
     root = Path(run_root)
     metadata = json.loads((root / "metadata" / "runtime_metadata.json").read_text(encoding="utf-8"))
     predictions = _safe_read_csv(root / "predictions" / "outer_fold_predictions.csv")
+    final_predictions = _final_prediction_rows(predictions, metadata)
     overall_metrics = _safe_read_csv(root / "metrics" / "overall_metrics.csv")
     per_subject_metrics = _safe_read_csv(root / "metrics" / "per_subject_metrics.csv")
     ci_path = root / "statistics" / "confidence_intervals.csv"
@@ -32,10 +33,16 @@ def generate_tables_from_run(run_root: Path | str) -> list[Path]:
     table_a = pd.DataFrame(
         [
             {
-                "subject_count": int(predictions["subject_id"].nunique()),
-                "sample_count": int(predictions["sample_id"].nunique()),
-                "rest_count": int((predictions["true_label"] == 0).sum()),
-                "task_count": int((predictions["true_label"] == 1).sum()),
+                "protocol": metadata.get("protocol"),
+                "dataset_subject_count": (metadata.get("train_subject_count") or 0) + (metadata.get("test_subject_count") or 0),
+                "train_subject_count": metadata.get("train_subject_count"),
+                "test_subject_count": metadata.get("test_subject_count"),
+                "dataset_sample_count": (metadata.get("train_sample_count") or 0) + (metadata.get("test_sample_count") or 0),
+                "train_sample_count": metadata.get("train_sample_count"),
+                "test_sample_count": metadata.get("test_sample_count"),
+                "official_test_prediction_count": int(final_predictions["sample_id"].nunique()) if not final_predictions.empty else 0,
+                "rest_count": int((final_predictions["true_label"] == 0).sum()) if not final_predictions.empty else 0,
+                "task_count": int((final_predictions["true_label"] == 1).sum()) if not final_predictions.empty else 0,
                 "mode": metadata["mode"],
             }
         ]
@@ -45,10 +52,11 @@ def generate_tables_from_run(run_root: Path | str) -> list[Path]:
     table_b = pd.DataFrame(
         [
             {
-                "outer_protocol": "LOSO",
+                "protocol": metadata.get("protocol"),
+                "outer_protocol": "Official subject-independent holdout" if metadata.get("protocol") == "official_holdout_groupkfold" else "Nested LOSO secondary",
                 "inner_protocol": "GroupKFold",
-                "selection_metric": "balanced_accuracy",
-                "threshold_metric": "balanced_accuracy",
+                "selection_metric": metadata.get("model_selection_metric"),
+                "threshold_metric": metadata.get("threshold_selection_metric"),
                 "run_mode": metadata["mode"],
                 "seed": metadata["seed"],
             }
@@ -73,6 +81,7 @@ def generate_figures_from_run(run_root: Path | str) -> list[Path]:
     root = Path(run_root)
     metadata = json.loads((root / "metadata" / "runtime_metadata.json").read_text(encoding="utf-8"))
     predictions = _safe_read_csv(root / "predictions" / "outer_fold_predictions.csv")
+    final_predictions = _final_prediction_rows(predictions, metadata)
     overall_metrics = _safe_read_csv(root / "metrics" / "overall_metrics.csv")
     per_subject_metrics = _safe_read_csv(root / "metrics" / "per_subject_metrics.csv")
     selection_path = root / "statistics" / "selection_frequencies.csv"
@@ -89,14 +98,19 @@ def generate_figures_from_run(run_root: Path | str) -> list[Path]:
     ax.text(0.02, 0.82, "FTS -> ANFIS -> BN", fontsize=18, weight="bold")
     ax.text(0.02, 0.58, f"Run: {metadata['run_name']}", fontsize=12)
     ax.text(0.02, 0.42, f"Mode: {metadata['mode']}", fontsize=12)
-    ax.text(0.02, 0.26, "Saved artifacts drive all downstream reports.", fontsize=12)
+    ax.text(0.02, 0.26, f"Protocol: {metadata.get('protocol')}", fontsize=12)
     output_paths.append(_save_figure(fig, root / "figures" / "architecture_overview.png"))
 
     fig, ax = plt.subplots(figsize=(8, 4))
     ax.axis("off")
-    ax.text(0.02, 0.80, "Outer LOSO", fontsize=16, weight="bold")
-    ax.text(0.02, 0.56, "Inner grouped CV for candidate/threshold selection", fontsize=13)
-    ax.text(0.02, 0.32, "Publication metrics from aggregated outer-test predictions only", fontsize=13)
+    if metadata.get("protocol") == "official_holdout_groupkfold":
+        ax.text(0.02, 0.80, "Official 18/5 Holdout", fontsize=16, weight="bold")
+        ax.text(0.02, 0.56, "5-fold GroupKFold only inside the 18 training subjects", fontsize=13)
+        ax.text(0.02, 0.32, "Publication metrics from the 193 official test predictions only", fontsize=13)
+    else:
+        ax.text(0.02, 0.80, "Nested LOSO Secondary", fontsize=16, weight="bold")
+        ax.text(0.02, 0.56, "Inner grouped CV for candidate/threshold selection", fontsize=13)
+        ax.text(0.02, 0.32, "Secondary metrics from aggregated outer-test predictions only", fontsize=13)
     output_paths.append(_save_figure(fig, root / "figures" / "nested_protocol.png"))
 
     fig, ax = plt.subplots(figsize=(6, 4))
@@ -107,7 +121,7 @@ def generate_figures_from_run(run_root: Path | str) -> list[Path]:
     output_paths.append(_save_figure(fig, root / "figures" / "overall_balanced_accuracy.png"))
 
     fig, ax = plt.subplots(figsize=(6, 4))
-    for method, group in predictions.groupby("method", sort=True):
+    for method, group in final_predictions.groupby("method", sort=True):
         if group["true_label"].nunique() < 2:
             continue
         fpr, tpr, _ = roc_curve(group["true_label"], group["score_or_probability"])
@@ -117,7 +131,7 @@ def generate_figures_from_run(run_root: Path | str) -> list[Path]:
 
     fig, axes = plt.subplots(1, max(1, len(overall_metrics)), figsize=(5 * max(1, len(overall_metrics)), 4))
     axes = np.atleast_1d(axes)
-    for ax, (method, group) in zip(axes, predictions.groupby("method", sort=True), strict=False):
+    for ax, (method, group) in zip(axes, final_predictions.groupby("method", sort=True), strict=False):
         cm = confusion_matrix(group["true_label"], group["prediction"], labels=[0, 1])
         ConfusionMatrixDisplay(cm, display_labels=["REST", "TASK"]).plot(ax=ax, colorbar=False)
         ax.set_title(method)
@@ -162,9 +176,9 @@ def generate_figures_from_run(run_root: Path | str) -> list[Path]:
             ax.set_title("ANFIS Rule Selection Frequencies")
             output_paths.append(_save_figure(fig, root / "figures" / "anfis_rule_selection_frequencies.png"))
 
-    if "threshold" in predictions.columns:
+    if "threshold" in final_predictions.columns:
         fig, ax = plt.subplots(figsize=(6, 4))
-        ax.hist(predictions["threshold"], bins=min(10, predictions["threshold"].nunique()))
+        ax.hist(final_predictions["threshold"], bins=min(10, final_predictions["threshold"].nunique()))
         ax.set_title("Threshold Distribution")
         ax.set_xlabel("Selected Threshold")
         output_paths.append(_save_figure(fig, root / "figures" / "threshold_distribution.png"))
@@ -208,3 +222,13 @@ def _safe_read_csv(path: Path) -> pd.DataFrame:
         return pd.read_csv(path)
     except EmptyDataError:
         return pd.DataFrame()
+
+
+def _final_prediction_rows(predictions: pd.DataFrame, metadata: dict[str, object]) -> pd.DataFrame:
+    if predictions.empty:
+        return predictions
+    if metadata.get("protocol") == "official_holdout_groupkfold" and "prediction_role" in predictions.columns:
+        return predictions.loc[predictions["prediction_role"] == "official_test"].copy()
+    if "prediction_role" in predictions.columns:
+        return predictions.loc[predictions["prediction_role"] != "train_oof"].copy()
+    return predictions.copy()

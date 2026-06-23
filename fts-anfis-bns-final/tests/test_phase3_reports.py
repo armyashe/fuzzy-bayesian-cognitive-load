@@ -26,6 +26,13 @@ def make_run_fixture(run_root: Path) -> None:
                 "run_name": "phase3_smoke",
                 "mode": "smoke",
                 "allow_partial_outer_folds": True,
+                "protocol": "official_holdout_smoke",
+                "train_subject_count": 2,
+                "test_subject_count": 1,
+                "train_sample_count": 4,
+                "test_sample_count": 2,
+                "model_selection_metric": "balanced_accuracy",
+                "threshold_selection_metric": "balanced_accuracy",
                 "seed": 7,
                 "dataset_order_hash": "d0",
                 "configuration_hash": "c0",
@@ -38,8 +45,8 @@ def make_run_fixture(run_root: Path) -> None:
         [
             {
                 "method": "proposed",
-                "outer_fold_index": 0,
                 "subject_id": "s0",
+                "prediction_role": "train_oof",
                 "sample_id": "a",
                 "true_label": 0,
                 "score_or_probability": 0.2,
@@ -51,9 +58,9 @@ def make_run_fixture(run_root: Path) -> None:
             },
             {
                 "method": "proposed",
-                "outer_fold_index": 1,
                 "subject_id": "s1",
                 "sample_id": "b",
+                "prediction_role": "official_test",
                 "true_label": 1,
                 "score_or_probability": 0.8,
                 "prediction": 1,
@@ -90,3 +97,5 @@ def test_table_and_figure_generation_use_saved_artifacts_only(tmp_path: Path) ->
 
     assert any(path.name.startswith("table_c_") for path in table_paths)
     assert any(path.suffix == ".png" for path in figure_paths)
+    table_a = pd.read_csv(run_root / "tables" / "table_a_dataset_characteristics.csv")
+    assert table_a.loc[0, "official_test_prediction_count"] == 1

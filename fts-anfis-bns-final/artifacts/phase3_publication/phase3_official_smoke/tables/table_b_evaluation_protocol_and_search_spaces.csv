@@ -1,0 +1,2 @@
+protocol,outer_protocol,inner_protocol,selection_metric,threshold_metric,run_mode,seed
+official_holdout_smoke,Nested LOSO secondary,GroupKFold,balanced_accuracy,balanced_accuracy,smoke,42

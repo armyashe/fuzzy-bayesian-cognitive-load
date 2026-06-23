@@ -14,7 +14,11 @@ if str(SRC) not in sys.path:
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from fbn_pipeline.publication_artifacts import create_run_layout, validate_publication_predictions
+from fbn_pipeline.publication_artifacts import (
+    create_run_layout,
+    validate_official_holdout_predictions,
+    validate_publication_predictions,
+)
 from fbn_pipeline.publication_metrics import (
     compute_pooled_metrics_from_predictions,
     compute_subject_metric_summary,
@@ -176,3 +180,43 @@ def test_validate_publication_predictions_rejects_incomplete_coverage_by_default
         mode="smoke",
         allow_partial_outer_folds=True,
     )
+
+
+def test_validate_official_holdout_predictions_requires_shared_complete_test_rows() -> None:
+    frame = pd.DataFrame(
+        [
+            {
+                "method": "proposed",
+                "subject_id": "te0",
+                "sample_id": "test_0",
+                "prediction_role": "official_test",
+            },
+            {
+                "method": "baseline",
+                "subject_id": "te0",
+                "sample_id": "test_0",
+                "prediction_role": "official_test",
+            },
+        ]
+    )
+
+    validate_official_holdout_predictions(
+        frame,
+        expected_train_sample_ids=["train_0"],
+        expected_test_sample_ids=["test_0"],
+        expected_test_subject_ids=["te0"],
+        mode="publication",
+        protocol="official_holdout_groupkfold",
+        complete_coverage=True,
+    )
+
+    with pytest.raises(ValueError, match="exactly 2 final predictions per method|complete coverage"):
+        validate_official_holdout_predictions(
+            frame.iloc[:1].copy(),
+            expected_train_sample_ids=["train_0"],
+            expected_test_sample_ids=["test_0", "test_1"],
+            expected_test_subject_ids=["te0", "te1"],
+            mode="publication",
+            protocol="official_holdout_groupkfold",
+            complete_coverage=True,
+        )

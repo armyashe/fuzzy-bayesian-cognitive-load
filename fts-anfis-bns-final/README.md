@@ -3,9 +3,9 @@
 This repository contains two evaluation paths:
 
 - `Legacy 18/5 pipeline`: preserved for regression protection and contextual comparison only.
-- `Phase 1/2/3 nested publication pipeline`: the primary subject-independent workflow for publication-ready results.
+- `Phase 3 publication pipeline`: primary official holdout workflow plus optional secondary nested LOSO robustness analysis.
 
-The legacy path and its frozen fixture are intentionally unchanged. New publication results should come from the nested workflow only.
+The legacy path and its frozen fixture are intentionally unchanged. New publication results should come from the official holdout workflow by default.
 
 ## Dataset Layout
 
@@ -64,19 +64,29 @@ The nested runner enforces deterministic seeds and single-threaded execution whe
 
 ## Evaluation Protocol
 
-The primary publication workflow uses:
+Primary publication evaluation:
 
-- outer `Leave-One-Subject-Out`
-- inner grouped cross-validation
-- candidate selection by inner OOF `balanced_accuracy`
-- threshold selection by inner OOF `balanced_accuracy`
-- final pooled metrics from aggregated outer-test predictions only
+- fixed official subject-independent split
+- `18` official training subjects / `632` training windows
+- `5` official test subjects / `193` test windows
+- `5`-fold `GroupKFold` only inside the `18` official training subjects
+- candidate selection by training OOF `balanced_accuracy`
+- threshold selection by training OOF `balanced_accuracy`
+- final retraining on all `18` official training subjects
+- final pooled metrics from the `193` official test predictions only
 
-Strict publication coverage is the default:
+Secondary robustness evaluation:
 
-- every subject must appear exactly once as outer test
-- every sample must receive exactly one outer prediction per method
-- missing outer folds or predictions raise errors
+- optional `nested_loso_secondary`
+- all `23` subjects
+- reported separately and never mixed with official holdout results
+
+Strict publication coverage is the default for the primary protocol:
+
+- every official test sample must receive exactly one final prediction per method
+- final publication outputs must contain exactly `193` official test prediction rows per method
+- no official training sample may appear in final test predictions
+- missing predictions or split inconsistencies raise errors
 
 Partial coverage is allowed only in explicit smoke mode.
 
@@ -154,7 +164,7 @@ The publication path keeps the predefined candidate grids from Phase 2:
 
 ## Cross-Fitted BN Evidence
 
-The proposed method fits the BN only from cross-fitted ANFIS evidence generated inside the outer-training fold. The BN never sees direct ANFIS evidence produced by models trained on the same samples used to fit the BN CPTs.
+The proposed method fits the BN only from cross-fitted ANFIS evidence generated inside the official training subjects. The BN never uses official test evidence or labels for binning, priors, CPT estimation, smoothing, calibration, or threshold selection.
 
 ## Output Artifacts
 
@@ -180,11 +190,11 @@ The Phase 3 runner writes machine-readable artifacts such as:
 
 ## Entry Points
 
-Run the proposed nested method:
+Run the proposed method with the default official holdout protocol:
 
 ```powershell
 .\.venv312_new\Scripts\python.exe scripts\run_nested_proposed.py `
-  --run-name nested_full_v1 `
+  --run-name official_proposed_v1 `
   --mode publication
 ```
 
@@ -199,22 +209,34 @@ Run the full publication workflow into one shared run root:
   --include-ablations
 ```
 
-Run the controlled baselines:
+Run the controlled baselines on the same official split:
 
 ```powershell
 .\.venv312_new\Scripts\python.exe scripts\run_nested_baselines.py `
-  --run-name nested_baselines_v1 `
+  --run-name official_baselines_v1 `
   --mode publication `
   --include-xgboost `
   --include-cnn
 ```
 
-Run the proposed model plus the Phase 3 ablations:
+Run the proposed model plus the Phase 3 ablations on the official split:
 
 ```powershell
 .\.venv312_new\Scripts\python.exe scripts\run_nested_ablations.py `
-  --run-name nested_ablations_v1 `
+  --run-name official_ablations_v1 `
   --mode publication
+```
+
+Run the optional secondary nested LOSO workflow explicitly:
+
+```powershell
+.\.venv312_new\Scripts\python.exe scripts\run_nested_publication.py `
+  --run-name nested_loso_secondary_v1 `
+  --mode publication `
+  --protocol nested_loso_secondary `
+  --include-xgboost `
+  --include-cnn `
+  --include-ablations
 ```
 
 Regenerate statistics, tables, and figures from saved artifacts only:
@@ -234,7 +256,8 @@ Example:
 .\.venv312_new\Scripts\python.exe scripts\run_nested_ablations.py `
   --run-name phase3_smoke `
   --mode smoke `
-  --subject-limit 5 `
+  --train-subject-limit 4 `
+  --test-subject-limit 2 `
   --inner-folds 2 `
   --overwrite
 ```
@@ -247,7 +270,7 @@ Smoke mode:
 
 ## Legacy Path
 
-Legacy commands such as `main.py` and `run_experiments.py` remain available for contextual use and regression protection, but they are not the primary publication evaluation path.
+Legacy commands such as `main.py` and `run_experiments.py` remain available for contextual use and regression protection, but they are not the primary publication evaluation path. The optional `nested_loso_secondary` workflow is also not the primary publication path.
 
 The frozen fixture at `tests/fixtures/legacy_reference.json` must not be regenerated automatically.
 
@@ -273,6 +296,7 @@ Focused Phase 3 tests:
 
 ```powershell
 .\.venv312_new\Scripts\python.exe -m pytest `
+tests\test_official_protocol.py `
 tests\test_phase3_reporting.py `
 tests\test_phase3_execution.py `
 tests\test_phase3_reports.py -q
@@ -286,7 +310,7 @@ Approximate runtime guidance:
 - reduced smoke runs: minutes
 - full publication run across all methods and ablations: materially longer and should be started manually
 
-The repository is prepared for the full run, but the expensive `23`-subject experiment is intentionally user-controlled.
+The repository is prepared for the full official holdout run, but the expensive full experiment is intentionally user-controlled.
 
 ## Known Limitations
 

@@ -99,15 +99,35 @@ def collect_runtime_metadata(
     configuration_hash: str,
     dataset_order_hash: str,
     command: str | None = None,
+    protocol: str | None = None,
+    complete_coverage: bool | None = None,
+    train_subject_ids: list[str] | None = None,
+    test_subject_ids: list[str] | None = None,
+    train_sample_count: int | None = None,
+    test_sample_count: int | None = None,
+    groupkfold_split_count: int | None = None,
+    model_selection_metric: str | None = None,
+    threshold_selection_metric: str | None = None,
     package_names: Iterable[str] = ("numpy", "pandas", "scikit-learn", "scipy", "openpyxl", "xgboost", "torch", "pytest"),
 ) -> dict[str, object]:
     return {
         "run_name": run_name,
         "mode": mode,
         "allow_partial_outer_folds": bool(allow_partial_outer_folds),
+        "complete_coverage": complete_coverage,
+        "protocol": protocol,
         "seed": int(seed),
         "configuration_hash": configuration_hash,
         "dataset_order_hash": dataset_order_hash,
+        "train_subject_count": None if train_subject_ids is None else len(train_subject_ids),
+        "test_subject_count": None if test_subject_ids is None else len(test_subject_ids),
+        "train_sample_count": train_sample_count,
+        "test_sample_count": test_sample_count,
+        "groupkfold_split_count": groupkfold_split_count,
+        "model_selection_metric": model_selection_metric,
+        "threshold_selection_metric": threshold_selection_metric,
+        "training_subject_ids": train_subject_ids,
+        "test_subject_ids": test_subject_ids,
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "python_version": platform.python_version(),
         "command": command or "",
@@ -159,6 +179,57 @@ def validate_publication_predictions(
         )
     if mode == "publication" and allow_partial_outer_folds:
         raise ValueError("Publication mode cannot allow partial outer folds")
+
+
+def validate_official_holdout_predictions(
+    frame: pd.DataFrame,
+    *,
+    expected_train_sample_ids: list[str],
+    expected_test_sample_ids: list[str],
+    expected_test_subject_ids: list[str],
+    mode: str,
+    protocol: str,
+    complete_coverage: bool,
+) -> None:
+    required_columns = {"method", "subject_id", "sample_id", "prediction_role"}
+    missing = required_columns - set(frame.columns)
+    if missing:
+        raise ValueError(f"Prediction frame is missing required columns: {sorted(missing)}")
+
+    test_rows = frame.loc[frame["prediction_role"] == "official_test"].copy()
+    if test_rows.empty:
+        raise ValueError("Official publication outputs require official_test prediction rows")
+    if test_rows[["method", "sample_id"]].duplicated().any():
+        raise ValueError("Duplicate method/sample rows found in official_test predictions")
+    if set(test_rows["sample_id"].astype(str)) & set(map(str, expected_train_sample_ids)):
+        raise ValueError("Official final predictions contain training sample IDs")
+
+    grouped = test_rows.groupby("method", sort=True)
+    expected_test_sample_set = set(map(str, expected_test_sample_ids))
+    expected_test_subject_set = set(map(str, expected_test_subject_ids))
+    reference_sample_ids: set[str] | None = None
+    for method, method_rows in grouped:
+        sample_ids = set(method_rows["sample_id"].astype(str))
+        subject_ids = set(method_rows["subject_id"].astype(str))
+        if mode == "publication":
+            if len(method_rows) != len(expected_test_sample_ids):
+                raise ValueError(
+                    "Official publication mode requires exactly "
+                    f"{len(expected_test_sample_ids)} final predictions per method"
+                )
+            if sample_ids != expected_test_sample_set:
+                raise ValueError("Official publication mode requires complete coverage of official test sample IDs")
+            if subject_ids != expected_test_subject_set:
+                raise ValueError("Official publication mode requires complete coverage of official test subject IDs")
+        if reference_sample_ids is None:
+            reference_sample_ids = sample_ids
+        elif sample_ids != reference_sample_ids:
+            raise ValueError("All methods must predict the same official test sample IDs")
+
+    if mode == "publication" and protocol != "official_holdout_groupkfold":
+        raise ValueError("Publication mode must use protocol official_holdout_groupkfold for primary results")
+    if mode == "publication" and not complete_coverage:
+        raise ValueError("Publication artifacts require complete coverage")
 
 
 def _contains_results(root: Path) -> bool:

@@ -1,0 +1,5 @@
+method_a,method_b,metric,paired_subject_count,zero_difference_count,statistic,p_value,effect_size_rank_biserial,zero_method,test,is_strongest_baseline,corrected_p_value
+proposed_fts_anfis_bn,fts_rbf_svm,balanced_accuracy,2,0,0.0,0.5,-1.0,pratt,wilcoxon_signed_rank,True,1.0
+proposed_fts_anfis_bn,fts_xgboost,balanced_accuracy,2,0,0.0,0.5,-1.0,pratt,wilcoxon_signed_rank,False,1.0
+proposed_fts_anfis_bn,fts_logistic_regression,balanced_accuracy,2,0,1.0,1.0,0.0,pratt,wilcoxon_signed_rank,False,1.0
+proposed_fts_anfis_bn,raw_1d_cnn,balanced_accuracy,2,0,1.0,1.0,0.0,pratt,wilcoxon_signed_rank,False,1.0

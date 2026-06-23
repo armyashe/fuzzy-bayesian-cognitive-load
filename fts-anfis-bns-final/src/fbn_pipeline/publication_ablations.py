@@ -13,6 +13,7 @@ from .nested_evaluation import (
     assert_no_subject_overlap,
 )
 from .nested_results import CandidateResult, NestedEvaluationResult, OuterFoldResult
+from .official_holdout import OfficialHoldoutManifest, OfficialHoldoutResult, OfficialHoldoutSplit
 from .production_adapters import _fit_signal_models, _make_fts_encoder, _predict_signal_evidence
 from .production_bn import fit_bn_from_cross_fitted_evidence, generate_cross_fitted_signal_evidence
 from .structured_config import EvaluationConfig
@@ -38,6 +39,16 @@ def build_frozen_proposed_configuration_map(result: NestedEvaluationResult) -> d
             "configuration_hash": fold.configuration_hash,
         }
     return frozen
+
+
+def build_frozen_official_configuration(result: OfficialHoldoutResult) -> dict[str, object]:
+    hyper = dict(result.selected_hyperparameters)
+    return {
+        "mf_type": str(hyper["mf_type"]),
+        "n_rules": int(hyper["n_rules"]),
+        "selected_threshold": float(result.selected_threshold),
+        "source_method": result.method_name,
+    }
 
 
 def compute_fts_summary_signal_evidence(features: np.ndarray) -> np.ndarray:
@@ -198,6 +209,117 @@ def run_frozen_ablation(
         runtime_metadata={
             "manifest_hash": manifest.manifest_hash,
             "dataset_order_hash": manifest.dataset_order_hash,
+            "frozen_from_method": proposed_result.method_name,
+        },
+    )
+
+
+def run_frozen_official_ablation(
+    *,
+    split: OfficialHoldoutSplit,
+    evaluation: EvaluationConfig,
+    manifest: OfficialHoldoutManifest,
+    proposed_result: OfficialHoldoutResult,
+    ablation_name: str,
+) -> OfficialHoldoutResult:
+    if ablation_name not in {"fts_anfis_mean", "fts_summary_bn"}:
+        raise ValueError(f"Unsupported ablation_name: {ablation_name!r}")
+    frozen_cfg = build_frozen_official_configuration(proposed_result)
+    train_dataset = split.train_dataset
+    test_dataset = split.test_dataset
+    sample_index_to_train_local = {
+        int(sample_index): local_index
+        for local_index, sample_index in enumerate(train_dataset.sample_indices.tolist())
+    }
+    oof_probabilities = np.full(len(train_dataset.y), np.nan, dtype=float)
+    prediction_counts = np.zeros(len(train_dataset.y), dtype=int)
+    for fold in manifest.folds:
+        tr_idx = np.array([sample_index_to_train_local[int(i)] for i in fold.train_indices], dtype=int)
+        va_idx = np.array([sample_index_to_train_local[int(i)] for i in fold.valid_indices], dtype=int)
+        train_data = train_dataset.subset(tr_idx)
+        valid_data = train_dataset.subset(va_idx)
+        assert_no_subject_overlap(train_data.subject_ids, valid_data.subject_ids, "official ablation inner split")
+        assert_no_subject_overlap(train_data.subject_ids, split.test_subject_ids, "official ablation train-vs-test")
+        assert_no_subject_overlap(valid_data.subject_ids, split.test_subject_ids, "official ablation valid-vs-test")
+        probabilities = _predict_ablation_probabilities(
+            train_data=train_data,
+            eval_data=valid_data,
+            mf_type=str(frozen_cfg["mf_type"]),
+            n_rules=int(frozen_cfg["n_rules"]),
+            seed=fold.seed,
+            ablation_name=ablation_name,
+        )
+        if len(probabilities) != len(va_idx):
+            raise LeakageError("Official ablation validation prediction length does not match validation samples")
+        oof_probabilities[va_idx] = probabilities
+        prediction_counts[va_idx] += 1
+    if np.any(np.isnan(oof_probabilities)):
+        raise LeakageError("Official ablation training OOF predictions are incomplete")
+    if np.any(prediction_counts != 1):
+        raise LeakageError("Official ablation training OOF coverage must equal one per sample")
+
+    threshold = _select_threshold(train_dataset.y, oof_probabilities, evaluation.threshold_grid)
+    ranking_metrics = _compute_metrics_from_predictions(
+        train_dataset.y,
+        oof_probabilities,
+        (oof_probabilities >= threshold).astype(int),
+    )
+    final_probabilities = _predict_ablation_probabilities(
+        train_data=train_dataset,
+        eval_data=test_dataset,
+        mf_type=str(frozen_cfg["mf_type"]),
+        n_rules=int(frozen_cfg["n_rules"]),
+        seed=evaluation.seed,
+        ablation_name=ablation_name,
+    )
+    if len(final_probabilities) != len(test_dataset.y):
+        raise LeakageError("Official ablation final prediction length does not match test samples")
+    final_predictions = (final_probabilities >= threshold).astype(int)
+    candidate_result = CandidateResult(
+        method_name=ablation_name,
+        candidate_id=f"{ablation_name}_{frozen_cfg['mf_type']}_{frozen_cfg['n_rules']}",
+        hyperparameters={
+            "mf_type": str(frozen_cfg["mf_type"]),
+            "n_rules": int(frozen_cfg["n_rules"]),
+            "frozen_from_method": proposed_result.method_name,
+        },
+        inner_oof_probabilities=oof_probabilities,
+        inner_oof_predictions=(oof_probabilities >= threshold).astype(int),
+        inner_oof_metrics=ranking_metrics,
+        selected_threshold=float(threshold),
+        model_complexity=float(frozen_cfg["n_rules"]),
+        status="success",
+        failure_reason=None,
+        outer_fold_index=None,
+        failed_inner_fold_index=None,
+    )
+    return OfficialHoldoutResult(
+        method_name=ablation_name,
+        protocol_name=manifest.protocol_name,
+        selected_candidate_id=candidate_result.candidate_id,
+        selected_hyperparameters=dict(candidate_result.hyperparameters),
+        selected_threshold=float(threshold),
+        candidate_results=[candidate_result],
+        train_oof_sample_ids=list(train_dataset.sample_ids),
+        train_oof_subject_ids=train_dataset.subject_ids.astype(str).tolist(),
+        train_oof_labels=train_dataset.y.copy(),
+        train_oof_probabilities=oof_probabilities,
+        train_oof_predictions=(oof_probabilities >= threshold).astype(int),
+        final_test_sample_ids=list(test_dataset.sample_ids),
+        final_test_subject_ids=test_dataset.subject_ids.astype(str).tolist(),
+        final_test_labels=test_dataset.y.copy(),
+        final_test_probabilities=final_probabilities,
+        final_test_predictions=final_predictions,
+        overall_test_metrics=_compute_metrics_from_predictions(
+            test_dataset.y,
+            final_probabilities,
+            final_predictions,
+        ),
+        per_subject_test_metrics=[],
+        runtime_metadata={
+            "manifest_hash": manifest.manifest_hash,
+            "dataset_order_hash": manifest.dataset_order_hash,
+            "protocol_name": manifest.protocol_name,
             "frozen_from_method": proposed_result.method_name,
         },
     )

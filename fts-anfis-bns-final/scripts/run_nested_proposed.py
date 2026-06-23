@@ -13,16 +13,18 @@ if str(ROOT) not in sys.path:
 
 from fbn_pipeline.production_adapters import ProposedFTSANFISBNAdapter
 from fbn_pipeline.publication_artifacts import create_run_layout
-from fbn_pipeline.publication_runner import build_publication_evaluation, load_subject_dataset, run_publication_methods
+from fbn_pipeline.publication_runner import build_publication_evaluation, run_publication_workflow
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run the nested proposed publication pipeline.")
+    parser = argparse.ArgumentParser(description="Run the proposed publication pipeline.")
     parser.add_argument("--run-name", required=True)
     parser.add_argument("--mode", choices=("publication", "smoke"), default="publication")
+    parser.add_argument("--protocol", choices=("official_holdout", "nested_loso_secondary"), default="official_holdout")
     parser.add_argument("--overwrite", action="store_true")
-    parser.add_argument("--subject-limit", type=int)
-    parser.add_argument("--inner-folds", type=int, default=10)
+    parser.add_argument("--train-subject-limit", type=int)
+    parser.add_argument("--test-subject-limit", type=int)
+    parser.add_argument("--inner-folds", type=int, default=5)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--output-root", default="artifacts/phase3_publication")
     parser.add_argument("--data-dir", default="last_30s_segments")
@@ -37,19 +39,21 @@ def main() -> int:
         mode=args.mode,
         overwrite=args.overwrite,
     )
-    dataset = load_subject_dataset(ROOT / args.data_dir, subject_limit=args.subject_limit)
     evaluation = build_publication_evaluation(
         output_directory=str(layout.run_root),
         inner_folds=args.inner_folds,
         seed=args.seed,
     )
-    run_publication_methods(
-        dataset=dataset,
+    run_publication_workflow(
+        data_dir=ROOT / args.data_dir,
         layout=layout,
         evaluation=evaluation,
         adapters=[ProposedFTSANFISBNAdapter(output_directory=str(layout.metadata_dir / "raw_results"))],
         command=" ".join(sys.argv),
-        allow_partial_outer_folds=args.mode == "smoke",
+        protocol=args.protocol,
+        allow_partial_outer_folds=args.mode == "smoke" and args.protocol == "nested_loso_secondary",
+        train_subject_limit=args.train_subject_limit,
+        test_subject_limit=args.test_subject_limit,
     )
     return 0
 
