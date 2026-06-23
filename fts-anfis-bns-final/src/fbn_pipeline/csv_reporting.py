@@ -4,6 +4,8 @@ import csv
 import os
 from typing import Any
 
+from .results import DevelopmentResult, FinalEvaluationResult
+
 CSV_COLUMNS = [
     # --- Experiment identification ---
     "experiment_group", "variant_name", "preset_name",
@@ -42,17 +44,73 @@ CSV_COLUMNS = [
     "test_acc", "test_bal_acc", "test_macro_f1",
 ]
 
+DEVELOPMENT_CSV_COLUMNS = [
+    "configuration_id",
+    "experiment_group",
+    "variant_name",
+    "preset_name",
+    "selection_rank",
+    "selected",
+    "selection_metric",
+    "selection_metric_value",
+    "tie_break_rules",
+    "selected_threshold",
+    "threshold_metric",
+    "threshold_score",
+    "seed",
+    "k_folds",
+    "n_sets",
+    "mf_type",
+    "anfis_mf_type",
+    "n_rules",
+    "n_bins",
+    "alpha",
+    "bn_structure",
+    "bn_soft",
+    "bn_reliability",
+    "calibrate",
+    "ablation",
+    "oof_accuracy",
+    "oof_bal_acc",
+    "oof_macro_f1",
+    "oof_f1",
+    "oof_auc",
+]
+
+FINAL_TEST_CSV_COLUMNS = [
+    "configuration_id",
+    "locked_config_path",
+    "threshold",
+    "test_accuracy",
+    "test_bal_acc",
+    "test_macro_f1",
+    "test_f1",
+    "test_auc",
+]
+
 
 def log_to_csv(filepath: str, row: dict[str, Any]) -> None:
+    _log_to_csv(filepath, row, CSV_COLUMNS)
+
+
+def _log_to_csv(filepath: str, row: dict[str, Any], columns: list[str]) -> None:
     parent = os.path.dirname(filepath)
     if parent:
         os.makedirs(parent, exist_ok=True)
     file_exists = os.path.isfile(filepath)
     with open(filepath, "a", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=CSV_COLUMNS)
+        writer = csv.DictWriter(f, fieldnames=columns)
         if not file_exists:
             writer.writeheader()
         writer.writerow(row)
+
+
+def log_development_row(filepath: str, row: dict[str, Any]) -> None:
+    _log_to_csv(filepath, row, DEVELOPMENT_CSV_COLUMNS)
+
+
+def log_final_test_row(filepath: str, row: dict[str, Any]) -> None:
+    _log_to_csv(filepath, row, FINAL_TEST_CSV_COLUMNS)
 
 
 def make_result_row(
@@ -141,5 +199,66 @@ def make_result_row(
         "test_acc": test.get("acc", test.get("accuracy", "")),
         "test_bal_acc": test.get("bal_acc", ""),
         "test_macro_f1": test.get("macro_f1", ""),
+    }
+
+
+def make_development_result_row(
+    result: DevelopmentResult,
+    *,
+    selection_rank: int | None = None,
+    selected: bool = False,
+    selection_metric: str = "oof_balanced_accuracy",
+    tie_break_rules: list[str] | None = None,
+) -> dict[str, Any]:
+    cfg = result.config.to_dict()
+    oof = result.oof_metrics
+    return {
+        "configuration_id": result.configuration_id,
+        "experiment_group": cfg.get("experiment_group", ""),
+        "variant_name": cfg.get("variant_name", "") or result.configuration_id,
+        "preset_name": cfg.get("variant_name", "") or result.configuration_id,
+        "selection_rank": selection_rank if selection_rank is not None else "",
+        "selected": bool(selected),
+        "selection_metric": selection_metric,
+        "selection_metric_value": result.selection_metric_value,
+        "tie_break_rules": " > ".join(tie_break_rules or []),
+        "selected_threshold": result.threshold,
+        "threshold_metric": result.threshold_metric,
+        "threshold_score": result.threshold_score,
+        "seed": cfg.get("seed", ""),
+        "k_folds": cfg.get("k_folds", ""),
+        "n_sets": cfg.get("n_sets", ""),
+        "mf_type": cfg.get("mf_type", ""),
+        "anfis_mf_type": cfg.get("anfis_mf_type", ""),
+        "n_rules": cfg.get("n_rules", ""),
+        "n_bins": cfg.get("n_bins", ""),
+        "alpha": cfg.get("alpha", ""),
+        "bn_structure": cfg.get("bn_structure", ""),
+        "bn_soft": cfg.get("bn_soft", ""),
+        "bn_reliability": cfg.get("bn_reliability", ""),
+        "calibrate": cfg.get("calibrate", ""),
+        "ablation": cfg.get("ablation", ""),
+        "oof_accuracy": oof.get("accuracy", ""),
+        "oof_bal_acc": oof.get("bal_acc", ""),
+        "oof_macro_f1": oof.get("macro_f1", ""),
+        "oof_f1": oof.get("f1", ""),
+        "oof_auc": oof.get("auc", ""),
+    }
+
+
+def make_final_test_result_row(
+    configuration_id: str,
+    result: FinalEvaluationResult,
+) -> dict[str, Any]:
+    metrics = result.test_metrics
+    return {
+        "configuration_id": configuration_id,
+        "locked_config_path": result.locked_config_path,
+        "threshold": result.threshold,
+        "test_accuracy": metrics.get("accuracy", ""),
+        "test_bal_acc": metrics.get("bal_acc", ""),
+        "test_macro_f1": metrics.get("macro_f1", ""),
+        "test_f1": metrics.get("f1", ""),
+        "test_auc": metrics.get("auc", ""),
     }
 

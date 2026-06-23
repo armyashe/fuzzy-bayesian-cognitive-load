@@ -56,6 +56,85 @@ class TestResult:
 
 
 @dataclass(slots=True)
+class DevelopmentResult:
+    config: ExperimentConfig
+    configuration_id: str
+    fold_indices: list[tuple[np.ndarray, np.ndarray]]
+    threshold: float
+    threshold_metric: str
+    threshold_score: float
+    oof_post: np.ndarray
+    oof_pred: np.ndarray
+    oof_y: np.ndarray
+    oof_metrics: dict[str, float]
+    selection_metric_value: float
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "config": self.config,
+            "configuration_id": self.configuration_id,
+            "fold_indices": self.fold_indices,
+            "best_threshold": self.threshold,
+            "threshold_metric": self.threshold_metric,
+            "threshold_score": self.threshold_score,
+            "oof_post": self.oof_post,
+            "oof_pred": self.oof_pred,
+            "oof_y": self.oof_y,
+            "oof_metrics": self.oof_metrics,
+            "selection_metric_value": self.selection_metric_value,
+            "variant": self.configuration_id,
+        }
+
+
+@dataclass(slots=True)
+class DevelopmentSelection:
+    selected_result: DevelopmentResult
+    ranked_results: list[DevelopmentResult]
+    ranking_metric: str
+    tie_break_rules: list[str]
+    seed: int
+    k_folds: int
+    grouping_protocol: str
+    timestamp_utc: str
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "selected_configuration_id": self.selected_result.configuration_id,
+            "ranking_metric": self.ranking_metric,
+            "tie_break_rules": list(self.tie_break_rules),
+            "seed": self.seed,
+            "k_folds": self.k_folds,
+            "grouping_protocol": self.grouping_protocol,
+            "timestamp_utc": self.timestamp_utc,
+            "ranked_configuration_ids": [
+                result.configuration_id for result in self.ranked_results
+            ],
+        }
+
+
+@dataclass(slots=True)
+class FinalEvaluationResult:
+    locked_config_path: str
+    final_artifact_path: str | None
+    threshold: float
+    test_pred: np.ndarray
+    test_post: np.ndarray
+    test_metrics: dict[str, float]
+    models: TrainedModels
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "locked_config_path": self.locked_config_path,
+            "final_artifact_path": self.final_artifact_path,
+            "best_threshold": self.threshold,
+            "test_pred": self.test_pred,
+            "test_post": self.test_post,
+            "test_metrics": self.test_metrics,
+            "models": self.models.as_dict(),
+        }
+
+
+@dataclass(slots=True)
 class RunResult:
     config: ExperimentConfig
     dataset: Any
