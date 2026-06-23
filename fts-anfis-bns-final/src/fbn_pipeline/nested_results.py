@@ -20,6 +20,8 @@ class CandidateResult:
     model_complexity: float
     status: str
     failure_reason: str | None
+    outer_fold_index: int | None = None
+    failed_inner_fold_index: int | None = None
 
     def to_metadata_dict(self) -> dict[str, Any]:
         data = asdict(self)
@@ -140,6 +142,8 @@ def load_nested_evaluation_result(output_dir: Path | str) -> NestedEvaluationRes
                     model_complexity=float(candidate_meta["model_complexity"]),
                     status=candidate_meta["status"],
                     failure_reason=candidate_meta["failure_reason"],
+                    outer_fold_index=candidate_meta.get("outer_fold_index"),
+                    failed_inner_fold_index=candidate_meta.get("failed_inner_fold_index"),
                 )
             )
 

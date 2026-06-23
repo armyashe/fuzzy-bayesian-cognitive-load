@@ -237,6 +237,9 @@ class BNFusion:
 
         log_p = np.zeros(2)
         contribs: dict = {0: {}, 1: {}}
+        prior_log_odds = float(np.log(self.prior_[1] + 1e-10) - np.log(self.prior_[0] + 1e-10))
+        signal_contributions = []
+        cumulative = prior_log_odds
         for c in range(2):
             log_p[c] = np.log(self.prior_[c] + 1e-10)
             for s in range(self.n_signals_):
@@ -244,6 +247,20 @@ class BNFusion:
                 ll = np.log(self.cpts_[s][c, ev[s]] + 1e-10)
                 contribs[c][name] = float(w[s] * ll)
                 log_p[c] += w[s] * ll
+        for s in range(self.n_signals_):
+            name = SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"
+            llr = contribs[1][name] - contribs[0][name]
+            cumulative += llr
+            signal_contributions.append(
+                {
+                    "signal": name,
+                    "evidence_bin": self.bin_names_[ev[s]],
+                    "rest_weighted_log_likelihood": float(contribs[0][name]),
+                    "task_weighted_log_likelihood": float(contribs[1][name]),
+                    "log_likelihood_ratio": float(llr),
+                    "cumulative_contribution": float(cumulative),
+                }
+            )
 
         posterior, scores = self._normalise_log_scores(log_p)
         ev_bins = {
@@ -260,6 +277,8 @@ class BNFusion:
             "posterior_task": float(posterior[1]),
             "posterior_rest": float(posterior[0]),
             "log_likelihoods": contribs,
+            "prior_log_odds": prior_log_odds,
+            "signal_contributions": signal_contributions,
             "signal_weights": self.get_signal_weights(),
         }
         return float(posterior[1]), trace
@@ -273,6 +292,7 @@ class BNFusion:
         contribs: dict = {0: {}, 1: {}}
         effective_likelihoods: dict = {"rest": {}, "task": {}}
         soft_trace_rows = []
+        prior_log_odds = float(np.log(self.prior_[1] + 1e-10) - np.log(self.prior_[0] + 1e-10))
 
         for c in range(2):
             cls = "rest" if c == 0 else "task"
@@ -329,6 +349,27 @@ class BNFusion:
             )
             for s in range(self.n_signals_)
         }
+        cumulative = prior_log_odds
+        signal_contributions = []
+        for s in range(self.n_signals_):
+            name = SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"
+            cumulative += log_likelihood_ratio[name]
+            signal_contributions.append(
+                {
+                    "signal": name,
+                    "anfis_evidence_score": float(probs_single[s]),
+                    "bin_memberships": {
+                        self.bin_names_[b]: float(mem[0, s, b])
+                        for b in range(self.n_bins)
+                    },
+                    "rest_weighted_likelihood": float(effective_likelihoods["rest"][name]),
+                    "task_weighted_likelihood": float(effective_likelihoods["task"][name]),
+                    "rest_weighted_log_likelihood": float(contribs[0][name]),
+                    "task_weighted_log_likelihood": float(contribs[1][name]),
+                    "log_likelihood_ratio": float(log_likelihood_ratio[name]),
+                    "cumulative_contribution": float(cumulative),
+                }
+            )
 
         trace = {
             "mode": "soft",
@@ -344,6 +385,8 @@ class BNFusion:
             "soft_evidence_trace": soft_trace_rows,
             "log_likelihoods": contribs,
             "log_likelihood_ratio": log_likelihood_ratio,
+            "prior_log_odds": prior_log_odds,
+            "signal_contributions": signal_contributions,
             "posterior_task": float(posterior[1]),
             "posterior_rest": float(posterior[0]),
             "final_posterior_task": float(posterior[1]),
@@ -383,7 +426,7 @@ class BNFusion:
             for s in range(self.n_signals_)
         }
 
-    def explain_sample(self, probs_single: np.ndarray) -> dict:
+    def explain_sample(self, probs_single: np.ndarray, threshold: float = 0.5) -> dict:
         """
         Full inference trace for one sample.
 
@@ -399,7 +442,16 @@ class BNFusion:
         -------
         dict - see _explain_sample_hard / _explain_sample_soft for keys.
         """
-        return self._infer_single(probs_single)[1]
+        trace = self._infer_single(probs_single)[1]
+        posterior_task = float(trace["posterior_task"])
+        posterior_rest = float(trace["posterior_rest"])
+        trace["selected_threshold"] = float(threshold)
+        trace["predicted_class"] = int(posterior_task >= threshold)
+        trace["reconstructed_posterior"] = {
+            "rest": posterior_rest,
+            "task": posterior_task,
+        }
+        return trace
 
     def _explain_sample_hard(self, probs_single: np.ndarray) -> dict:
         """Hard-evidence inference trace (original logic)."""

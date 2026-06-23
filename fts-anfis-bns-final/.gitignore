@@ -23,3 +23,19 @@ Thumbs.db
 artifacts/debug_exp2/
 notebooks/artifacts/debug_exp2/
 .serena/
+
+.venv312/
+.venv312_new/
+
+# Python virtual environments
+.venv/
+.venv*/
+venv/
+venv*/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/

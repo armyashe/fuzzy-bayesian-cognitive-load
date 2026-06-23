@@ -6,11 +6,10 @@ from dataclasses import dataclass
 from typing import Protocol
 
 import numpy as np
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
-from sklearn.metrics import balanced_accuracy_score, roc_auc_score
-from sklearn.model_selection import GroupKFold
+from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, precision_score, recall_score, roc_auc_score
 
 from .determinism import configure_determinism
+from .fold_manifest import FoldManifest, OuterFoldManifest, build_subject_loso_manifest, validate_manifest_against_dataset
 from .metrics import per_subject_metrics
 from .nested_results import CandidateResult, NestedEvaluationResult, OuterFoldResult
 from .structured_config import EvaluationConfig, validate_candidate_ids
@@ -20,12 +19,22 @@ class LeakageError(ValueError):
     pass
 
 
+EXPECTED_CANDIDATE_ERRORS = (
+    ValueError,
+    RuntimeError,
+    FloatingPointError,
+    OverflowError,
+    np.linalg.LinAlgError,
+)
+
+
 @dataclass(slots=True)
 class NestedDataset:
     X: np.ndarray
     y: np.ndarray
     subject_ids: np.ndarray
     sample_ids: list[str]
+    sample_indices: np.ndarray | None = None
 
     def __post_init__(self) -> None:
         n_samples = len(self.y)
@@ -35,6 +44,10 @@ class NestedDataset:
             raise ValueError("subject_ids length must match y")
         if len(self.sample_ids) != n_samples:
             raise ValueError("sample_ids length must match y")
+        if self.sample_indices is None:
+            self.sample_indices = np.arange(n_samples, dtype=int)
+        if len(self.sample_indices) != n_samples:
+            raise ValueError("sample_indices length must match y")
 
     def subset(self, indices: np.ndarray) -> "NestedDataset":
         return NestedDataset(
@@ -42,6 +55,7 @@ class NestedDataset:
             y=self.y[indices],
             subject_ids=self.subject_ids[indices],
             sample_ids=[self.sample_ids[i] for i in indices.tolist()],
+            sample_indices=self.sample_indices[indices],
         )
 
 
@@ -94,14 +108,21 @@ def run_nested_subject_loso(
     dataset: NestedDataset,
     adapter: NestedMethodAdapter,
     evaluation: EvaluationConfig,
+    manifest: FoldManifest | None = None,
+    allow_partial_outer_folds: bool = False,
 ) -> NestedEvaluationResult:
     runtime_metadata = configure_determinism(
         evaluation.seed,
         deterministic_threads=evaluation.deterministic_threads,
+    ).as_dict()
+    if manifest is None:
+        manifest = build_subject_loso_manifest(dataset=dataset, evaluation=evaluation)
+    validate_manifest_against_dataset(manifest, dataset)
+    _validate_outer_fold_subject_coverage(
+        dataset=dataset,
+        manifest=manifest,
+        allow_partial_outer_folds=allow_partial_outer_folds,
     )
-    unique_subjects = sorted(np.unique(dataset.subject_ids).tolist())
-    if len(unique_subjects) < 2:
-        raise ValueError("At least two subject groups are required")
 
     candidate_specs = adapter.candidate_specs()
     validate_candidate_ids(tuple(spec.candidate_id for spec in candidate_specs))
@@ -112,26 +133,30 @@ def run_nested_subject_loso(
     aggregated_probabilities = np.full(len(dataset.y), np.nan, dtype=float)
     aggregated_predictions = np.full(len(dataset.y), -1, dtype=int)
     prediction_counts = np.zeros(len(dataset.y), dtype=int)
+    sample_index_to_dataset_local = {
+        int(sample_index): local_index
+        for local_index, sample_index in enumerate(dataset.sample_indices.tolist())
+    }
 
-    for outer_fold_index, outer_subject in enumerate(unique_subjects):
-        outer_test_mask = dataset.subject_ids == outer_subject
-        outer_train_mask = ~outer_test_mask
-        outer_test_indices = np.flatnonzero(outer_test_mask)
-        outer_train_indices = np.flatnonzero(outer_train_mask)
-        outer_train_subjects = dataset.subject_ids[outer_train_indices]
-        outer_test_subjects = dataset.subject_ids[outer_test_indices]
-
-        assert_no_subject_overlap(outer_train_subjects, outer_test_subjects, "outer split")
-        evaluation.validate_available_groups(sorted(np.unique(outer_train_subjects).tolist()))
-
+    for outer_fold in manifest.outer_folds:
+        if hasattr(adapter, "set_outer_fold_context"):
+            adapter.set_outer_fold_context(outer_fold)
+        outer_test_indices = np.array(
+            [sample_index_to_dataset_local[int(i)] for i in outer_fold.outer_test_indices],
+            dtype=int,
+        )
+        outer_train_indices = np.array(
+            [sample_index_to_dataset_local[int(i)] for i in outer_fold.outer_train_indices],
+            dtype=int,
+        )
         outer_train_data = dataset.subset(outer_train_indices)
         outer_test_data = dataset.subset(outer_test_indices)
         candidate_results = _evaluate_candidates(
             outer_train_data=outer_train_data,
-            outer_test_subject=outer_subject,
+            outer_test_subject=outer_fold.outer_test_subject,
             adapter=adapter,
             evaluation=evaluation,
-            outer_fold_index=outer_fold_index,
+            outer_fold_manifest=outer_fold,
         )
         selected_candidate = _select_candidate(candidate_results)
 
@@ -140,7 +165,7 @@ def run_nested_subject_loso(
                 outer_train_data,
                 outer_test_data,
                 selected_candidate["spec"],
-                seed=evaluation.seed + outer_fold_index,
+                seed=outer_fold.seed,
             ),
             dtype=float,
         )
@@ -154,9 +179,9 @@ def run_nested_subject_loso(
 
         outer_fold_results.append(
             OuterFoldResult(
-                outer_fold_index=outer_fold_index,
-                outer_test_subject=outer_subject,
-                outer_training_subjects=sorted(np.unique(outer_train_subjects).tolist()),
+                outer_fold_index=outer_fold.outer_fold_index,
+                outer_test_subject=outer_fold.outer_test_subject,
+                outer_training_subjects=list(outer_fold.outer_train_subjects),
                 selected_candidate_id=selected_candidate["spec"].candidate_id,
                 selected_hyperparameters=dict(selected_candidate["spec"].hyperparameters),
                 selected_threshold=float(selected_candidate["threshold"]),
@@ -171,37 +196,97 @@ def run_nested_subject_loso(
             )
         )
 
-    if np.any(np.isnan(aggregated_probabilities)):
-        raise LeakageError("An outer sample received zero predictions")
-    if np.any(prediction_counts != 1):
-        raise LeakageError("Each outer sample must receive exactly one prediction")
-    if dataset.sample_ids != [dataset.sample_ids[i] for i in range(len(dataset.sample_ids))]:
-        raise LeakageError("Sample ordering changed silently")
+    covered_indices = _validate_outer_prediction_coverage(
+        aggregated_probabilities=aggregated_probabilities,
+        prediction_counts=prediction_counts,
+        allow_partial_outer_folds=allow_partial_outer_folds,
+    )
+    aggregated_sample_ids = [dataset.sample_ids[i] for i in covered_indices.tolist()]
+    aggregated_subject_ids = dataset.subject_ids[covered_indices].astype(str).tolist()
+    aggregated_labels = dataset.y[covered_indices].copy()
+    aggregated_probabilities = aggregated_probabilities[covered_indices]
+    aggregated_predictions = aggregated_predictions[covered_indices]
 
     overall_metrics = _compute_metrics_from_predictions(
-        dataset.y,
+        aggregated_labels,
         aggregated_probabilities,
         aggregated_predictions,
     )
-    subject_rows = per_subject_metrics(
-        dataset.y,
-        aggregated_predictions,
-        aggregated_probabilities,
-        dataset.subject_ids,
-    )
-    return NestedEvaluationResult(
+    result = NestedEvaluationResult(
         method_name=adapter.method_name,
         outer_fold_results=outer_fold_results,
-        aggregated_sample_ids=list(dataset.sample_ids),
-        aggregated_subject_ids=dataset.subject_ids.tolist(),
-        aggregated_labels=dataset.y.copy(),
+        aggregated_sample_ids=aggregated_sample_ids,
+        aggregated_subject_ids=aggregated_subject_ids,
+        aggregated_labels=aggregated_labels,
         aggregated_probabilities=aggregated_probabilities,
         aggregated_predictions=aggregated_predictions,
         overall_metrics=overall_metrics,
-        per_subject_metrics=subject_rows,
+        per_subject_metrics=per_subject_metrics(
+            aggregated_labels,
+            aggregated_predictions,
+            aggregated_probabilities,
+            dataset.subject_ids[covered_indices],
+        ),
         evaluation_protocol="outer LOSO + inner GroupKFold",
-        runtime_metadata=runtime_metadata.as_dict(),
+        runtime_metadata={
+            **runtime_metadata,
+            "manifest_hash": manifest.manifest_hash,
+            "dataset_order_hash": manifest.dataset_order_hash,
+        },
     )
+    return result
+
+
+def _validate_outer_fold_subject_coverage(
+    *,
+    dataset: NestedDataset,
+    manifest: FoldManifest,
+    allow_partial_outer_folds: bool,
+) -> None:
+    expected_subjects = set(dataset.subject_ids.astype(str).tolist())
+    seen_counts: dict[str, int] = {}
+    for outer_fold in manifest.outer_folds:
+        subject = str(outer_fold.outer_test_subject)
+        seen_counts[subject] = seen_counts.get(subject, 0) + 1
+
+    duplicate_subjects = sorted(subject for subject, count in seen_counts.items() if count > 1)
+    if duplicate_subjects:
+        raise LeakageError(f"Outer-test subjects must be unique; duplicates: {duplicate_subjects}")
+
+    seen_subjects = set(seen_counts)
+    missing_subjects = sorted(expected_subjects - seen_subjects)
+    unexpected_subjects = sorted(seen_subjects - expected_subjects)
+    if unexpected_subjects:
+        raise LeakageError(f"Manifest outer-test subjects are not present in the dataset: {unexpected_subjects}")
+    if missing_subjects and not allow_partial_outer_folds:
+        raise LeakageError(
+            "Publication coverage requires every subject exactly once as the outer test fold; "
+            f"missing subjects: {missing_subjects}"
+        )
+
+
+def _validate_outer_prediction_coverage(
+    *,
+    aggregated_probabilities: np.ndarray,
+    prediction_counts: np.ndarray,
+    allow_partial_outer_folds: bool,
+) -> np.ndarray:
+    covered_indices = np.flatnonzero(prediction_counts > 0)
+    if covered_indices.size == 0:
+        raise LeakageError("The supplied manifest produced zero outer predictions")
+    if np.any(np.isnan(aggregated_probabilities[covered_indices])):
+        raise LeakageError("A covered outer sample received zero predictions")
+    duplicate_indices = np.flatnonzero(prediction_counts > 1)
+    if duplicate_indices.size > 0:
+        raise LeakageError("Each outer sample must receive exactly one prediction")
+
+    missing_indices = np.flatnonzero(prediction_counts == 0)
+    if missing_indices.size > 0 and not allow_partial_outer_folds:
+        raise LeakageError(
+            "Publication coverage requires exactly one outer prediction for every sample; "
+            f"missing predictions for {int(missing_indices.size)} samples"
+        )
+    return covered_indices
 
 
 def _evaluate_candidates(
@@ -210,50 +295,83 @@ def _evaluate_candidates(
     outer_test_subject: str,
     adapter: NestedMethodAdapter,
     evaluation: EvaluationConfig,
-    outer_fold_index: int,
+    outer_fold_manifest: OuterFoldManifest,
 ) -> list[dict[str, object]]:
-    gkf = GroupKFold(n_splits=evaluation.inner_folds)
     results: list[dict[str, object]] = []
-    split_groups = outer_train_data.subject_ids
+    sample_index_to_local = {
+        int(sample_index): local_index
+        for local_index, sample_index in enumerate(outer_train_data.sample_indices.tolist())
+    }
 
     for candidate_rank, spec in enumerate(adapter.candidate_specs()):
         oof_probabilities = np.full(len(outer_train_data.y), np.nan, dtype=float)
         prediction_counts = np.zeros(len(outer_train_data.y), dtype=int)
+        failure_reason: str | None = None
+        failed_inner_fold_index: int | None = None
 
-        for inner_fold_index, (tr_idx, va_idx) in enumerate(
-            gkf.split(outer_train_data.X, outer_train_data.y, split_groups)
-        ):
-            train_data = outer_train_data.subset(np.asarray(tr_idx))
-            valid_data = outer_train_data.subset(np.asarray(va_idx))
-            assert_no_subject_overlap(train_data.subject_ids, valid_data.subject_ids, "inner split")
-            assert_no_subject_overlap(valid_data.subject_ids, [outer_test_subject], "outer-vs-inner validation")
-            assert_no_subject_overlap(train_data.subject_ids, [outer_test_subject], "outer-vs-inner train")
+        try:
+            for inner_fold in outer_fold_manifest.inner_folds:
+                if hasattr(adapter, "set_inner_fold_context"):
+                    adapter.set_inner_fold_context(
+                        outer_fold_manifest.outer_fold_index,
+                        inner_fold.inner_fold_index,
+                    )
+                tr_idx = np.array([sample_index_to_local[int(i)] for i in inner_fold.train_indices], dtype=int)
+                va_idx = np.array([sample_index_to_local[int(i)] for i in inner_fold.valid_indices], dtype=int)
+                train_data = outer_train_data.subset(tr_idx)
+                valid_data = outer_train_data.subset(va_idx)
+                assert_no_subject_overlap(train_data.subject_ids, valid_data.subject_ids, "inner split")
+                assert_no_subject_overlap(valid_data.subject_ids, [outer_test_subject], "outer-vs-inner validation")
+                assert_no_subject_overlap(train_data.subject_ids, [outer_test_subject], "outer-vs-inner train")
 
-            valid_probabilities = np.asarray(
-                adapter.fit_predict_inner_fold(
-                    train_data,
-                    valid_data,
-                    spec,
-                    seed=evaluation.seed + outer_fold_index * 100 + inner_fold_index + candidate_rank,
-                ),
-                dtype=float,
+                valid_probabilities = np.asarray(
+                    adapter.fit_predict_inner_fold(
+                        train_data,
+                        valid_data,
+                        spec,
+                        seed=outer_fold_manifest.seed + inner_fold.inner_fold_index + candidate_rank,
+                    ),
+                    dtype=float,
+                )
+                if len(valid_probabilities) != len(va_idx):
+                    raise LeakageError("Inner validation prediction length does not match validation samples")
+                oof_probabilities[va_idx] = valid_probabilities
+                prediction_counts[va_idx] += 1
+
+            if np.any(np.isnan(oof_probabilities)):
+                raise LeakageError("An outer-training sample received zero inner OOF predictions")
+            if np.any(prediction_counts != 1):
+                raise LeakageError("An outer-training sample received more than one inner OOF prediction")
+        except EXPECTED_CANDIDATE_ERRORS as exc:
+            failure_reason = f"{type(exc).__name__}: {exc}"
+            failed_inner_fold_index = inner_fold.inner_fold_index if "inner_fold" in locals() else None
+
+        if failure_reason is not None:
+            result = CandidateResult(
+                method_name=adapter.method_name,
+                candidate_id=spec.candidate_id,
+                hyperparameters=dict(spec.hyperparameters),
+                inner_oof_probabilities=np.array([], dtype=float),
+                inner_oof_predictions=np.array([], dtype=int),
+                inner_oof_metrics={"bal_acc": float("nan"), "auc": float("nan")},
+                selected_threshold=float("nan"),
+                model_complexity=float(spec.complexity),
+                status="failed",
+                failure_reason=failure_reason,
+                outer_fold_index=outer_fold_manifest.outer_fold_index,
+                failed_inner_fold_index=failed_inner_fold_index,
             )
-            if len(valid_probabilities) != len(va_idx):
-                raise LeakageError("Inner validation prediction length does not match validation samples")
-            oof_probabilities[va_idx] = valid_probabilities
-            prediction_counts[va_idx] += 1
+            results.append(
+                {"spec": spec, "threshold": float("nan"), "metrics": result.inner_oof_metrics, "result": result}
+            )
+            continue
 
-        if np.any(np.isnan(oof_probabilities)):
-            raise LeakageError("An outer-training sample received zero inner OOF predictions")
-        if np.any(prediction_counts != 1):
-            raise LeakageError("An outer-training sample received more than one inner OOF prediction")
-
+        threshold = _select_threshold(outer_train_data.y, oof_probabilities, evaluation.threshold_grid)
         ranking_metrics = _compute_metrics_from_predictions(
             outer_train_data.y,
             oof_probabilities,
-            (oof_probabilities >= 0.5).astype(int),
+            (oof_probabilities >= threshold).astype(int),
         )
-        threshold = _select_threshold(outer_train_data.y, oof_probabilities, evaluation.threshold_grid)
         result = CandidateResult(
             method_name=adapter.method_name,
             candidate_id=spec.candidate_id,
@@ -263,8 +381,10 @@ def _evaluate_candidates(
             inner_oof_metrics=ranking_metrics,
             selected_threshold=float(threshold),
             model_complexity=float(spec.complexity),
-            status="ok",
+            status="success",
             failure_reason=None,
+            outer_fold_index=outer_fold_manifest.outer_fold_index,
+            failed_inner_fold_index=None,
         )
         if len(result.inner_oof_probabilities) != len(outer_train_data.y):
             raise LeakageError("Candidate result length does not match outer-training sample count")
@@ -274,6 +394,11 @@ def _evaluate_candidates(
 
 
 def _select_candidate(candidate_results: list[dict[str, object]]) -> dict[str, object]:
+    valid_results = [item for item in candidate_results if item["result"].status == "success"]
+    if not valid_results:
+        reasons = [item["result"].failure_reason for item in candidate_results]
+        raise RuntimeError(f"No valid candidates remain for this outer fold. Failures: {reasons}")
+
     def candidate_key(item: dict[str, object]) -> tuple[float, float, float, str]:
         metrics = item["metrics"]
         spec = item["spec"]
@@ -287,7 +412,7 @@ def _select_candidate(candidate_results: list[dict[str, object]]) -> dict[str, o
             str(spec.candidate_id),
         )
 
-    return sorted(candidate_results, key=candidate_key)[0]
+    return sorted(valid_results, key=candidate_key)[0]
 
 
 def _select_threshold(y_true: np.ndarray, probabilities: np.ndarray, grid: tuple[float, ...]) -> float:

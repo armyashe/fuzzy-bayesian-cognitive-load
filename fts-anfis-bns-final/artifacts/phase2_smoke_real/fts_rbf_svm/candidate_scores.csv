@@ -1,0 +1,11 @@
+method,outer_fold,outer_test_subject,candidate_id,hyperparameters_json,selected_threshold,balanced_accuracy,auc,complexity,status,failure_reason
+fts_rbf_svm,0,1mpau,fts_svm_triangular_0.1_scale,"{""C"": 0.1, ""gamma"": ""scale"", ""mf_type"": ""triangular""}",0.5,0.5479,0.5522,0.1,ok,
+fts_rbf_svm,0,1mpau,fts_svm_gaussian_0.1_scale,"{""C"": 0.1, ""gamma"": ""scale"", ""mf_type"": ""gaussian""}",0.5,0.5489,0.5008,0.1,ok,
+fts_rbf_svm,1,2nxs5,fts_svm_triangular_0.1_scale,"{""C"": 0.1, ""gamma"": ""scale"", ""mf_type"": ""triangular""}",0.7,0.5373,0.5295,0.1,ok,
+fts_rbf_svm,1,2nxs5,fts_svm_gaussian_0.1_scale,"{""C"": 0.1, ""gamma"": ""scale"", ""mf_type"": ""gaussian""}",0.4,0.5217,0.5133,0.1,ok,
+fts_rbf_svm,2,3caqi,fts_svm_triangular_0.1_scale,"{""C"": 0.1, ""gamma"": ""scale"", ""mf_type"": ""triangular""}",0.3,0.4965,0.4847,0.1,ok,
+fts_rbf_svm,2,3caqi,fts_svm_gaussian_0.1_scale,"{""C"": 0.1, ""gamma"": ""scale"", ""mf_type"": ""gaussian""}",0.7,0.524,0.5078,0.1,ok,
+fts_rbf_svm,3,5gpsc,fts_svm_triangular_0.1_scale,"{""C"": 0.1, ""gamma"": ""scale"", ""mf_type"": ""triangular""}",0.3,0.5,0.5261,0.1,ok,
+fts_rbf_svm,3,5gpsc,fts_svm_gaussian_0.1_scale,"{""C"": 0.1, ""gamma"": ""scale"", ""mf_type"": ""gaussian""}",0.3,0.5,0.5113,0.1,ok,
+fts_rbf_svm,4,6frz4,fts_svm_triangular_0.1_scale,"{""C"": 0.1, ""gamma"": ""scale"", ""mf_type"": ""triangular""}",0.3,0.5527,0.5381,0.1,ok,
+fts_rbf_svm,4,6frz4,fts_svm_gaussian_0.1_scale,"{""C"": 0.1, ""gamma"": ""scale"", ""mf_type"": ""gaussian""}",0.4,0.5217,0.5753,0.1,ok,
