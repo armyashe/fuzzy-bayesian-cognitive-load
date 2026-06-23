@@ -1,0 +1,23 @@
+{
+  "allow_partial_outer_folds": true,
+  "command": "scripts\\run_nested_publication.py --run-name phase3_combined_smoke --mode smoke --subject-limit 5 --inner-folds 2 --include-xgboost --include-cnn --include-ablations --overwrite",
+  "configuration_hash": "389c2984679477aa71f3f013b171358602b46ec6006ad3b2778454aaa5f9885b",
+  "dataset_order_hash": "44dfd4428fad06e7a1c201165b7fa32f84bcc72046e0adf186cc0f679900e926",
+  "git_commit_hash": "628fcc7b7c1399293e74d7574d845aacc63bd697",
+  "git_worktree_dirty": true,
+  "mode": "smoke",
+  "package_versions": {
+    "numpy": "2.4.4",
+    "openpyxl": "3.1.5",
+    "pandas": "3.0.2",
+    "pytest": "9.1.1",
+    "scikit-learn": "1.8.0",
+    "scipy": "1.17.1",
+    "torch": "2.12.1+cpu",
+    "xgboost": "3.2.0"
+  },
+  "python_version": "3.12.10",
+  "run_name": "phase3_combined_smoke",
+  "seed": 42,
+  "timestamp_utc": "2026-06-23T10:16:04.717247+00:00"
+}

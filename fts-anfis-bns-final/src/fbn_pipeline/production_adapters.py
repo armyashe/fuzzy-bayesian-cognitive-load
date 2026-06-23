@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -82,6 +83,67 @@ def _predict_signal_evidence(
     return evidence
 
 
+def _sigmoid(values: np.ndarray) -> np.ndarray:
+    return 1.0 / (1.0 + np.exp(-np.clip(values, -500, 500)))
+
+
+def explain_anfis_sample(
+    *,
+    model: ANFIS_TSK,
+    x_row: np.ndarray,
+    signal_name: str,
+    sample_id: str,
+    subject_id: str,
+    outer_fold_index: int | None,
+    feature_names: list[str] | None = None,
+) -> dict[str, object]:
+    x_row = np.asarray(x_row, dtype=float).reshape(1, -1)
+    feature_names = feature_names or [f"x{i}" for i in range(x_row.shape[1])]
+    diff = x_row[:, np.newaxis, :] - model.centers_[np.newaxis, :, :]
+    sig = model.sigmas_[np.newaxis, :, :]
+
+    if model.mf_type == "gaussian":
+        premise = np.exp(-0.5 * (diff / sig) ** 2)
+    else:
+        ratio = np.abs(diff / sig)
+        premise = 1.0 / (1.0 + ratio ** (2.0 * model.gbell_b))
+
+    log_firing = np.log(np.clip(premise, 1e-12, None)).sum(axis=2)
+    firing_strengths = np.exp(log_firing[0])
+    normalized = model._normalised_firing(x_row)[0]
+    x_aug = np.hstack([x_row[0], 1.0])
+    consequent_outputs = []
+    for rule_index in range(model.n_rules_):
+        block = model.theta_[rule_index * (model.d_ + 1):(rule_index + 1) * (model.d_ + 1)]
+        consequent_outputs.append(float(np.dot(x_aug, block)))
+    consequent_outputs_arr = np.asarray(consequent_outputs, dtype=float)
+    weighted_outputs = normalized * consequent_outputs_arr
+    raw_output = float(np.sum(weighted_outputs))
+    sigmoid_output = float(_sigmoid(np.array([raw_output], dtype=float))[0])
+    reconstructed_raw = float(model.predict_raw(x_row)[0])
+    return {
+        "sample_id": sample_id,
+        "subject_id": subject_id,
+        "signal": signal_name,
+        "outer_fold_index": outer_fold_index,
+        "input_fts_features_json": json.dumps({feature_names[i]: float(x_row[0, i]) for i in range(model.d_)}, sort_keys=True),
+        "premise_memberships_json": json.dumps(
+            {
+                f"rule_{rule_index}": {feature_names[j]: float(premise[0, rule_index, j]) for j in range(model.d_)}
+                for rule_index in range(model.n_rules_)
+            },
+            sort_keys=True,
+        ),
+        "rule_firing_strengths_json": json.dumps([float(value) for value in firing_strengths.tolist()]),
+        "normalized_firing_strengths_json": json.dumps([float(value) for value in normalized.tolist()]),
+        "rule_consequent_outputs_json": json.dumps([float(value) for value in consequent_outputs_arr.tolist()]),
+        "rule_weighted_outputs_json": json.dumps([float(value) for value in weighted_outputs.tolist()]),
+        "raw_anfis_output": raw_output,
+        "sigmoid_evidence_score": sigmoid_output,
+        "reconstruction_error": abs(raw_output - reconstructed_raw),
+    }
+
+
 @dataclass(slots=True)
 class ProposedFTSANFISBNAdapter:
     membership_types: tuple[str, ...] = ("triangular", "gaussian", "trapezoid", "gbell")
@@ -91,6 +153,7 @@ class ProposedFTSANFISBNAdapter:
     method_name: str = "proposed_fts_anfis_bn"
     _current_outer_fold_index: int | None = None
     _current_inner_fold_index: int | None = None
+    outer_artifacts_by_fold: dict[int, dict[str, object]] | None = None
 
     def candidate_specs(self) -> list[CandidateSpec]:
         specs: list[CandidateSpec] = []
@@ -130,7 +193,18 @@ class ProposedFTSANFISBNAdapter:
         *,
         seed: int,
     ) -> np.ndarray:
-        return self._fit_predict(train_data=train_data, eval_data=test_data, candidate=candidate, seed=seed)
+        probabilities, details = self._fit_predict_details(
+            train_data=train_data,
+            eval_data=test_data,
+            candidate=candidate,
+            seed=seed,
+            capture_outer_details=True,
+        )
+        if self.outer_artifacts_by_fold is None:
+            self.outer_artifacts_by_fold = {}
+        if self._current_outer_fold_index is not None:
+            self.outer_artifacts_by_fold[int(self._current_outer_fold_index)] = details
+        return probabilities
 
     def _fit_predict(
         self,
@@ -140,6 +214,23 @@ class ProposedFTSANFISBNAdapter:
         candidate: CandidateSpec,
         seed: int,
     ) -> np.ndarray:
+        return self._fit_predict_details(
+            train_data=train_data,
+            eval_data=eval_data,
+            candidate=candidate,
+            seed=seed,
+            capture_outer_details=False,
+        )[0]
+
+    def _fit_predict_details(
+        self,
+        *,
+        train_data: NestedDataset,
+        eval_data: NestedDataset,
+        candidate: CandidateSpec,
+        seed: int,
+        capture_outer_details: bool,
+    ) -> tuple[np.ndarray, dict[str, object]]:
         mf_type = str(candidate.hyperparameters["mf_type"])
         n_rules = int(candidate.hyperparameters["n_rules"])
 
@@ -182,7 +273,58 @@ class ProposedFTSANFISBNAdapter:
             signal_models=signal_models,
             X_data=eval_data.X,
         )
-        return bn.predict_proba(eval_evidence)
+        probabilities = bn.predict_proba(eval_evidence)
+        details: dict[str, object] = {
+            "candidate_id": candidate.candidate_id,
+            "mf_type": mf_type,
+            "n_rules": n_rules,
+            "crossfit_rows": list(crossfit.rows),
+        }
+        if capture_outer_details:
+            feature_matrix = encoder.transform(eval_data.X)
+            signal_names = ("temp", "hr", "gsr", "rr")
+            anfis_rows: list[dict[str, object]] = []
+            bn_rows: list[dict[str, object]] = []
+            for sample_index, sample_id in enumerate(eval_data.sample_ids):
+                subject_id = str(eval_data.subject_ids[sample_index])
+                for signal_index, signal_name in enumerate(signal_names):
+                    block = feature_matrix[sample_index, signal_index * 9:(signal_index + 1) * 9]
+                    anfis_rows.append(
+                        explain_anfis_sample(
+                            model=signal_models[signal_index],
+                            x_row=block,
+                            signal_name=signal_name,
+                            sample_id=sample_id,
+                            subject_id=subject_id,
+                            outer_fold_index=self._current_outer_fold_index,
+                            feature_names=[f"{signal_name}_t{i}" for i in range(9)],
+                        )
+                    )
+                trace = bn.explain_sample(eval_evidence[sample_index])
+                bn_rows.append(
+                    {
+                        "sample_id": sample_id,
+                        "subject_id": subject_id,
+                        "outer_fold_index": self._current_outer_fold_index,
+                        "posterior_task_probability": float(trace["posterior_task"]),
+                        "prior_rest": float(trace["prior"]["rest"]),
+                        "prior_task": float(trace["prior"]["task"]),
+                        "prior_log_odds": float(trace["prior_log_odds"]),
+                        "signal_contributions_json": json.dumps(trace["signal_contributions"], sort_keys=True),
+                        "soft_memberships_json": json.dumps(trace.get("soft_memberships", {}), sort_keys=True),
+                        "reconstructed_posterior_task": float(trace["reconstructed_posterior"]["task"]),
+                        "reconstruction_error": abs(float(trace["reconstructed_posterior"]["task"]) - float(trace["posterior_task"])),
+                    }
+                )
+            details.update(
+                {
+                    "anfis_rows": anfis_rows,
+                    "bn_rows": bn_rows,
+                    "eval_evidence": eval_evidence,
+                    "bn_model": bn,
+                }
+            )
+        return probabilities, details
 
     def _predict_partition_evidence(
         self,

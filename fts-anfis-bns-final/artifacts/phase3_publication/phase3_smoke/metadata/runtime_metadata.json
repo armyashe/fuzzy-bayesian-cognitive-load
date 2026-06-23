@@ -1,0 +1,23 @@
+{
+  "allow_partial_outer_folds": true,
+  "command": "scripts\\run_nested_ablations.py --run-name phase3_smoke --mode smoke --subject-limit 5 --inner-folds 2 --overwrite",
+  "configuration_hash": "8d46ab99173ad9ebace5d082b78164315383e850cac7c2901ffd878975503917",
+  "dataset_order_hash": "44dfd4428fad06e7a1c201165b7fa32f84bcc72046e0adf186cc0f679900e926",
+  "git_commit_hash": "628fcc7b7c1399293e74d7574d845aacc63bd697",
+  "git_worktree_dirty": true,
+  "mode": "smoke",
+  "package_versions": {
+    "numpy": "2.4.4",
+    "openpyxl": "3.1.5",
+    "pandas": "3.0.2",
+    "pytest": "9.1.1",
+    "scikit-learn": "1.8.0",
+    "scipy": "1.17.1",
+    "torch": "2.12.1+cpu",
+    "xgboost": "3.2.0"
+  },
+  "python_version": "3.12.10",
+  "run_name": "phase3_smoke",
+  "seed": 42,
+  "timestamp_utc": "2026-06-23T10:01:38.062445+00:00"
+}

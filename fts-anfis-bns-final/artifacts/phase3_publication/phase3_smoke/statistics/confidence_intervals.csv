@@ -1,0 +1,16 @@
+method,metric,lower,upper,point_estimate,bootstrap_repetitions,resample_unit,interval_method
+fts_anfis_mean,balanced_accuracy,0.5128027726242012,0.5433620414673046,0.5290013537436218,100,subject_cluster,percentile
+fts_anfis_mean,accuracy,0.5126903553299492,0.5487179487179488,0.5306122448979592,100,subject_cluster,percentile
+fts_anfis_mean,f1_task,0.4134860713355897,0.6813221747325386,0.5964912280701754,100,subject_cluster,percentile
+fts_anfis_mean,macro_f1,0.43895699612297967,0.537396401859713,0.517757809157039,100,subject_cluster,percentile
+fts_anfis_mean,roc_auc,0.5463031935508875,0.6754368686868686,0.5966885348328647,100,subject_cluster,percentile
+fts_summary_bn,balanced_accuracy,0.4997860203125299,0.5502098480737927,0.5235863792564823,100,subject_cluster,percentile
+fts_summary_bn,accuracy,0.49610347985347986,0.5484830144474815,0.5204081632653061,100,subject_cluster,percentile
+fts_summary_bn,f1_task,0.02912745098039216,0.5229597767960938,0.3088235294117647,100,subject_cluster,percentile
+fts_summary_bn,macro_f1,0.3467810573508905,0.5462989989305779,0.47081801470588236,100,subject_cluster,percentile
+fts_summary_bn,roc_auc,0.5042232896759063,0.5828641148325359,0.5471206914505883,100,subject_cluster,percentile
+proposed_fts_anfis_bn,balanced_accuracy,0.4701916067895449,0.5391717171717171,0.5108820160366552,100,subject_cluster,percentile
+proposed_fts_anfis_bn,accuracy,0.4716863033873343,0.5390496231155778,0.5102040816326531,100,subject_cluster,percentile
+proposed_fts_anfis_bn,f1_task,0.2523809523809524,0.6116483364460121,0.4782608695652174,100,subject_cluster,percentile
+proposed_fts_anfis_bn,macro_f1,0.4398898186488766,0.5282590335240486,0.5083612040133779,100,subject_cluster,percentile
+proposed_fts_anfis_bn,roc_auc,0.48039487660106217,0.5793659528111383,0.5399354368426534,100,subject_cluster,percentile

@@ -1,0 +1,5001 @@
+{
+  "aggregated_sample_ids": [
+    "0:3caqi:1507644638489",
+    "1:3caqi:1507644835498",
+    "2:3caqi:1507644955499",
+    "3:3caqi:1507645135501",
+    "4:3caqi:1507646592492",
+    "5:3caqi:1507646739492",
+    "6:3caqi:1507646874491",
+    "7:3caqi:1507646670490",
+    "8:3caqi:1507646782491",
+    "9:3caqi:1507646983497",
+    "10:3caqi:1507647046499",
+    "11:3caqi:1507647283488",
+    "12:3caqi:1507647377498",
+    "13:3caqi:1507647101490",
+    "14:3caqi:1507647331508",
+    "15:3caqi:1507647469491",
+    "16:3caqi:1507647567499",
+    "17:3caqi:1507647698498",
+    "18:3caqi:1507647785499",
+    "19:3caqi:1507647612499",
+    "20:3caqi:1507647746510",
+    "21:3caqi:1507647880494",
+    "22:3caqi:1507647940493",
+    "23:3caqi:1507648168492",
+    "24:3caqi:1507648319496",
+    "25:3caqi:1507647994489",
+    "26:3caqi:1507648222504",
+    "27:3caqi:1507648405496",
+    "28:3caqi:1507648446494",
+    "29:3caqi:1507648567490",
+    "30:3caqi:1507648776496",
+    "31:3caqi:1507648489488",
+    "32:3caqi:1507648614492",
+    "33:3caqi:1507648859505",
+    "34:3caqi:1507648916499",
+    "35:3caqi:1507649002494",
+    "36:3caqi:1507649224507",
+    "37:3caqi:1507648966496",
+    "38:3caqi:1507649042504",
+    "77:6frz4:1507729223503",
+    "78:6frz4:1507729416500",
+    "79:6frz4:1507729536491",
+    "80:6frz4:1507729716498",
+    "81:6frz4:1507730695510",
+    "82:6frz4:1507730873511",
+    "83:6frz4:1507731029504",
+    "84:6frz4:1507730777494",
+    "85:6frz4:1507730934495",
+    "86:6frz4:1507731165482",
+    "87:6frz4:1507731324509",
+    "88:6frz4:1507731539499",
+    "89:6frz4:1507731693490",
+    "90:6frz4:1507731378504",
+    "91:6frz4:1507731594505",
+    "92:6frz4:1507731794502",
+    "93:6frz4:1507731892508",
+    "94:6frz4:1507732037506",
+    "95:6frz4:1507732235498",
+    "96:6frz4:1507731945503",
+    "97:6frz4:1507732191502",
+    "98:6frz4:1507732327502",
+    "99:6frz4:1507732412511",
+    "100:6frz4:1507732646504",
+    "101:6frz4:1507732865488",
+    "102:6frz4:1507732464501",
+    "103:6frz4:1507732719483",
+    "104:6frz4:1507732990496",
+    "105:6frz4:1507733041498",
+    "106:6frz4:1507733242494",
+    "107:6frz4:1507733473490",
+    "108:6frz4:1507733118497",
+    "109:6frz4:1507733291504",
+    "110:6frz4:1507733544502",
+    "111:6frz4:1507733687509",
+    "112:6frz4:1507733837479",
+    "113:6frz4:1507734100510",
+    "114:6frz4:1507733736506",
+    "115:6frz4:1507733917492",
+    "173:5gpsc:1508231754497",
+    "174:5gpsc:1508231959496",
+    "175:5gpsc:1508232079512",
+    "176:5gpsc:1508232259504",
+    "177:5gpsc:1508233167493",
+    "178:5gpsc:1508233330503",
+    "179:5gpsc:1508233471513",
+    "180:5gpsc:1508231634495",
+    "181:5gpsc:1508233065498",
+    "182:5gpsc:1508233241507",
+    "183:5gpsc:1508233369510",
+    "184:5gpsc:1508233537508",
+    "185:5gpsc:1508233643497",
+    "186:5gpsc:1508233875493",
+    "187:5gpsc:1508234048496",
+    "188:5gpsc:1508233693503",
+    "189:5gpsc:1508233918505",
+    "190:5gpsc:1508234119494",
+    "191:5gpsc:1508234202501",
+    "192:5gpsc:1508234425497",
+    "193:5gpsc:1508234516498",
+    "194:5gpsc:1508234244497",
+    "195:5gpsc:1508234474497",
+    "196:5gpsc:1508234574499",
+    "197:5gpsc:1508234631500",
+    "198:5gpsc:1508234833503",
+    "199:5gpsc:1508235058495",
+    "200:5gpsc:1508234671500",
+    "201:5gpsc:1508234877497",
+    "202:5gpsc:1508235140497",
+    "203:5gpsc:1508235169497",
+    "204:5gpsc:1508235263502",
+    "205:5gpsc:1508235405482",
+    "206:5gpsc:1508235214496",
+    "207:5gpsc:1508235307499",
+    "208:5gpsc:1508235486503",
+    "209:5gpsc:1508235530459",
+    "210:5gpsc:1508235626494",
+    "211:5gpsc:1508235761495",
+    "212:5gpsc:1508235584505",
+    "213:5gpsc:1508235665492",
+    "252:2nxs5:1508336535506",
+    "253:2nxs5:1508336712502",
+    "254:2nxs5:1508336832489",
+    "255:2nxs5:1508337012492",
+    "256:2nxs5:1508337673505",
+    "257:2nxs5:1508337798501",
+    "258:2nxs5:1508337940505",
+    "259:2nxs5:1508337733497",
+    "260:2nxs5:1508337845501",
+    "261:2nxs5:1508338017500",
+    "262:2nxs5:1508338169505",
+    "263:2nxs5:1508338401496",
+    "264:2nxs5:1508338633493",
+    "265:2nxs5:1508338219494",
+    "266:2nxs5:1508338451496",
+    "267:2nxs5:1508338712499",
+    "268:2nxs5:1508338788500",
+    "269:2nxs5:1508338893495",
+    "270:2nxs5:1508338967497",
+    "271:2nxs5:1508338837500",
+    "272:2nxs5:1508338937504",
+    "273:2nxs5:1508339032495",
+    "274:2nxs5:1508339122500",
+    "275:2nxs5:1508339345525",
+    "276:2nxs5:1508339501505",
+    "277:2nxs5:1508339164506",
+    "278:2nxs5:1508339391495",
+    "279:2nxs5:1508339562493",
+    "280:2nxs5:1508339600501",
+    "281:2nxs5:1508339706503",
+    "282:2nxs5:1508339929500",
+    "283:2nxs5:1508339643502",
+    "284:2nxs5:1508339747497",
+    "285:2nxs5:1508340013497",
+    "286:2nxs5:1508340074500",
+    "287:2nxs5:1508340164504",
+    "288:2nxs5:1508340337497",
+    "289:2nxs5:1508340115499",
+    "290:2nxs5:1508340205500",
+    "750:1mpau:1505831952503",
+    "751:1mpau:1505832067491",
+    "752:1mpau:1505832187492",
+    "753:1mpau:1505832367531",
+    "754:1mpau:1505833116511",
+    "755:1mpau:1505833251503",
+    "756:1mpau:1505833362493",
+    "757:1mpau:1505833204503",
+    "758:1mpau:1505833305495",
+    "759:1mpau:1505833446490",
+    "760:1mpau:1505833538485",
+    "761:1mpau:1505833641494",
+    "762:1mpau:1505833714507",
+    "763:1mpau:1505833592495",
+    "764:1mpau:1505833683525",
+    "765:1mpau:1505833801501",
+    "766:1mpau:1505833834508",
+    "767:1mpau:1505833971589",
+    "768:1mpau:1505833880497",
+    "769:1mpau:1505834013500",
+    "770:1mpau:1505834095506",
+    "771:1mpau:1505834141496",
+    "772:1mpau:1505834355496",
+    "773:1mpau:1505834479499",
+    "774:1mpau:1505834187499",
+    "775:1mpau:1505834399513",
+    "776:1mpau:1505834563509",
+    "777:1mpau:1505834606499",
+    "778:1mpau:1505834696510",
+    "779:1mpau:1505834822491",
+    "780:1mpau:1505834651513",
+    "781:1mpau:1505834741505",
+    "782:1mpau:1505834889496",
+    "783:1mpau:1505834932503",
+    "784:1mpau:1505835026504",
+    "785:1mpau:1505835163556",
+    "786:1mpau:1505834999499",
+    "787:1mpau:1505835070498"
+  ],
+  "aggregated_subject_ids": [
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau"
+  ],
+  "evaluation_protocol": "outer LOSO + inner GroupKFold",
+  "method_name": "fts_xgboost",
+  "outer_fold_results": [
+    {
+      "candidate_results": [
+        {
+          "candidate_id": "fts_xgb_triangular_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6013,
+            "accuracy": 0.6013,
+            "auc": 0.5989,
+            "bal_acc": 0.6026,
+            "f1": 0.5594,
+            "macro_f1": 0.5976,
+            "precision": 0.6349,
+            "recall": 0.5
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6266,
+            "accuracy": 0.6266,
+            "auc": 0.6404,
+            "bal_acc": 0.6255,
+            "f1": 0.659,
+            "macro_f1": 0.6232,
+            "precision": 0.6129,
+            "recall": 0.7125
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5886,
+            "accuracy": 0.5886,
+            "auc": 0.6014,
+            "bal_acc": 0.5888,
+            "f1": 0.586,
+            "macro_f1": 0.5886,
+            "precision": 0.5974,
+            "recall": 0.575
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6329,
+            "accuracy": 0.6329,
+            "auc": 0.6284,
+            "bal_acc": 0.6324,
+            "f1": 0.6506,
+            "macro_f1": 0.632,
+            "precision": 0.6279,
+            "recall": 0.675
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6139,
+            "accuracy": 0.6139,
+            "auc": 0.6274,
+            "bal_acc": 0.613,
+            "f1": 0.6433,
+            "macro_f1": 0.6113,
+            "precision": 0.6044,
+            "recall": 0.6875
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6392,
+            "accuracy": 0.6392,
+            "auc": 0.6362,
+            "bal_acc": 0.6381,
+            "f1": 0.6705,
+            "macro_f1": 0.636,
+            "precision": 0.6237,
+            "recall": 0.725
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6266,
+            "accuracy": 0.6266,
+            "auc": 0.6215,
+            "bal_acc": 0.6258,
+            "f1": 0.6509,
+            "macro_f1": 0.6248,
+            "precision": 0.618,
+            "recall": 0.6875
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6329,
+            "accuracy": 0.6329,
+            "auc": 0.6353,
+            "bal_acc": 0.6322,
+            "f1": 0.6548,
+            "macro_f1": 0.6314,
+            "precision": 0.625,
+            "recall": 0.6875
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6329,
+            "accuracy": 0.6329,
+            "auc": 0.6613,
+            "bal_acc": 0.6343,
+            "f1": 0.5915,
+            "macro_f1": 0.6291,
+            "precision": 0.6774,
+            "recall": 0.525
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6266,
+            "accuracy": 0.6266,
+            "auc": 0.6612,
+            "bal_acc": 0.625,
+            "f1": 0.6704,
+            "macro_f1": 0.6199,
+            "precision": 0.6061,
+            "recall": 0.75
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6139,
+            "accuracy": 0.6139,
+            "auc": 0.6483,
+            "bal_acc": 0.6144,
+            "f1": 0.6013,
+            "macro_f1": 0.6135,
+            "precision": 0.6301,
+            "recall": 0.575
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6013,
+            "accuracy": 0.6013,
+            "auc": 0.6287,
+            "bal_acc": 0.6011,
+            "f1": 0.6087,
+            "macro_f1": 0.6011,
+            "precision": 0.6049,
+            "recall": 0.6125
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6329,
+            "accuracy": 0.6329,
+            "auc": 0.6599,
+            "bal_acc": 0.6311,
+            "f1": 0.6813,
+            "macro_f1": 0.6242,
+            "precision": 0.6078,
+            "recall": 0.775
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6076,
+            "accuracy": 0.6076,
+            "auc": 0.6513,
+            "bal_acc": 0.6066,
+            "f1": 0.6395,
+            "macro_f1": 0.6045,
+            "precision": 0.5978,
+            "recall": 0.6875
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6139,
+            "accuracy": 0.6139,
+            "auc": 0.6389,
+            "bal_acc": 0.6139,
+            "f1": 0.6164,
+            "macro_f1": 0.6139,
+            "precision": 0.6203,
+            "recall": 0.6125
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6013,
+            "accuracy": 0.6013,
+            "auc": 0.6215,
+            "bal_acc": 0.6003,
+            "f1": 0.6316,
+            "macro_f1": 0.5985,
+            "precision": 0.5934,
+            "recall": 0.675
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5886,
+            "accuracy": 0.5886,
+            "auc": 0.5947,
+            "bal_acc": 0.5896,
+            "f1": 0.5578,
+            "macro_f1": 0.5866,
+            "precision": 0.6119,
+            "recall": 0.5125
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6139,
+            "accuracy": 0.6139,
+            "auc": 0.6099,
+            "bal_acc": 0.6146,
+            "f1": 0.596,
+            "macro_f1": 0.6132,
+            "precision": 0.6338,
+            "recall": 0.5625
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5633,
+            "accuracy": 0.5633,
+            "auc": 0.5631,
+            "bal_acc": 0.5619,
+            "f1": 0.6102,
+            "macro_f1": 0.5569,
+            "precision": 0.5567,
+            "recall": 0.675
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6076,
+            "accuracy": 0.6076,
+            "auc": 0.6019,
+            "bal_acc": 0.6071,
+            "f1": 0.6265,
+            "macro_f1": 0.6066,
+            "precision": 0.6047,
+            "recall": 0.65
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5949,
+            "accuracy": 0.5949,
+            "auc": 0.6104,
+            "bal_acc": 0.5962,
+            "f1": 0.5556,
+            "macro_f1": 0.5917,
+            "precision": 0.625,
+            "recall": 0.5
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6013,
+            "accuracy": 0.6013,
+            "auc": 0.6027,
+            "bal_acc": 0.6021,
+            "f1": 0.5772,
+            "macro_f1": 0.6,
+            "precision": 0.6232,
+            "recall": 0.5375
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6013,
+            "accuracy": 0.6013,
+            "auc": 0.5934,
+            "bal_acc": 0.601,
+            "f1": 0.6135,
+            "macro_f1": 0.6009,
+            "precision": 0.6024,
+            "recall": 0.625
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5823,
+            "accuracy": 0.5823,
+            "auc": 0.5979,
+            "bal_acc": 0.5824,
+            "f1": 0.5823,
+            "macro_f1": 0.5823,
+            "precision": 0.5897,
+            "recall": 0.575
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6582,
+            "accuracy": 0.6582,
+            "auc": 0.6824,
+            "bal_acc": 0.6562,
+            "f1": 0.7065,
+            "macro_f1": 0.6487,
+            "precision": 0.625,
+            "recall": 0.8125
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6392,
+            "accuracy": 0.6392,
+            "auc": 0.668,
+            "bal_acc": 0.6383,
+            "f1": 0.6667,
+            "macro_f1": 0.6368,
+            "precision": 0.6264,
+            "recall": 0.7125
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6329,
+            "accuracy": 0.6329,
+            "auc": 0.6608,
+            "bal_acc": 0.6309,
+            "f1": 0.6848,
+            "macro_f1": 0.6227,
+            "precision": 0.6058,
+            "recall": 0.7875
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6266,
+            "accuracy": 0.6266,
+            "auc": 0.6631,
+            "bal_acc": 0.6242,
+            "f1": 0.6878,
+            "macro_f1": 0.6116,
+            "precision": 0.5963,
+            "recall": 0.8125
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.3,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6519,
+            "accuracy": 0.6519,
+            "auc": 0.6862,
+            "bal_acc": 0.6502,
+            "f1": 0.6961,
+            "macro_f1": 0.6444,
+            "precision": 0.6238,
+            "recall": 0.7875
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6013,
+            "accuracy": 0.6013,
+            "auc": 0.6457,
+            "bal_acc": 0.6034,
+            "f1": 0.5263,
+            "macro_f1": 0.591,
+            "precision": 0.6604,
+            "recall": 0.4375
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6203,
+            "accuracy": 0.6203,
+            "auc": 0.6592,
+            "bal_acc": 0.6178,
+            "f1": 0.6842,
+            "macro_f1": 0.604,
+            "precision": 0.5909,
+            "recall": 0.8125
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.3,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6139,
+            "accuracy": 0.6139,
+            "auc": 0.6486,
+            "bal_acc": 0.612,
+            "f1": 0.6667,
+            "macro_f1": 0.604,
+            "precision": 0.5922,
+            "recall": 0.7625
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.3,
+          "status": "success"
+        }
+      ],
+      "configuration_hash": "c4690ad5dde57f51c02d45d7a24161db0538c34d2b80e22b08887ee8d1a9bb32",
+      "inner_selection_metrics": {
+        "acc": 0.6582,
+        "accuracy": 0.6582,
+        "auc": 0.6824,
+        "bal_acc": 0.6562,
+        "f1": 0.7065,
+        "macro_f1": 0.6487,
+        "precision": 0.625,
+        "recall": 0.8125
+      },
+      "outer_fold_index": 0,
+      "outer_test_sample_ids": [
+        "750:1mpau:1505831952503",
+        "751:1mpau:1505832067491",
+        "752:1mpau:1505832187492",
+        "753:1mpau:1505832367531",
+        "754:1mpau:1505833116511",
+        "755:1mpau:1505833251503",
+        "756:1mpau:1505833362493",
+        "757:1mpau:1505833204503",
+        "758:1mpau:1505833305495",
+        "759:1mpau:1505833446490",
+        "760:1mpau:1505833538485",
+        "761:1mpau:1505833641494",
+        "762:1mpau:1505833714507",
+        "763:1mpau:1505833592495",
+        "764:1mpau:1505833683525",
+        "765:1mpau:1505833801501",
+        "766:1mpau:1505833834508",
+        "767:1mpau:1505833971589",
+        "768:1mpau:1505833880497",
+        "769:1mpau:1505834013500",
+        "770:1mpau:1505834095506",
+        "771:1mpau:1505834141496",
+        "772:1mpau:1505834355496",
+        "773:1mpau:1505834479499",
+        "774:1mpau:1505834187499",
+        "775:1mpau:1505834399513",
+        "776:1mpau:1505834563509",
+        "777:1mpau:1505834606499",
+        "778:1mpau:1505834696510",
+        "779:1mpau:1505834822491",
+        "780:1mpau:1505834651513",
+        "781:1mpau:1505834741505",
+        "782:1mpau:1505834889496",
+        "783:1mpau:1505834932503",
+        "784:1mpau:1505835026504",
+        "785:1mpau:1505835163556",
+        "786:1mpau:1505834999499",
+        "787:1mpau:1505835070498"
+      ],
+      "outer_test_subject": "1mpau",
+      "outer_training_subjects": [
+        "2nxs5",
+        "3caqi",
+        "5gpsc",
+        "6frz4"
+      ],
+      "seed": 42,
+      "selected_candidate_id": "fts_xgb_gbell_100_3_0.03",
+      "selected_hyperparameters": {
+        "learning_rate": 0.03,
+        "max_depth": 3,
+        "mf_type": "gbell",
+        "n_estimators": 100
+      },
+      "selected_threshold": 0.4
+    },
+    {
+      "candidate_results": [
+        {
+          "candidate_id": "fts_xgb_triangular_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.586,
+            "accuracy": 0.586,
+            "auc": 0.5862,
+            "bal_acc": 0.5879,
+            "f1": 0.4144,
+            "macro_f1": 0.5471,
+            "precision": 0.7188,
+            "recall": 0.2911
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5796,
+            "accuracy": 0.5796,
+            "auc": 0.5937,
+            "bal_acc": 0.5813,
+            "f1": 0.431,
+            "macro_f1": 0.5489,
+            "precision": 0.6757,
+            "recall": 0.3165
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5796,
+            "accuracy": 0.5796,
+            "auc": 0.5699,
+            "bal_acc": 0.5811,
+            "f1": 0.459,
+            "macro_f1": 0.5576,
+            "precision": 0.6512,
+            "recall": 0.3544
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5669,
+            "accuracy": 0.5669,
+            "auc": 0.5696,
+            "bal_acc": 0.5685,
+            "f1": 0.4237,
+            "macro_f1": 0.5384,
+            "precision": 0.641,
+            "recall": 0.3165
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5669,
+            "accuracy": 0.5669,
+            "auc": 0.5925,
+            "bal_acc": 0.5686,
+            "f1": 0.4138,
+            "macro_f1": 0.5352,
+            "precision": 0.6486,
+            "recall": 0.3038
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5732,
+            "accuracy": 0.5732,
+            "auc": 0.5912,
+            "bal_acc": 0.5745,
+            "f1": 0.4724,
+            "macro_f1": 0.5571,
+            "precision": 0.625,
+            "recall": 0.3797
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.586,
+            "accuracy": 0.586,
+            "auc": 0.588,
+            "bal_acc": 0.5873,
+            "f1": 0.48,
+            "macro_f1": 0.568,
+            "precision": 0.6522,
+            "recall": 0.3797
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5669,
+            "accuracy": 0.5669,
+            "auc": 0.5708,
+            "bal_acc": 0.5681,
+            "f1": 0.4688,
+            "macro_f1": 0.5516,
+            "precision": 0.6122,
+            "recall": 0.3797
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5924,
+            "accuracy": 0.5924,
+            "auc": 0.5962,
+            "bal_acc": 0.594,
+            "f1": 0.4483,
+            "macro_f1": 0.5625,
+            "precision": 0.7027,
+            "recall": 0.3291
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5924,
+            "accuracy": 0.5924,
+            "auc": 0.5665,
+            "bal_acc": 0.5938,
+            "f1": 0.4754,
+            "macro_f1": 0.571,
+            "precision": 0.6744,
+            "recall": 0.3671
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6115,
+            "accuracy": 0.6115,
+            "auc": 0.5862,
+            "bal_acc": 0.6131,
+            "f1": 0.4786,
+            "macro_f1": 0.5845,
+            "precision": 0.7368,
+            "recall": 0.3544
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6051,
+            "accuracy": 0.6051,
+            "auc": 0.5804,
+            "bal_acc": 0.6066,
+            "f1": 0.4833,
+            "macro_f1": 0.5819,
+            "precision": 0.7073,
+            "recall": 0.3671
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6051,
+            "accuracy": 0.6051,
+            "auc": 0.5733,
+            "bal_acc": 0.6066,
+            "f1": 0.4833,
+            "macro_f1": 0.5819,
+            "precision": 0.7073,
+            "recall": 0.3671
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5541,
+            "accuracy": 0.5541,
+            "auc": 0.557,
+            "bal_acc": 0.5552,
+            "f1": 0.4697,
+            "macro_f1": 0.5425,
+            "precision": 0.5849,
+            "recall": 0.3924
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6178,
+            "accuracy": 0.6178,
+            "auc": 0.5712,
+            "bal_acc": 0.6192,
+            "f1": 0.5161,
+            "macro_f1": 0.6002,
+            "precision": 0.7111,
+            "recall": 0.4051
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5796,
+            "accuracy": 0.5796,
+            "auc": 0.5652,
+            "bal_acc": 0.5808,
+            "f1": 0.4844,
+            "macro_f1": 0.5648,
+            "precision": 0.6327,
+            "recall": 0.3924
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.586,
+            "accuracy": 0.586,
+            "auc": 0.5454,
+            "bal_acc": 0.5874,
+            "f1": 0.4715,
+            "macro_f1": 0.5656,
+            "precision": 0.6591,
+            "recall": 0.3671
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.586,
+            "accuracy": 0.586,
+            "auc": 0.5613,
+            "bal_acc": 0.5873,
+            "f1": 0.48,
+            "macro_f1": 0.568,
+            "precision": 0.6522,
+            "recall": 0.3797
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5732,
+            "accuracy": 0.5732,
+            "auc": 0.5326,
+            "bal_acc": 0.5741,
+            "f1": 0.5109,
+            "macro_f1": 0.5662,
+            "precision": 0.6034,
+            "recall": 0.443
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6051,
+            "accuracy": 0.6051,
+            "auc": 0.5585,
+            "bal_acc": 0.6062,
+            "f1": 0.5231,
+            "macro_f1": 0.5931,
+            "precision": 0.6667,
+            "recall": 0.4304
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5732,
+            "accuracy": 0.5732,
+            "auc": 0.5479,
+            "bal_acc": 0.5745,
+            "f1": 0.4724,
+            "macro_f1": 0.5571,
+            "precision": 0.625,
+            "recall": 0.3797
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5732,
+            "accuracy": 0.5732,
+            "auc": 0.5624,
+            "bal_acc": 0.574,
+            "f1": 0.518,
+            "macro_f1": 0.5676,
+            "precision": 0.6,
+            "recall": 0.4557
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5796,
+            "accuracy": 0.5796,
+            "auc": 0.5536,
+            "bal_acc": 0.5807,
+            "f1": 0.4923,
+            "macro_f1": 0.5668,
+            "precision": 0.6275,
+            "recall": 0.4051
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5732,
+            "accuracy": 0.5732,
+            "auc": 0.554,
+            "bal_acc": 0.574,
+            "f1": 0.518,
+            "macro_f1": 0.5676,
+            "precision": 0.6,
+            "recall": 0.4557
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6178,
+            "accuracy": 0.6178,
+            "auc": 0.591,
+            "bal_acc": 0.6195,
+            "f1": 0.4828,
+            "macro_f1": 0.5899,
+            "precision": 0.7568,
+            "recall": 0.3544
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6178,
+            "accuracy": 0.6178,
+            "auc": 0.5848,
+            "bal_acc": 0.6191,
+            "f1": 0.5238,
+            "macro_f1": 0.6023,
+            "precision": 0.7021,
+            "recall": 0.4177
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.586,
+            "accuracy": 0.586,
+            "auc": 0.576,
+            "bal_acc": 0.5868,
+            "f1": 0.5255,
+            "macro_f1": 0.5792,
+            "precision": 0.6207,
+            "recall": 0.4557
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5924,
+            "accuracy": 0.5924,
+            "auc": 0.5738,
+            "bal_acc": 0.5932,
+            "f1": 0.5294,
+            "macro_f1": 0.5849,
+            "precision": 0.6316,
+            "recall": 0.4557
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6306,
+            "accuracy": 0.6306,
+            "auc": 0.5833,
+            "bal_acc": 0.6319,
+            "f1": 0.5323,
+            "macro_f1": 0.6135,
+            "precision": 0.7333,
+            "recall": 0.4177
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6178,
+            "accuracy": 0.6178,
+            "auc": 0.5787,
+            "bal_acc": 0.6192,
+            "f1": 0.5161,
+            "macro_f1": 0.6002,
+            "precision": 0.7111,
+            "recall": 0.4051
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.586,
+            "accuracy": 0.586,
+            "auc": 0.589,
+            "bal_acc": 0.5869,
+            "f1": 0.5185,
+            "macro_f1": 0.5777,
+            "precision": 0.625,
+            "recall": 0.443
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5924,
+            "accuracy": 0.5924,
+            "auc": 0.5489,
+            "bal_acc": 0.5934,
+            "f1": 0.5152,
+            "macro_f1": 0.5818,
+            "precision": 0.6415,
+            "recall": 0.4304
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        }
+      ],
+      "configuration_hash": "8d0861ba63f05915bf24bc9146a2130d029d14c9c04d99a46e597aebfc4a0bc7",
+      "inner_selection_metrics": {
+        "acc": 0.6306,
+        "accuracy": 0.6306,
+        "auc": 0.5833,
+        "bal_acc": 0.6319,
+        "f1": 0.5323,
+        "macro_f1": 0.6135,
+        "precision": 0.7333,
+        "recall": 0.4177
+      },
+      "outer_fold_index": 1,
+      "outer_test_sample_ids": [
+        "252:2nxs5:1508336535506",
+        "253:2nxs5:1508336712502",
+        "254:2nxs5:1508336832489",
+        "255:2nxs5:1508337012492",
+        "256:2nxs5:1508337673505",
+        "257:2nxs5:1508337798501",
+        "258:2nxs5:1508337940505",
+        "259:2nxs5:1508337733497",
+        "260:2nxs5:1508337845501",
+        "261:2nxs5:1508338017500",
+        "262:2nxs5:1508338169505",
+        "263:2nxs5:1508338401496",
+        "264:2nxs5:1508338633493",
+        "265:2nxs5:1508338219494",
+        "266:2nxs5:1508338451496",
+        "267:2nxs5:1508338712499",
+        "268:2nxs5:1508338788500",
+        "269:2nxs5:1508338893495",
+        "270:2nxs5:1508338967497",
+        "271:2nxs5:1508338837500",
+        "272:2nxs5:1508338937504",
+        "273:2nxs5:1508339032495",
+        "274:2nxs5:1508339122500",
+        "275:2nxs5:1508339345525",
+        "276:2nxs5:1508339501505",
+        "277:2nxs5:1508339164506",
+        "278:2nxs5:1508339391495",
+        "279:2nxs5:1508339562493",
+        "280:2nxs5:1508339600501",
+        "281:2nxs5:1508339706503",
+        "282:2nxs5:1508339929500",
+        "283:2nxs5:1508339643502",
+        "284:2nxs5:1508339747497",
+        "285:2nxs5:1508340013497",
+        "286:2nxs5:1508340074500",
+        "287:2nxs5:1508340164504",
+        "288:2nxs5:1508340337497",
+        "289:2nxs5:1508340115499",
+        "290:2nxs5:1508340205500"
+      ],
+      "outer_test_subject": "2nxs5",
+      "outer_training_subjects": [
+        "1mpau",
+        "3caqi",
+        "5gpsc",
+        "6frz4"
+      ],
+      "seed": 42,
+      "selected_candidate_id": "fts_xgb_gbell_300_3_0.03",
+      "selected_hyperparameters": {
+        "learning_rate": 0.03,
+        "max_depth": 3,
+        "mf_type": "gbell",
+        "n_estimators": 300
+      },
+      "selected_threshold": 0.6
+    },
+    {
+      "candidate_results": [
+        {
+          "candidate_id": "fts_xgb_triangular_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5414,
+            "accuracy": 0.5414,
+            "auc": 0.5114,
+            "bal_acc": 0.5428,
+            "f1": 0.4194,
+            "macro_f1": 0.5202,
+            "precision": 0.5778,
+            "recall": 0.3291
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.535,
+            "accuracy": 0.535,
+            "auc": 0.522,
+            "bal_acc": 0.5361,
+            "f1": 0.4427,
+            "macro_f1": 0.5219,
+            "precision": 0.5577,
+            "recall": 0.3671
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5414,
+            "accuracy": 0.5414,
+            "auc": 0.5373,
+            "bal_acc": 0.5428,
+            "f1": 0.4194,
+            "macro_f1": 0.5202,
+            "precision": 0.5778,
+            "recall": 0.3291
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5414,
+            "accuracy": 0.5414,
+            "auc": 0.5174,
+            "bal_acc": 0.5428,
+            "f1": 0.4194,
+            "macro_f1": 0.5202,
+            "precision": 0.5778,
+            "recall": 0.3291
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.535,
+            "accuracy": 0.535,
+            "auc": 0.5274,
+            "bal_acc": 0.5362,
+            "f1": 0.4341,
+            "macro_f1": 0.5198,
+            "precision": 0.56,
+            "recall": 0.3544
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5287,
+            "accuracy": 0.5287,
+            "auc": 0.5219,
+            "bal_acc": 0.5295,
+            "f1": 0.4559,
+            "macro_f1": 0.5201,
+            "precision": 0.5439,
+            "recall": 0.3924
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.535,
+            "accuracy": 0.535,
+            "auc": 0.5385,
+            "bal_acc": 0.5366,
+            "f1": 0.3866,
+            "macro_f1": 0.5061,
+            "precision": 0.575,
+            "recall": 0.2911
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5414,
+            "accuracy": 0.5414,
+            "auc": 0.5106,
+            "bal_acc": 0.5426,
+            "f1": 0.4375,
+            "macro_f1": 0.5252,
+            "precision": 0.5714,
+            "recall": 0.3544
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5414,
+            "accuracy": 0.5414,
+            "auc": 0.5458,
+            "bal_acc": 0.5412,
+            "f1": 0.5556,
+            "macro_f1": 0.5409,
+            "precision": 0.5422,
+            "recall": 0.5696
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5541,
+            "accuracy": 0.5541,
+            "auc": 0.5362,
+            "bal_acc": 0.5541,
+            "f1": 0.557,
+            "macro_f1": 0.5541,
+            "precision": 0.557,
+            "recall": 0.557
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5287,
+            "accuracy": 0.5287,
+            "auc": 0.5173,
+            "bal_acc": 0.5287,
+            "f1": 0.5256,
+            "macro_f1": 0.5286,
+            "precision": 0.5325,
+            "recall": 0.519
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5478,
+            "accuracy": 0.5478,
+            "auc": 0.5171,
+            "bal_acc": 0.5477,
+            "f1": 0.5535,
+            "macro_f1": 0.5477,
+            "precision": 0.55,
+            "recall": 0.557
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.3,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5414,
+            "accuracy": 0.5414,
+            "auc": 0.5381,
+            "bal_acc": 0.5415,
+            "f1": 0.5385,
+            "macro_f1": 0.5414,
+            "precision": 0.5455,
+            "recall": 0.5316
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5478,
+            "accuracy": 0.5478,
+            "auc": 0.5289,
+            "bal_acc": 0.5481,
+            "f1": 0.5235,
+            "macro_f1": 0.5466,
+            "precision": 0.5571,
+            "recall": 0.4937
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.535,
+            "accuracy": 0.535,
+            "auc": 0.5219,
+            "bal_acc": 0.5353,
+            "f1": 0.5166,
+            "macro_f1": 0.5344,
+            "precision": 0.5417,
+            "recall": 0.4937
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5414,
+            "accuracy": 0.5414,
+            "auc": 0.5187,
+            "bal_acc": 0.5417,
+            "f1": 0.52,
+            "macro_f1": 0.5405,
+            "precision": 0.5493,
+            "recall": 0.4937
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5223,
+            "accuracy": 0.5223,
+            "auc": 0.5105,
+            "bal_acc": 0.523,
+            "f1": 0.4681,
+            "macro_f1": 0.5173,
+            "precision": 0.5323,
+            "recall": 0.4177
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5032,
+            "accuracy": 0.5032,
+            "auc": 0.5152,
+            "bal_acc": 0.5037,
+            "f1": 0.4583,
+            "macro_f1": 0.4998,
+            "precision": 0.5077,
+            "recall": 0.4177
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.4968,
+            "accuracy": 0.4968,
+            "auc": 0.5049,
+            "bal_acc": 0.4972,
+            "f1": 0.4698,
+            "macro_f1": 0.4955,
+            "precision": 0.5,
+            "recall": 0.443
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5096,
+            "accuracy": 0.5096,
+            "auc": 0.5082,
+            "bal_acc": 0.5101,
+            "f1": 0.469,
+            "macro_f1": 0.5067,
+            "precision": 0.5152,
+            "recall": 0.4304
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5096,
+            "accuracy": 0.5096,
+            "auc": 0.5018,
+            "bal_acc": 0.5101,
+            "f1": 0.469,
+            "macro_f1": 0.5067,
+            "precision": 0.5152,
+            "recall": 0.4304
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5096,
+            "accuracy": 0.5096,
+            "auc": 0.5214,
+            "bal_acc": 0.51,
+            "f1": 0.4762,
+            "macro_f1": 0.5076,
+            "precision": 0.5147,
+            "recall": 0.443
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5032,
+            "accuracy": 0.5032,
+            "auc": 0.5127,
+            "bal_acc": 0.5037,
+            "f1": 0.4658,
+            "macro_f1": 0.5007,
+            "precision": 0.5075,
+            "recall": 0.4304
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5159,
+            "accuracy": 0.5159,
+            "auc": 0.5183,
+            "bal_acc": 0.5164,
+            "f1": 0.4795,
+            "macro_f1": 0.5135,
+            "precision": 0.5224,
+            "recall": 0.443
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5669,
+            "accuracy": 0.5669,
+            "auc": 0.537,
+            "bal_acc": 0.5664,
+            "f1": 0.6,
+            "macro_f1": 0.5639,
+            "precision": 0.5604,
+            "recall": 0.6456
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.3,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5414,
+            "accuracy": 0.5414,
+            "auc": 0.5299,
+            "bal_acc": 0.5415,
+            "f1": 0.5385,
+            "macro_f1": 0.5414,
+            "precision": 0.5455,
+            "recall": 0.5316
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5414,
+            "accuracy": 0.5414,
+            "auc": 0.5254,
+            "bal_acc": 0.5411,
+            "f1": 0.561,
+            "macro_f1": 0.5405,
+            "precision": 0.5412,
+            "recall": 0.5823
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.3,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5287,
+            "accuracy": 0.5287,
+            "auc": 0.5247,
+            "bal_acc": 0.529,
+            "f1": 0.5067,
+            "macro_f1": 0.5277,
+            "precision": 0.5352,
+            "recall": 0.481
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.535,
+            "accuracy": 0.535,
+            "auc": 0.5385,
+            "bal_acc": 0.5354,
+            "f1": 0.5101,
+            "macro_f1": 0.5338,
+            "precision": 0.5429,
+            "recall": 0.481
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5287,
+            "accuracy": 0.5287,
+            "auc": 0.5211,
+            "bal_acc": 0.5293,
+            "f1": 0.4789,
+            "macro_f1": 0.5243,
+            "precision": 0.5397,
+            "recall": 0.4304
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5414,
+            "accuracy": 0.5414,
+            "auc": 0.5346,
+            "bal_acc": 0.5418,
+            "f1": 0.5135,
+            "macro_f1": 0.5399,
+            "precision": 0.5507,
+            "recall": 0.481
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.535,
+            "accuracy": 0.535,
+            "auc": 0.5209,
+            "bal_acc": 0.5355,
+            "f1": 0.5034,
+            "macro_f1": 0.5331,
+            "precision": 0.5441,
+            "recall": 0.4684
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        }
+      ],
+      "configuration_hash": "c4690ad5dde57f51c02d45d7a24161db0538c34d2b80e22b08887ee8d1a9bb32",
+      "inner_selection_metrics": {
+        "acc": 0.5669,
+        "accuracy": 0.5669,
+        "auc": 0.537,
+        "bal_acc": 0.5664,
+        "f1": 0.6,
+        "macro_f1": 0.5639,
+        "precision": 0.5604,
+        "recall": 0.6456
+      },
+      "outer_fold_index": 2,
+      "outer_test_sample_ids": [
+        "0:3caqi:1507644638489",
+        "1:3caqi:1507644835498",
+        "2:3caqi:1507644955499",
+        "3:3caqi:1507645135501",
+        "4:3caqi:1507646592492",
+        "5:3caqi:1507646739492",
+        "6:3caqi:1507646874491",
+        "7:3caqi:1507646670490",
+        "8:3caqi:1507646782491",
+        "9:3caqi:1507646983497",
+        "10:3caqi:1507647046499",
+        "11:3caqi:1507647283488",
+        "12:3caqi:1507647377498",
+        "13:3caqi:1507647101490",
+        "14:3caqi:1507647331508",
+        "15:3caqi:1507647469491",
+        "16:3caqi:1507647567499",
+        "17:3caqi:1507647698498",
+        "18:3caqi:1507647785499",
+        "19:3caqi:1507647612499",
+        "20:3caqi:1507647746510",
+        "21:3caqi:1507647880494",
+        "22:3caqi:1507647940493",
+        "23:3caqi:1507648168492",
+        "24:3caqi:1507648319496",
+        "25:3caqi:1507647994489",
+        "26:3caqi:1507648222504",
+        "27:3caqi:1507648405496",
+        "28:3caqi:1507648446494",
+        "29:3caqi:1507648567490",
+        "30:3caqi:1507648776496",
+        "31:3caqi:1507648489488",
+        "32:3caqi:1507648614492",
+        "33:3caqi:1507648859505",
+        "34:3caqi:1507648916499",
+        "35:3caqi:1507649002494",
+        "36:3caqi:1507649224507",
+        "37:3caqi:1507648966496",
+        "38:3caqi:1507649042504"
+      ],
+      "outer_test_subject": "3caqi",
+      "outer_training_subjects": [
+        "1mpau",
+        "2nxs5",
+        "5gpsc",
+        "6frz4"
+      ],
+      "seed": 42,
+      "selected_candidate_id": "fts_xgb_gbell_100_3_0.03",
+      "selected_hyperparameters": {
+        "learning_rate": 0.03,
+        "max_depth": 3,
+        "mf_type": "gbell",
+        "n_estimators": 100
+      },
+      "selected_threshold": 0.3
+    },
+    {
+      "candidate_results": [
+        {
+          "candidate_id": "fts_xgb_triangular_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5419,
+            "accuracy": 0.5419,
+            "auc": 0.504,
+            "bal_acc": 0.5471,
+            "f1": 0.3826,
+            "macro_f1": 0.5093,
+            "precision": 0.6111,
+            "recall": 0.2785
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.529,
+            "accuracy": 0.529,
+            "auc": 0.4959,
+            "bal_acc": 0.532,
+            "f1": 0.4511,
+            "macro_f1": 0.5193,
+            "precision": 0.5556,
+            "recall": 0.3797
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5355,
+            "accuracy": 0.5355,
+            "auc": 0.52,
+            "bal_acc": 0.5388,
+            "f1": 0.4462,
+            "macro_f1": 0.5231,
+            "precision": 0.5686,
+            "recall": 0.3671
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5355,
+            "accuracy": 0.5355,
+            "auc": 0.5361,
+            "bal_acc": 0.5371,
+            "f1": 0.5,
+            "macro_f1": 0.5331,
+            "precision": 0.5538,
+            "recall": 0.4557
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5226,
+            "accuracy": 0.5226,
+            "auc": 0.4862,
+            "bal_acc": 0.5249,
+            "f1": 0.4638,
+            "macro_f1": 0.5168,
+            "precision": 0.5424,
+            "recall": 0.4051
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5226,
+            "accuracy": 0.5226,
+            "auc": 0.4901,
+            "bal_acc": 0.5251,
+            "f1": 0.4559,
+            "macro_f1": 0.5153,
+            "precision": 0.5439,
+            "recall": 0.3924
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.529,
+            "accuracy": 0.529,
+            "auc": 0.5364,
+            "bal_acc": 0.5325,
+            "f1": 0.4341,
+            "macro_f1": 0.5154,
+            "precision": 0.56,
+            "recall": 0.3544
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5161,
+            "accuracy": 0.5161,
+            "auc": 0.5245,
+            "bal_acc": 0.5173,
+            "f1": 0.4898,
+            "macro_f1": 0.5148,
+            "precision": 0.5294,
+            "recall": 0.4557
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5484,
+            "accuracy": 0.5484,
+            "auc": 0.5465,
+            "bal_acc": 0.549,
+            "f1": 0.5395,
+            "macro_f1": 0.5482,
+            "precision": 0.5616,
+            "recall": 0.519
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5548,
+            "accuracy": 0.5548,
+            "auc": 0.5447,
+            "bal_acc": 0.556,
+            "f1": 0.5306,
+            "macro_f1": 0.5536,
+            "precision": 0.5735,
+            "recall": 0.4937
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5419,
+            "accuracy": 0.5419,
+            "auc": 0.539,
+            "bal_acc": 0.5429,
+            "f1": 0.5235,
+            "macro_f1": 0.5412,
+            "precision": 0.5571,
+            "recall": 0.4937
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5419,
+            "accuracy": 0.5419,
+            "auc": 0.5361,
+            "bal_acc": 0.5429,
+            "f1": 0.5235,
+            "macro_f1": 0.5412,
+            "precision": 0.5571,
+            "recall": 0.4937
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5548,
+            "accuracy": 0.5548,
+            "auc": 0.5416,
+            "bal_acc": 0.556,
+            "f1": 0.5306,
+            "macro_f1": 0.5536,
+            "precision": 0.5735,
+            "recall": 0.4937
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5548,
+            "accuracy": 0.5548,
+            "auc": 0.5414,
+            "bal_acc": 0.5558,
+            "f1": 0.5369,
+            "macro_f1": 0.5542,
+            "precision": 0.5714,
+            "recall": 0.5063
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5419,
+            "accuracy": 0.5419,
+            "auc": 0.5429,
+            "bal_acc": 0.5429,
+            "f1": 0.5235,
+            "macro_f1": 0.5412,
+            "precision": 0.5571,
+            "recall": 0.4937
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5419,
+            "accuracy": 0.5419,
+            "auc": 0.5404,
+            "bal_acc": 0.5429,
+            "f1": 0.5235,
+            "macro_f1": 0.5412,
+            "precision": 0.5571,
+            "recall": 0.4937
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5355,
+            "accuracy": 0.5355,
+            "auc": 0.5424,
+            "bal_acc": 0.5381,
+            "f1": 0.4706,
+            "macro_f1": 0.5284,
+            "precision": 0.5614,
+            "recall": 0.4051
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5419,
+            "accuracy": 0.5419,
+            "auc": 0.5523,
+            "bal_acc": 0.5374,
+            "f1": 0.6321,
+            "macro_f1": 0.5126,
+            "precision": 0.5351,
+            "recall": 0.7722
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.3,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5419,
+            "accuracy": 0.5419,
+            "auc": 0.5458,
+            "bal_acc": 0.5361,
+            "f1": 0.6502,
+            "macro_f1": 0.4933,
+            "precision": 0.5323,
+            "recall": 0.8354
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.3,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5032,
+            "accuracy": 0.5032,
+            "auc": 0.5349,
+            "bal_acc": 0.5047,
+            "f1": 0.469,
+            "macro_f1": 0.5011,
+            "precision": 0.5152,
+            "recall": 0.4304
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5613,
+            "accuracy": 0.5613,
+            "auc": 0.559,
+            "bal_acc": 0.5561,
+            "f1": 0.6566,
+            "macro_f1": 0.5247,
+            "precision": 0.5462,
+            "recall": 0.8228
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.3,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5032,
+            "accuracy": 0.5032,
+            "auc": 0.5553,
+            "bal_acc": 0.5047,
+            "f1": 0.469,
+            "macro_f1": 0.5011,
+            "precision": 0.5152,
+            "recall": 0.4304
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.4968,
+            "accuracy": 0.4968,
+            "auc": 0.5292,
+            "bal_acc": 0.4981,
+            "f1": 0.4658,
+            "macro_f1": 0.4951,
+            "precision": 0.5075,
+            "recall": 0.4304
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5097,
+            "accuracy": 0.5097,
+            "auc": 0.5375,
+            "bal_acc": 0.5105,
+            "f1": 0.4933,
+            "macro_f1": 0.5092,
+            "precision": 0.5211,
+            "recall": 0.4684
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5613,
+            "accuracy": 0.5613,
+            "auc": 0.5833,
+            "bal_acc": 0.5631,
+            "f1": 0.5211,
+            "macro_f1": 0.5582,
+            "precision": 0.5873,
+            "recall": 0.4684
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5677,
+            "accuracy": 0.5677,
+            "auc": 0.5224,
+            "bal_acc": 0.5695,
+            "f1": 0.5315,
+            "macro_f1": 0.5651,
+            "precision": 0.5938,
+            "recall": 0.481
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5484,
+            "accuracy": 0.5484,
+            "auc": 0.5648,
+            "bal_acc": 0.5445,
+            "f1": 0.6277,
+            "macro_f1": 0.5269,
+            "precision": 0.5413,
+            "recall": 0.7468
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5548,
+            "accuracy": 0.5548,
+            "auc": 0.4993,
+            "bal_acc": 0.5565,
+            "f1": 0.5175,
+            "macro_f1": 0.5522,
+            "precision": 0.5781,
+            "recall": 0.4684
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5677,
+            "accuracy": 0.5677,
+            "auc": 0.5333,
+            "bal_acc": 0.5695,
+            "f1": 0.5315,
+            "macro_f1": 0.5651,
+            "precision": 0.5938,
+            "recall": 0.481
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5613,
+            "accuracy": 0.5613,
+            "auc": 0.5015,
+            "bal_acc": 0.5634,
+            "f1": 0.5143,
+            "macro_f1": 0.5571,
+            "precision": 0.5902,
+            "recall": 0.4557
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5613,
+            "accuracy": 0.5613,
+            "auc": 0.521,
+            "bal_acc": 0.5631,
+            "f1": 0.5211,
+            "macro_f1": 0.5582,
+            "precision": 0.5873,
+            "recall": 0.4684
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5613,
+            "accuracy": 0.5613,
+            "auc": 0.5161,
+            "bal_acc": 0.5631,
+            "f1": 0.5211,
+            "macro_f1": 0.5582,
+            "precision": 0.5873,
+            "recall": 0.4684
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.6,
+          "status": "success"
+        }
+      ],
+      "configuration_hash": "8d0861ba63f05915bf24bc9146a2130d029d14c9c04d99a46e597aebfc4a0bc7",
+      "inner_selection_metrics": {
+        "acc": 0.5677,
+        "accuracy": 0.5677,
+        "auc": 0.5333,
+        "bal_acc": 0.5695,
+        "f1": 0.5315,
+        "macro_f1": 0.5651,
+        "precision": 0.5938,
+        "recall": 0.481
+      },
+      "outer_fold_index": 3,
+      "outer_test_sample_ids": [
+        "173:5gpsc:1508231754497",
+        "174:5gpsc:1508231959496",
+        "175:5gpsc:1508232079512",
+        "176:5gpsc:1508232259504",
+        "177:5gpsc:1508233167493",
+        "178:5gpsc:1508233330503",
+        "179:5gpsc:1508233471513",
+        "180:5gpsc:1508231634495",
+        "181:5gpsc:1508233065498",
+        "182:5gpsc:1508233241507",
+        "183:5gpsc:1508233369510",
+        "184:5gpsc:1508233537508",
+        "185:5gpsc:1508233643497",
+        "186:5gpsc:1508233875493",
+        "187:5gpsc:1508234048496",
+        "188:5gpsc:1508233693503",
+        "189:5gpsc:1508233918505",
+        "190:5gpsc:1508234119494",
+        "191:5gpsc:1508234202501",
+        "192:5gpsc:1508234425497",
+        "193:5gpsc:1508234516498",
+        "194:5gpsc:1508234244497",
+        "195:5gpsc:1508234474497",
+        "196:5gpsc:1508234574499",
+        "197:5gpsc:1508234631500",
+        "198:5gpsc:1508234833503",
+        "199:5gpsc:1508235058495",
+        "200:5gpsc:1508234671500",
+        "201:5gpsc:1508234877497",
+        "202:5gpsc:1508235140497",
+        "203:5gpsc:1508235169497",
+        "204:5gpsc:1508235263502",
+        "205:5gpsc:1508235405482",
+        "206:5gpsc:1508235214496",
+        "207:5gpsc:1508235307499",
+        "208:5gpsc:1508235486503",
+        "209:5gpsc:1508235530459",
+        "210:5gpsc:1508235626494",
+        "211:5gpsc:1508235761495",
+        "212:5gpsc:1508235584505",
+        "213:5gpsc:1508235665492"
+      ],
+      "outer_test_subject": "5gpsc",
+      "outer_training_subjects": [
+        "1mpau",
+        "2nxs5",
+        "3caqi",
+        "6frz4"
+      ],
+      "seed": 42,
+      "selected_candidate_id": "fts_xgb_gbell_300_3_0.03",
+      "selected_hyperparameters": {
+        "learning_rate": 0.03,
+        "max_depth": 3,
+        "mf_type": "gbell",
+        "n_estimators": 300
+      },
+      "selected_threshold": 0.6
+    },
+    {
+      "candidate_results": [
+        {
+          "candidate_id": "fts_xgb_triangular_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6051,
+            "accuracy": 0.6051,
+            "auc": 0.6023,
+            "bal_acc": 0.6056,
+            "f1": 0.5694,
+            "macro_f1": 0.6024,
+            "precision": 0.6308,
+            "recall": 0.519
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5987,
+            "accuracy": 0.5987,
+            "auc": 0.6299,
+            "bal_acc": 0.5983,
+            "f1": 0.6272,
+            "macro_f1": 0.5964,
+            "precision": 0.5889,
+            "recall": 0.6709
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6115,
+            "accuracy": 0.6115,
+            "auc": 0.6143,
+            "bal_acc": 0.6115,
+            "f1": 0.6115,
+            "macro_f1": 0.6115,
+            "precision": 0.6154,
+            "recall": 0.6076
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5796,
+            "accuracy": 0.5796,
+            "auc": 0.6036,
+            "bal_acc": 0.5795,
+            "f1": 0.5875,
+            "macro_f1": 0.5795,
+            "precision": 0.5802,
+            "recall": 0.5949
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5987,
+            "accuracy": 0.5987,
+            "auc": 0.6171,
+            "bal_acc": 0.5986,
+            "f1": 0.6087,
+            "macro_f1": 0.5985,
+            "precision": 0.5976,
+            "recall": 0.6203
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6178,
+            "accuracy": 0.6178,
+            "auc": 0.6353,
+            "bal_acc": 0.6176,
+            "f1": 0.6341,
+            "macro_f1": 0.6171,
+            "precision": 0.6118,
+            "recall": 0.6582
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.586,
+            "accuracy": 0.586,
+            "auc": 0.6128,
+            "bal_acc": 0.5861,
+            "f1": 0.5806,
+            "macro_f1": 0.5859,
+            "precision": 0.5921,
+            "recall": 0.5696
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_triangular_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "triangular",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5987,
+            "accuracy": 0.5987,
+            "auc": 0.6153,
+            "bal_acc": 0.5988,
+            "f1": 0.5987,
+            "macro_f1": 0.5987,
+            "precision": 0.6026,
+            "recall": 0.5949
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6178,
+            "accuracy": 0.6178,
+            "auc": 0.6564,
+            "bal_acc": 0.6178,
+            "f1": 0.6203,
+            "macro_f1": 0.6178,
+            "precision": 0.6203,
+            "recall": 0.6203
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6051,
+            "accuracy": 0.6051,
+            "auc": 0.6233,
+            "bal_acc": 0.6053,
+            "f1": 0.5921,
+            "macro_f1": 0.6047,
+            "precision": 0.6164,
+            "recall": 0.5696
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6242,
+            "accuracy": 0.6242,
+            "auc": 0.6381,
+            "bal_acc": 0.6245,
+            "f1": 0.6093,
+            "macro_f1": 0.6237,
+            "precision": 0.6389,
+            "recall": 0.5823
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6306,
+            "accuracy": 0.6306,
+            "auc": 0.6184,
+            "bal_acc": 0.6309,
+            "f1": 0.6133,
+            "macro_f1": 0.6298,
+            "precision": 0.6479,
+            "recall": 0.5823
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6051,
+            "accuracy": 0.6051,
+            "auc": 0.6306,
+            "bal_acc": 0.6055,
+            "f1": 0.5811,
+            "macro_f1": 0.6038,
+            "precision": 0.6232,
+            "recall": 0.5443
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5796,
+            "accuracy": 0.5796,
+            "auc": 0.6019,
+            "bal_acc": 0.5793,
+            "f1": 0.6024,
+            "macro_f1": 0.5782,
+            "precision": 0.5747,
+            "recall": 0.6329
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6242,
+            "accuracy": 0.6242,
+            "auc": 0.6191,
+            "bal_acc": 0.6241,
+            "f1": 0.6289,
+            "macro_f1": 0.6241,
+            "precision": 0.625,
+            "recall": 0.6329
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gaussian_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gaussian",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5924,
+            "accuracy": 0.5924,
+            "auc": 0.6021,
+            "bal_acc": 0.5923,
+            "f1": 0.6,
+            "macro_f1": 0.5922,
+            "precision": 0.5926,
+            "recall": 0.6076
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6369,
+            "accuracy": 0.6369,
+            "auc": 0.654,
+            "bal_acc": 0.6372,
+            "f1": 0.6225,
+            "macro_f1": 0.6364,
+            "precision": 0.6528,
+            "recall": 0.5949
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6306,
+            "accuracy": 0.6306,
+            "auc": 0.6556,
+            "bal_acc": 0.6309,
+            "f1": 0.6133,
+            "macro_f1": 0.6298,
+            "precision": 0.6479,
+            "recall": 0.5823
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6115,
+            "accuracy": 0.6115,
+            "auc": 0.6508,
+            "bal_acc": 0.6112,
+            "f1": 0.6303,
+            "macro_f1": 0.6105,
+            "precision": 0.6047,
+            "recall": 0.6582
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6178,
+            "accuracy": 0.6178,
+            "auc": 0.648,
+            "bal_acc": 0.6182,
+            "f1": 0.5946,
+            "macro_f1": 0.6166,
+            "precision": 0.6377,
+            "recall": 0.557
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6306,
+            "accuracy": 0.6306,
+            "auc": 0.6594,
+            "bal_acc": 0.6308,
+            "f1": 0.6184,
+            "macro_f1": 0.6302,
+            "precision": 0.6438,
+            "recall": 0.5949
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5924,
+            "accuracy": 0.5924,
+            "auc": 0.651,
+            "bal_acc": 0.5919,
+            "f1": 0.619,
+            "macro_f1": 0.5903,
+            "precision": 0.5843,
+            "recall": 0.6582
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.586,
+            "accuracy": 0.586,
+            "auc": 0.6505,
+            "bal_acc": 0.5863,
+            "f1": 0.5638,
+            "macro_f1": 0.5849,
+            "precision": 0.6,
+            "recall": 0.5316
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_trapezoid_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "trapezoid",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5924,
+            "accuracy": 0.5924,
+            "auc": 0.6407,
+            "bal_acc": 0.5922,
+            "f1": 0.6049,
+            "macro_f1": 0.5919,
+            "precision": 0.5904,
+            "recall": 0.6203
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6115,
+            "accuracy": 0.6115,
+            "auc": 0.6276,
+            "bal_acc": 0.6115,
+            "f1": 0.6115,
+            "macro_f1": 0.6115,
+            "precision": 0.6154,
+            "recall": 0.6076
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6051,
+            "accuracy": 0.6051,
+            "auc": 0.6289,
+            "bal_acc": 0.6048,
+            "f1": 0.6265,
+            "macro_f1": 0.6038,
+            "precision": 0.5977,
+            "recall": 0.6582
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 300.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5796,
+            "accuracy": 0.5796,
+            "auc": 0.6195,
+            "bal_acc": 0.5787,
+            "f1": 0.6333,
+            "macro_f1": 0.5704,
+            "precision": 0.5644,
+            "recall": 0.7215
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_100_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 100
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5669,
+            "accuracy": 0.5669,
+            "auc": 0.6118,
+            "bal_acc": 0.5663,
+            "f1": 0.6047,
+            "macro_f1": 0.5629,
+            "precision": 0.5591,
+            "recall": 0.6582
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 500.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_3_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6115,
+            "accuracy": 0.6115,
+            "auc": 0.6334,
+            "bal_acc": 0.6121,
+            "f1": 0.5734,
+            "macro_f1": 0.6084,
+            "precision": 0.6406,
+            "recall": 0.519
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_3_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 3,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5987,
+            "accuracy": 0.5987,
+            "auc": 0.6142,
+            "bal_acc": 0.5987,
+            "f1": 0.6038,
+            "macro_f1": 0.5987,
+            "precision": 0.6,
+            "recall": 0.6076
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 900.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_5_0.03",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.03,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5732,
+            "accuracy": 0.5732,
+            "auc": 0.6164,
+            "bal_acc": 0.5725,
+            "f1": 0.6171,
+            "macro_f1": 0.5676,
+            "precision": 0.5625,
+            "recall": 0.6835
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_xgb_gbell_300_5_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "mf_type": "gbell",
+            "n_estimators": 300
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5669,
+            "accuracy": 0.5669,
+            "auc": 0.6051,
+            "bal_acc": 0.5663,
+            "f1": 0.6047,
+            "macro_f1": 0.5629,
+            "precision": 0.5591,
+            "recall": 0.6582
+          },
+          "method_name": "fts_xgboost",
+          "model_complexity": 1500.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        }
+      ],
+      "configuration_hash": "b2deb430c25e9b82a9042e916278dba9e202e60c9bc009c8fff1c2e55daf3cec",
+      "inner_selection_metrics": {
+        "acc": 0.6369,
+        "accuracy": 0.6369,
+        "auc": 0.654,
+        "bal_acc": 0.6372,
+        "f1": 0.6225,
+        "macro_f1": 0.6364,
+        "precision": 0.6528,
+        "recall": 0.5949
+      },
+      "outer_fold_index": 4,
+      "outer_test_sample_ids": [
+        "77:6frz4:1507729223503",
+        "78:6frz4:1507729416500",
+        "79:6frz4:1507729536491",
+        "80:6frz4:1507729716498",
+        "81:6frz4:1507730695510",
+        "82:6frz4:1507730873511",
+        "83:6frz4:1507731029504",
+        "84:6frz4:1507730777494",
+        "85:6frz4:1507730934495",
+        "86:6frz4:1507731165482",
+        "87:6frz4:1507731324509",
+        "88:6frz4:1507731539499",
+        "89:6frz4:1507731693490",
+        "90:6frz4:1507731378504",
+        "91:6frz4:1507731594505",
+        "92:6frz4:1507731794502",
+        "93:6frz4:1507731892508",
+        "94:6frz4:1507732037506",
+        "95:6frz4:1507732235498",
+        "96:6frz4:1507731945503",
+        "97:6frz4:1507732191502",
+        "98:6frz4:1507732327502",
+        "99:6frz4:1507732412511",
+        "100:6frz4:1507732646504",
+        "101:6frz4:1507732865488",
+        "102:6frz4:1507732464501",
+        "103:6frz4:1507732719483",
+        "104:6frz4:1507732990496",
+        "105:6frz4:1507733041498",
+        "106:6frz4:1507733242494",
+        "107:6frz4:1507733473490",
+        "108:6frz4:1507733118497",
+        "109:6frz4:1507733291504",
+        "110:6frz4:1507733544502",
+        "111:6frz4:1507733687509",
+        "112:6frz4:1507733837479",
+        "113:6frz4:1507734100510",
+        "114:6frz4:1507733736506",
+        "115:6frz4:1507733917492"
+      ],
+      "outer_test_subject": "6frz4",
+      "outer_training_subjects": [
+        "1mpau",
+        "2nxs5",
+        "3caqi",
+        "5gpsc"
+      ],
+      "seed": 42,
+      "selected_candidate_id": "fts_xgb_trapezoid_100_3_0.03",
+      "selected_hyperparameters": {
+        "learning_rate": 0.03,
+        "max_depth": 3,
+        "mf_type": "trapezoid",
+        "n_estimators": 100
+      },
+      "selected_threshold": 0.6
+    }
+  ],
+  "overall_metrics": {
+    "acc": 0.5663,
+    "accuracy": 0.5663,
+    "auc": 0.6044,
+    "bal_acc": 0.566,
+    "f1": 0.5813,
+    "macro_f1": 0.5658,
+    "precision": 0.5673,
+    "recall": 0.596
+  },
+  "per_subject_metrics": [
+    {
+      "acc": 0.5,
+      "auc": 0.4972,
+      "bal_acc": 0.5,
+      "f1": 0.6415,
+      "macro_f1": 0.4077,
+      "n": 38,
+      "subject": "1mpau"
+    },
+    {
+      "acc": 0.5641,
+      "auc": 0.5947,
+      "bal_acc": 0.5684,
+      "f1": 0.4848,
+      "macro_f1": 0.5535,
+      "n": 39,
+      "subject": "2nxs5"
+    },
+    {
+      "acc": 0.5641,
+      "auc": 0.6816,
+      "bal_acc": 0.5539,
+      "f1": 0.6909,
+      "macro_f1": 0.4759,
+      "n": 39,
+      "subject": "3caqi"
+    },
+    {
+      "acc": 0.7073,
+      "auc": 0.7881,
+      "bal_acc": 0.7083,
+      "f1": 0.7143,
+      "macro_f1": 0.7071,
+      "n": 41,
+      "subject": "5gpsc"
+    },
+    {
+      "acc": 0.4872,
+      "auc": 0.4961,
+      "bal_acc": 0.5,
+      "f1": 0.0,
+      "macro_f1": 0.3276,
+      "n": 39,
+      "subject": "6frz4"
+    }
+  ],
+  "runtime_metadata": {
+    "dataset_order_hash": "44dfd4428fad06e7a1c201165b7fa32f84bcc72046e0adf186cc0f679900e926",
+    "deterministic_threads": 1,
+    "manifest_hash": "5dedbc246dd51cf33f97478eedfce45f81d21de2d3d1ecd79a3e382b2a38a8ff",
+    "package_versions": {
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.17.1",
+      "threadpoolctl": "3.6.0"
+    },
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "seed": 42,
+    "timestamp_utc": "2026-06-23T10:15:39.904564+00:00"
+  }
+}

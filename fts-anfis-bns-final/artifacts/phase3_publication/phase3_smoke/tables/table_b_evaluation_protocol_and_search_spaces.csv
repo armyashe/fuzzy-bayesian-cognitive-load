@@ -1,0 +1,2 @@
+outer_protocol,inner_protocol,selection_metric,threshold_metric,run_mode,seed
+LOSO,GroupKFold,balanced_accuracy,balanced_accuracy,smoke,42

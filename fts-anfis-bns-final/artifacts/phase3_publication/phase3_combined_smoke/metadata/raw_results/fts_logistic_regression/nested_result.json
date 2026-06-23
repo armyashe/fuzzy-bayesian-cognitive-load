@@ -1,0 +1,2751 @@
+{
+  "aggregated_sample_ids": [
+    "0:3caqi:1507644638489",
+    "1:3caqi:1507644835498",
+    "2:3caqi:1507644955499",
+    "3:3caqi:1507645135501",
+    "4:3caqi:1507646592492",
+    "5:3caqi:1507646739492",
+    "6:3caqi:1507646874491",
+    "7:3caqi:1507646670490",
+    "8:3caqi:1507646782491",
+    "9:3caqi:1507646983497",
+    "10:3caqi:1507647046499",
+    "11:3caqi:1507647283488",
+    "12:3caqi:1507647377498",
+    "13:3caqi:1507647101490",
+    "14:3caqi:1507647331508",
+    "15:3caqi:1507647469491",
+    "16:3caqi:1507647567499",
+    "17:3caqi:1507647698498",
+    "18:3caqi:1507647785499",
+    "19:3caqi:1507647612499",
+    "20:3caqi:1507647746510",
+    "21:3caqi:1507647880494",
+    "22:3caqi:1507647940493",
+    "23:3caqi:1507648168492",
+    "24:3caqi:1507648319496",
+    "25:3caqi:1507647994489",
+    "26:3caqi:1507648222504",
+    "27:3caqi:1507648405496",
+    "28:3caqi:1507648446494",
+    "29:3caqi:1507648567490",
+    "30:3caqi:1507648776496",
+    "31:3caqi:1507648489488",
+    "32:3caqi:1507648614492",
+    "33:3caqi:1507648859505",
+    "34:3caqi:1507648916499",
+    "35:3caqi:1507649002494",
+    "36:3caqi:1507649224507",
+    "37:3caqi:1507648966496",
+    "38:3caqi:1507649042504",
+    "77:6frz4:1507729223503",
+    "78:6frz4:1507729416500",
+    "79:6frz4:1507729536491",
+    "80:6frz4:1507729716498",
+    "81:6frz4:1507730695510",
+    "82:6frz4:1507730873511",
+    "83:6frz4:1507731029504",
+    "84:6frz4:1507730777494",
+    "85:6frz4:1507730934495",
+    "86:6frz4:1507731165482",
+    "87:6frz4:1507731324509",
+    "88:6frz4:1507731539499",
+    "89:6frz4:1507731693490",
+    "90:6frz4:1507731378504",
+    "91:6frz4:1507731594505",
+    "92:6frz4:1507731794502",
+    "93:6frz4:1507731892508",
+    "94:6frz4:1507732037506",
+    "95:6frz4:1507732235498",
+    "96:6frz4:1507731945503",
+    "97:6frz4:1507732191502",
+    "98:6frz4:1507732327502",
+    "99:6frz4:1507732412511",
+    "100:6frz4:1507732646504",
+    "101:6frz4:1507732865488",
+    "102:6frz4:1507732464501",
+    "103:6frz4:1507732719483",
+    "104:6frz4:1507732990496",
+    "105:6frz4:1507733041498",
+    "106:6frz4:1507733242494",
+    "107:6frz4:1507733473490",
+    "108:6frz4:1507733118497",
+    "109:6frz4:1507733291504",
+    "110:6frz4:1507733544502",
+    "111:6frz4:1507733687509",
+    "112:6frz4:1507733837479",
+    "113:6frz4:1507734100510",
+    "114:6frz4:1507733736506",
+    "115:6frz4:1507733917492",
+    "173:5gpsc:1508231754497",
+    "174:5gpsc:1508231959496",
+    "175:5gpsc:1508232079512",
+    "176:5gpsc:1508232259504",
+    "177:5gpsc:1508233167493",
+    "178:5gpsc:1508233330503",
+    "179:5gpsc:1508233471513",
+    "180:5gpsc:1508231634495",
+    "181:5gpsc:1508233065498",
+    "182:5gpsc:1508233241507",
+    "183:5gpsc:1508233369510",
+    "184:5gpsc:1508233537508",
+    "185:5gpsc:1508233643497",
+    "186:5gpsc:1508233875493",
+    "187:5gpsc:1508234048496",
+    "188:5gpsc:1508233693503",
+    "189:5gpsc:1508233918505",
+    "190:5gpsc:1508234119494",
+    "191:5gpsc:1508234202501",
+    "192:5gpsc:1508234425497",
+    "193:5gpsc:1508234516498",
+    "194:5gpsc:1508234244497",
+    "195:5gpsc:1508234474497",
+    "196:5gpsc:1508234574499",
+    "197:5gpsc:1508234631500",
+    "198:5gpsc:1508234833503",
+    "199:5gpsc:1508235058495",
+    "200:5gpsc:1508234671500",
+    "201:5gpsc:1508234877497",
+    "202:5gpsc:1508235140497",
+    "203:5gpsc:1508235169497",
+    "204:5gpsc:1508235263502",
+    "205:5gpsc:1508235405482",
+    "206:5gpsc:1508235214496",
+    "207:5gpsc:1508235307499",
+    "208:5gpsc:1508235486503",
+    "209:5gpsc:1508235530459",
+    "210:5gpsc:1508235626494",
+    "211:5gpsc:1508235761495",
+    "212:5gpsc:1508235584505",
+    "213:5gpsc:1508235665492",
+    "252:2nxs5:1508336535506",
+    "253:2nxs5:1508336712502",
+    "254:2nxs5:1508336832489",
+    "255:2nxs5:1508337012492",
+    "256:2nxs5:1508337673505",
+    "257:2nxs5:1508337798501",
+    "258:2nxs5:1508337940505",
+    "259:2nxs5:1508337733497",
+    "260:2nxs5:1508337845501",
+    "261:2nxs5:1508338017500",
+    "262:2nxs5:1508338169505",
+    "263:2nxs5:1508338401496",
+    "264:2nxs5:1508338633493",
+    "265:2nxs5:1508338219494",
+    "266:2nxs5:1508338451496",
+    "267:2nxs5:1508338712499",
+    "268:2nxs5:1508338788500",
+    "269:2nxs5:1508338893495",
+    "270:2nxs5:1508338967497",
+    "271:2nxs5:1508338837500",
+    "272:2nxs5:1508338937504",
+    "273:2nxs5:1508339032495",
+    "274:2nxs5:1508339122500",
+    "275:2nxs5:1508339345525",
+    "276:2nxs5:1508339501505",
+    "277:2nxs5:1508339164506",
+    "278:2nxs5:1508339391495",
+    "279:2nxs5:1508339562493",
+    "280:2nxs5:1508339600501",
+    "281:2nxs5:1508339706503",
+    "282:2nxs5:1508339929500",
+    "283:2nxs5:1508339643502",
+    "284:2nxs5:1508339747497",
+    "285:2nxs5:1508340013497",
+    "286:2nxs5:1508340074500",
+    "287:2nxs5:1508340164504",
+    "288:2nxs5:1508340337497",
+    "289:2nxs5:1508340115499",
+    "290:2nxs5:1508340205500",
+    "750:1mpau:1505831952503",
+    "751:1mpau:1505832067491",
+    "752:1mpau:1505832187492",
+    "753:1mpau:1505832367531",
+    "754:1mpau:1505833116511",
+    "755:1mpau:1505833251503",
+    "756:1mpau:1505833362493",
+    "757:1mpau:1505833204503",
+    "758:1mpau:1505833305495",
+    "759:1mpau:1505833446490",
+    "760:1mpau:1505833538485",
+    "761:1mpau:1505833641494",
+    "762:1mpau:1505833714507",
+    "763:1mpau:1505833592495",
+    "764:1mpau:1505833683525",
+    "765:1mpau:1505833801501",
+    "766:1mpau:1505833834508",
+    "767:1mpau:1505833971589",
+    "768:1mpau:1505833880497",
+    "769:1mpau:1505834013500",
+    "770:1mpau:1505834095506",
+    "771:1mpau:1505834141496",
+    "772:1mpau:1505834355496",
+    "773:1mpau:1505834479499",
+    "774:1mpau:1505834187499",
+    "775:1mpau:1505834399513",
+    "776:1mpau:1505834563509",
+    "777:1mpau:1505834606499",
+    "778:1mpau:1505834696510",
+    "779:1mpau:1505834822491",
+    "780:1mpau:1505834651513",
+    "781:1mpau:1505834741505",
+    "782:1mpau:1505834889496",
+    "783:1mpau:1505834932503",
+    "784:1mpau:1505835026504",
+    "785:1mpau:1505835163556",
+    "786:1mpau:1505834999499",
+    "787:1mpau:1505835070498"
+  ],
+  "aggregated_subject_ids": [
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "3caqi",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "6frz4",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "5gpsc",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "2nxs5",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau",
+    "1mpau"
+  ],
+  "evaluation_protocol": "outer LOSO + inner GroupKFold",
+  "method_name": "fts_logistic_regression",
+  "outer_fold_results": [
+    {
+      "candidate_results": [
+        {
+          "candidate_id": "fts_lr_triangular_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6013,
+            "accuracy": 0.6013,
+            "auc": 0.6071,
+            "bal_acc": 0.6014,
+            "f1": 0.5987,
+            "macro_f1": 0.6012,
+            "precision": 0.6104,
+            "recall": 0.5875
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_triangular_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5886,
+            "accuracy": 0.5886,
+            "auc": 0.6067,
+            "bal_acc": 0.5875,
+            "f1": 0.6243,
+            "macro_f1": 0.5849,
+            "precision": 0.5806,
+            "recall": 0.675
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_triangular_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5506,
+            "accuracy": 0.5506,
+            "auc": 0.5958,
+            "bal_acc": 0.5511,
+            "f1": 0.5359,
+            "macro_f1": 0.5502,
+            "precision": 0.5616,
+            "recall": 0.5125
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_triangular_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.538,
+            "accuracy": 0.538,
+            "auc": 0.5776,
+            "bal_acc": 0.5381,
+            "f1": 0.535,
+            "macro_f1": 0.538,
+            "precision": 0.5455,
+            "recall": 0.525
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5696,
+            "accuracy": 0.5696,
+            "auc": 0.5603,
+            "bal_acc": 0.5726,
+            "f1": 0.4426,
+            "macro_f1": 0.5461,
+            "precision": 0.6429,
+            "recall": 0.3375
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.538,
+            "accuracy": 0.538,
+            "auc": 0.559,
+            "bal_acc": 0.5407,
+            "f1": 0.416,
+            "macro_f1": 0.5169,
+            "precision": 0.5778,
+            "recall": 0.325
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.538,
+            "accuracy": 0.538,
+            "auc": 0.5699,
+            "bal_acc": 0.5364,
+            "f1": 0.5922,
+            "macro_f1": 0.5297,
+            "precision": 0.5354,
+            "recall": 0.6625
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.3,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5506,
+            "accuracy": 0.5506,
+            "auc": 0.5809,
+            "bal_acc": 0.5495,
+            "f1": 0.5896,
+            "macro_f1": 0.5465,
+            "precision": 0.5484,
+            "recall": 0.6375
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5823,
+            "accuracy": 0.5823,
+            "auc": 0.5899,
+            "bal_acc": 0.5859,
+            "f1": 0.4211,
+            "macro_f1": 0.5472,
+            "precision": 0.7059,
+            "recall": 0.3
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5886,
+            "accuracy": 0.5886,
+            "auc": 0.5811,
+            "bal_acc": 0.5904,
+            "f1": 0.5255,
+            "macro_f1": 0.5812,
+            "precision": 0.6316,
+            "recall": 0.45
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5506,
+            "accuracy": 0.5506,
+            "auc": 0.5776,
+            "bal_acc": 0.5522,
+            "f1": 0.4892,
+            "macro_f1": 0.544,
+            "precision": 0.5763,
+            "recall": 0.425
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.519,
+            "accuracy": 0.519,
+            "auc": 0.5296,
+            "bal_acc": 0.5191,
+            "f1": 0.519,
+            "macro_f1": 0.519,
+            "precision": 0.5256,
+            "recall": 0.5125
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5443,
+            "accuracy": 0.5443,
+            "auc": 0.5716,
+            "bal_acc": 0.5444,
+            "f1": 0.5443,
+            "macro_f1": 0.5443,
+            "precision": 0.5513,
+            "recall": 0.5375
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5443,
+            "accuracy": 0.5443,
+            "auc": 0.5712,
+            "bal_acc": 0.5466,
+            "f1": 0.4462,
+            "macro_f1": 0.5295,
+            "precision": 0.58,
+            "recall": 0.3625
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5506,
+            "accuracy": 0.5506,
+            "auc": 0.5809,
+            "bal_acc": 0.5486,
+            "f1": 0.6162,
+            "macro_f1": 0.5371,
+            "precision": 0.5429,
+            "recall": 0.7125
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.3,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5886,
+            "accuracy": 0.5886,
+            "auc": 0.5813,
+            "bal_acc": 0.588,
+            "f1": 0.6108,
+            "macro_f1": 0.5873,
+            "precision": 0.5862,
+            "recall": 0.6375
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 0,
+          "selected_threshold": 0.5,
+          "status": "success"
+        }
+      ],
+      "configuration_hash": "804f218184f2fa01bf804a3bd702677ff7a11d5a4d74f779b92729c697dd2669",
+      "inner_selection_metrics": {
+        "acc": 0.6013,
+        "accuracy": 0.6013,
+        "auc": 0.6071,
+        "bal_acc": 0.6014,
+        "f1": 0.5987,
+        "macro_f1": 0.6012,
+        "precision": 0.6104,
+        "recall": 0.5875
+      },
+      "outer_fold_index": 0,
+      "outer_test_sample_ids": [
+        "750:1mpau:1505831952503",
+        "751:1mpau:1505832067491",
+        "752:1mpau:1505832187492",
+        "753:1mpau:1505832367531",
+        "754:1mpau:1505833116511",
+        "755:1mpau:1505833251503",
+        "756:1mpau:1505833362493",
+        "757:1mpau:1505833204503",
+        "758:1mpau:1505833305495",
+        "759:1mpau:1505833446490",
+        "760:1mpau:1505833538485",
+        "761:1mpau:1505833641494",
+        "762:1mpau:1505833714507",
+        "763:1mpau:1505833592495",
+        "764:1mpau:1505833683525",
+        "765:1mpau:1505833801501",
+        "766:1mpau:1505833834508",
+        "767:1mpau:1505833971589",
+        "768:1mpau:1505833880497",
+        "769:1mpau:1505834013500",
+        "770:1mpau:1505834095506",
+        "771:1mpau:1505834141496",
+        "772:1mpau:1505834355496",
+        "773:1mpau:1505834479499",
+        "774:1mpau:1505834187499",
+        "775:1mpau:1505834399513",
+        "776:1mpau:1505834563509",
+        "777:1mpau:1505834606499",
+        "778:1mpau:1505834696510",
+        "779:1mpau:1505834822491",
+        "780:1mpau:1505834651513",
+        "781:1mpau:1505834741505",
+        "782:1mpau:1505834889496",
+        "783:1mpau:1505834932503",
+        "784:1mpau:1505835026504",
+        "785:1mpau:1505835163556",
+        "786:1mpau:1505834999499",
+        "787:1mpau:1505835070498"
+      ],
+      "outer_test_subject": "1mpau",
+      "outer_training_subjects": [
+        "2nxs5",
+        "3caqi",
+        "5gpsc",
+        "6frz4"
+      ],
+      "seed": 42,
+      "selected_candidate_id": "fts_lr_triangular_0.01",
+      "selected_hyperparameters": {
+        "C": 0.01,
+        "mf_type": "triangular"
+      },
+      "selected_threshold": 0.5
+    },
+    {
+      "candidate_results": [
+        {
+          "candidate_id": "fts_lr_triangular_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6306,
+            "accuracy": 0.6306,
+            "auc": 0.6111,
+            "bal_acc": 0.6314,
+            "f1": 0.5797,
+            "macro_f1": 0.6251,
+            "precision": 0.678,
+            "recall": 0.5063
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_triangular_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5987,
+            "accuracy": 0.5987,
+            "auc": 0.5786,
+            "bal_acc": 0.5995,
+            "f1": 0.5468,
+            "macro_f1": 0.5934,
+            "precision": 0.6333,
+            "recall": 0.481
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_triangular_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5732,
+            "accuracy": 0.5732,
+            "auc": 0.5631,
+            "bal_acc": 0.5733,
+            "f1": 0.5732,
+            "macro_f1": 0.5732,
+            "precision": 0.5769,
+            "recall": 0.5696
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_triangular_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5669,
+            "accuracy": 0.5669,
+            "auc": 0.5643,
+            "bal_acc": 0.5668,
+            "f1": 0.575,
+            "macro_f1": 0.5667,
+            "precision": 0.5679,
+            "recall": 0.5823
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5605,
+            "accuracy": 0.5605,
+            "auc": 0.55,
+            "bal_acc": 0.5632,
+            "f1": 0.2418,
+            "macro_f1": 0.4662,
+            "precision": 0.9167,
+            "recall": 0.1392
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5605,
+            "accuracy": 0.5605,
+            "auc": 0.581,
+            "bal_acc": 0.5609,
+            "f1": 0.5306,
+            "macro_f1": 0.5587,
+            "precision": 0.5735,
+            "recall": 0.4937
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.3,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5478,
+            "accuracy": 0.5478,
+            "auc": 0.5933,
+            "bal_acc": 0.5484,
+            "f1": 0.5035,
+            "macro_f1": 0.5441,
+            "precision": 0.5625,
+            "recall": 0.4557
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.3,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5541,
+            "accuracy": 0.5541,
+            "auc": 0.5992,
+            "bal_acc": 0.5551,
+            "f1": 0.4776,
+            "macro_f1": 0.5444,
+            "precision": 0.5818,
+            "recall": 0.4051
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.586,
+            "accuracy": 0.586,
+            "auc": 0.5852,
+            "bal_acc": 0.5869,
+            "f1": 0.5185,
+            "macro_f1": 0.5777,
+            "precision": 0.625,
+            "recall": 0.443
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6051,
+            "accuracy": 0.6051,
+            "auc": 0.5811,
+            "bal_acc": 0.6065,
+            "f1": 0.5,
+            "macro_f1": 0.5868,
+            "precision": 0.6889,
+            "recall": 0.3924
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5924,
+            "accuracy": 0.5924,
+            "auc": 0.5602,
+            "bal_acc": 0.5936,
+            "f1": 0.5,
+            "macro_f1": 0.578,
+            "precision": 0.6531,
+            "recall": 0.4051
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5796,
+            "accuracy": 0.5796,
+            "auc": 0.5245,
+            "bal_acc": 0.5806,
+            "f1": 0.5075,
+            "macro_f1": 0.5704,
+            "precision": 0.6182,
+            "recall": 0.4304
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5541,
+            "accuracy": 0.5541,
+            "auc": 0.5581,
+            "bal_acc": 0.5557,
+            "f1": 0.4167,
+            "macro_f1": 0.5279,
+            "precision": 0.6098,
+            "recall": 0.3165
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5605,
+            "accuracy": 0.5605,
+            "auc": 0.5774,
+            "bal_acc": 0.5612,
+            "f1": 0.5106,
+            "macro_f1": 0.5559,
+            "precision": 0.5806,
+            "recall": 0.4557
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5669,
+            "accuracy": 0.5669,
+            "auc": 0.5928,
+            "bal_acc": 0.5675,
+            "f1": 0.5211,
+            "macro_f1": 0.5629,
+            "precision": 0.5873,
+            "recall": 0.4684
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5732,
+            "accuracy": 0.5732,
+            "auc": 0.6013,
+            "bal_acc": 0.5738,
+            "f1": 0.5315,
+            "macro_f1": 0.5698,
+            "precision": 0.5938,
+            "recall": 0.481
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 1,
+          "selected_threshold": 0.4,
+          "status": "success"
+        }
+      ],
+      "configuration_hash": "804f218184f2fa01bf804a3bd702677ff7a11d5a4d74f779b92729c697dd2669",
+      "inner_selection_metrics": {
+        "acc": 0.6306,
+        "accuracy": 0.6306,
+        "auc": 0.6111,
+        "bal_acc": 0.6314,
+        "f1": 0.5797,
+        "macro_f1": 0.6251,
+        "precision": 0.678,
+        "recall": 0.5063
+      },
+      "outer_fold_index": 1,
+      "outer_test_sample_ids": [
+        "252:2nxs5:1508336535506",
+        "253:2nxs5:1508336712502",
+        "254:2nxs5:1508336832489",
+        "255:2nxs5:1508337012492",
+        "256:2nxs5:1508337673505",
+        "257:2nxs5:1508337798501",
+        "258:2nxs5:1508337940505",
+        "259:2nxs5:1508337733497",
+        "260:2nxs5:1508337845501",
+        "261:2nxs5:1508338017500",
+        "262:2nxs5:1508338169505",
+        "263:2nxs5:1508338401496",
+        "264:2nxs5:1508338633493",
+        "265:2nxs5:1508338219494",
+        "266:2nxs5:1508338451496",
+        "267:2nxs5:1508338712499",
+        "268:2nxs5:1508338788500",
+        "269:2nxs5:1508338893495",
+        "270:2nxs5:1508338967497",
+        "271:2nxs5:1508338837500",
+        "272:2nxs5:1508338937504",
+        "273:2nxs5:1508339032495",
+        "274:2nxs5:1508339122500",
+        "275:2nxs5:1508339345525",
+        "276:2nxs5:1508339501505",
+        "277:2nxs5:1508339164506",
+        "278:2nxs5:1508339391495",
+        "279:2nxs5:1508339562493",
+        "280:2nxs5:1508339600501",
+        "281:2nxs5:1508339706503",
+        "282:2nxs5:1508339929500",
+        "283:2nxs5:1508339643502",
+        "284:2nxs5:1508339747497",
+        "285:2nxs5:1508340013497",
+        "286:2nxs5:1508340074500",
+        "287:2nxs5:1508340164504",
+        "288:2nxs5:1508340337497",
+        "289:2nxs5:1508340115499",
+        "290:2nxs5:1508340205500"
+      ],
+      "outer_test_subject": "2nxs5",
+      "outer_training_subjects": [
+        "1mpau",
+        "3caqi",
+        "5gpsc",
+        "6frz4"
+      ],
+      "seed": 42,
+      "selected_candidate_id": "fts_lr_triangular_0.01",
+      "selected_hyperparameters": {
+        "C": 0.01,
+        "mf_type": "triangular"
+      },
+      "selected_threshold": 0.5
+    },
+    {
+      "candidate_results": [
+        {
+          "candidate_id": "fts_lr_triangular_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5287,
+            "accuracy": 0.5287,
+            "auc": 0.5024,
+            "bal_acc": 0.5264,
+            "f1": 0.6542,
+            "macro_f1": 0.4571,
+            "precision": 0.5185,
+            "recall": 0.8861
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.3,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_triangular_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5414,
+            "accuracy": 0.5414,
+            "auc": 0.5266,
+            "bal_acc": 0.5415,
+            "f1": 0.5385,
+            "macro_f1": 0.5414,
+            "precision": 0.5455,
+            "recall": 0.5316
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_triangular_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5605,
+            "accuracy": 0.5605,
+            "auc": 0.5333,
+            "bal_acc": 0.5606,
+            "f1": 0.5548,
+            "macro_f1": 0.5604,
+            "precision": 0.5658,
+            "recall": 0.5443
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_triangular_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5605,
+            "accuracy": 0.5605,
+            "auc": 0.5396,
+            "bal_acc": 0.5607,
+            "f1": 0.549,
+            "macro_f1": 0.5602,
+            "precision": 0.5676,
+            "recall": 0.5316
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5414,
+            "accuracy": 0.5414,
+            "auc": 0.5396,
+            "bal_acc": 0.5432,
+            "f1": 0.3684,
+            "macro_f1": 0.5042,
+            "precision": 0.6,
+            "recall": 0.2658
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5732,
+            "accuracy": 0.5732,
+            "auc": 0.5686,
+            "bal_acc": 0.5748,
+            "f1": 0.437,
+            "macro_f1": 0.5467,
+            "precision": 0.65,
+            "recall": 0.3291
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5414,
+            "accuracy": 0.5414,
+            "auc": 0.5664,
+            "bal_acc": 0.5422,
+            "f1": 0.4783,
+            "macro_f1": 0.5346,
+            "precision": 0.5593,
+            "recall": 0.4177
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5478,
+            "accuracy": 0.5478,
+            "auc": 0.5594,
+            "bal_acc": 0.5484,
+            "f1": 0.5035,
+            "macro_f1": 0.5441,
+            "precision": 0.5625,
+            "recall": 0.4557
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5796,
+            "accuracy": 0.5796,
+            "auc": 0.5542,
+            "bal_acc": 0.5813,
+            "f1": 0.431,
+            "macro_f1": 0.5489,
+            "precision": 0.6757,
+            "recall": 0.3165
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5478,
+            "accuracy": 0.5478,
+            "auc": 0.5441,
+            "bal_acc": 0.5491,
+            "f1": 0.432,
+            "macro_f1": 0.5282,
+            "precision": 0.587,
+            "recall": 0.3418
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5669,
+            "accuracy": 0.5669,
+            "auc": 0.5344,
+            "bal_acc": 0.568,
+            "f1": 0.4769,
+            "macro_f1": 0.5537,
+            "precision": 0.6078,
+            "recall": 0.3924
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5732,
+            "accuracy": 0.5732,
+            "auc": 0.5334,
+            "bal_acc": 0.5742,
+            "f1": 0.5037,
+            "macro_f1": 0.5647,
+            "precision": 0.6071,
+            "recall": 0.4304
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.586,
+            "accuracy": 0.586,
+            "auc": 0.5597,
+            "bal_acc": 0.5881,
+            "f1": 0.381,
+            "macro_f1": 0.535,
+            "precision": 0.7692,
+            "recall": 0.2532
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5796,
+            "accuracy": 0.5796,
+            "auc": 0.5748,
+            "bal_acc": 0.5813,
+            "f1": 0.431,
+            "macro_f1": 0.5489,
+            "precision": 0.6757,
+            "recall": 0.3165
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5287,
+            "accuracy": 0.5287,
+            "auc": 0.5896,
+            "bal_acc": 0.5291,
+            "f1": 0.4932,
+            "macro_f1": 0.5263,
+            "precision": 0.5373,
+            "recall": 0.4557
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5414,
+            "accuracy": 0.5414,
+            "auc": 0.5839,
+            "bal_acc": 0.5419,
+            "f1": 0.5068,
+            "macro_f1": 0.5391,
+            "precision": 0.5522,
+            "recall": 0.4684
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 2,
+          "selected_threshold": 0.7,
+          "status": "success"
+        }
+      ],
+      "configuration_hash": "54305d6134eeaebad4dd63535a20d91a5e1a4cd62d1e34cf90955c7986f2c2a2",
+      "inner_selection_metrics": {
+        "acc": 0.586,
+        "accuracy": 0.586,
+        "auc": 0.5597,
+        "bal_acc": 0.5881,
+        "f1": 0.381,
+        "macro_f1": 0.535,
+        "precision": 0.7692,
+        "recall": 0.2532
+      },
+      "outer_fold_index": 2,
+      "outer_test_sample_ids": [
+        "0:3caqi:1507644638489",
+        "1:3caqi:1507644835498",
+        "2:3caqi:1507644955499",
+        "3:3caqi:1507645135501",
+        "4:3caqi:1507646592492",
+        "5:3caqi:1507646739492",
+        "6:3caqi:1507646874491",
+        "7:3caqi:1507646670490",
+        "8:3caqi:1507646782491",
+        "9:3caqi:1507646983497",
+        "10:3caqi:1507647046499",
+        "11:3caqi:1507647283488",
+        "12:3caqi:1507647377498",
+        "13:3caqi:1507647101490",
+        "14:3caqi:1507647331508",
+        "15:3caqi:1507647469491",
+        "16:3caqi:1507647567499",
+        "17:3caqi:1507647698498",
+        "18:3caqi:1507647785499",
+        "19:3caqi:1507647612499",
+        "20:3caqi:1507647746510",
+        "21:3caqi:1507647880494",
+        "22:3caqi:1507647940493",
+        "23:3caqi:1507648168492",
+        "24:3caqi:1507648319496",
+        "25:3caqi:1507647994489",
+        "26:3caqi:1507648222504",
+        "27:3caqi:1507648405496",
+        "28:3caqi:1507648446494",
+        "29:3caqi:1507648567490",
+        "30:3caqi:1507648776496",
+        "31:3caqi:1507648489488",
+        "32:3caqi:1507648614492",
+        "33:3caqi:1507648859505",
+        "34:3caqi:1507648916499",
+        "35:3caqi:1507649002494",
+        "36:3caqi:1507649224507",
+        "37:3caqi:1507648966496",
+        "38:3caqi:1507649042504"
+      ],
+      "outer_test_subject": "3caqi",
+      "outer_training_subjects": [
+        "1mpau",
+        "2nxs5",
+        "5gpsc",
+        "6frz4"
+      ],
+      "seed": 42,
+      "selected_candidate_id": "fts_lr_gbell_0.01",
+      "selected_hyperparameters": {
+        "C": 0.01,
+        "mf_type": "gbell"
+      },
+      "selected_threshold": 0.6
+    },
+    {
+      "candidate_results": [
+        {
+          "candidate_id": "fts_lr_triangular_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5355,
+            "accuracy": 0.5355,
+            "auc": 0.5575,
+            "bal_acc": 0.5326,
+            "f1": 0.6,
+            "macro_f1": 0.5231,
+            "precision": 0.5347,
+            "recall": 0.6835
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_triangular_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5806,
+            "accuracy": 0.5806,
+            "auc": 0.5651,
+            "bal_acc": 0.5789,
+            "f1": 0.6199,
+            "macro_f1": 0.5761,
+            "precision": 0.5761,
+            "recall": 0.6709
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_triangular_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5935,
+            "accuracy": 0.5935,
+            "auc": 0.564,
+            "bal_acc": 0.5888,
+            "f1": 0.6769,
+            "macro_f1": 0.5645,
+            "precision": 0.569,
+            "recall": 0.8354
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_triangular_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5742,
+            "accuracy": 0.5742,
+            "auc": 0.5656,
+            "bal_acc": 0.5695,
+            "f1": 0.6598,
+            "macro_f1": 0.5454,
+            "precision": 0.5565,
+            "recall": 0.8101
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5548,
+            "accuracy": 0.5548,
+            "auc": 0.5708,
+            "bal_acc": 0.556,
+            "f1": 0.5306,
+            "macro_f1": 0.5536,
+            "precision": 0.5735,
+            "recall": 0.4937
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6129,
+            "accuracy": 0.6129,
+            "auc": 0.6103,
+            "bal_acc": 0.6183,
+            "f1": 0.4737,
+            "macro_f1": 0.5838,
+            "precision": 0.7714,
+            "recall": 0.3418
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5806,
+            "accuracy": 0.5806,
+            "auc": 0.6113,
+            "bal_acc": 0.5831,
+            "f1": 0.5255,
+            "macro_f1": 0.5749,
+            "precision": 0.6207,
+            "recall": 0.4557
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6323,
+            "accuracy": 0.6323,
+            "auc": 0.5904,
+            "bal_acc": 0.626,
+            "f1": 0.7246,
+            "macro_f1": 0.5856,
+            "precision": 0.5859,
+            "recall": 0.9494
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.3,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5742,
+            "accuracy": 0.5742,
+            "auc": 0.5425,
+            "bal_acc": 0.5785,
+            "f1": 0.459,
+            "macro_f1": 0.554,
+            "precision": 0.6512,
+            "recall": 0.3544
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5484,
+            "accuracy": 0.5484,
+            "auc": 0.5202,
+            "bal_acc": 0.5517,
+            "f1": 0.4615,
+            "macro_f1": 0.5363,
+            "precision": 0.5882,
+            "recall": 0.3797
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5484,
+            "accuracy": 0.5484,
+            "auc": 0.4975,
+            "bal_acc": 0.551,
+            "f1": 0.4853,
+            "macro_f1": 0.5415,
+            "precision": 0.5789,
+            "recall": 0.4177
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5226,
+            "accuracy": 0.5226,
+            "auc": 0.5128,
+            "bal_acc": 0.5234,
+            "f1": 0.5067,
+            "macro_f1": 0.5221,
+            "precision": 0.5352,
+            "recall": 0.481
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5871,
+            "accuracy": 0.5871,
+            "auc": 0.5904,
+            "bal_acc": 0.5937,
+            "f1": 0.3846,
+            "macro_f1": 0.537,
+            "precision": 0.8,
+            "recall": 0.2532
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5806,
+            "accuracy": 0.5806,
+            "auc": 0.6201,
+            "bal_acc": 0.5866,
+            "f1": 0.4037,
+            "macro_f1": 0.5401,
+            "precision": 0.7333,
+            "recall": 0.2785
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6,
+            "accuracy": 0.6,
+            "auc": 0.6406,
+            "bal_acc": 0.5934,
+            "f1": 0.7048,
+            "macro_f1": 0.5424,
+            "precision": 0.5649,
+            "recall": 0.9367
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.3,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6194,
+            "accuracy": 0.6194,
+            "auc": 0.6099,
+            "bal_acc": 0.6136,
+            "f1": 0.7094,
+            "macro_f1": 0.579,
+            "precision": 0.5806,
+            "recall": 0.9114
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 3,
+          "selected_threshold": 0.3,
+          "status": "success"
+        }
+      ],
+      "configuration_hash": "046428a57a338470f8231c835195f2ab3b4928a8f859dfaf02bedeaa88895a23",
+      "inner_selection_metrics": {
+        "acc": 0.6323,
+        "accuracy": 0.6323,
+        "auc": 0.5904,
+        "bal_acc": 0.626,
+        "f1": 0.7246,
+        "macro_f1": 0.5856,
+        "precision": 0.5859,
+        "recall": 0.9494
+      },
+      "outer_fold_index": 3,
+      "outer_test_sample_ids": [
+        "173:5gpsc:1508231754497",
+        "174:5gpsc:1508231959496",
+        "175:5gpsc:1508232079512",
+        "176:5gpsc:1508232259504",
+        "177:5gpsc:1508233167493",
+        "178:5gpsc:1508233330503",
+        "179:5gpsc:1508233471513",
+        "180:5gpsc:1508231634495",
+        "181:5gpsc:1508233065498",
+        "182:5gpsc:1508233241507",
+        "183:5gpsc:1508233369510",
+        "184:5gpsc:1508233537508",
+        "185:5gpsc:1508233643497",
+        "186:5gpsc:1508233875493",
+        "187:5gpsc:1508234048496",
+        "188:5gpsc:1508233693503",
+        "189:5gpsc:1508233918505",
+        "190:5gpsc:1508234119494",
+        "191:5gpsc:1508234202501",
+        "192:5gpsc:1508234425497",
+        "193:5gpsc:1508234516498",
+        "194:5gpsc:1508234244497",
+        "195:5gpsc:1508234474497",
+        "196:5gpsc:1508234574499",
+        "197:5gpsc:1508234631500",
+        "198:5gpsc:1508234833503",
+        "199:5gpsc:1508235058495",
+        "200:5gpsc:1508234671500",
+        "201:5gpsc:1508234877497",
+        "202:5gpsc:1508235140497",
+        "203:5gpsc:1508235169497",
+        "204:5gpsc:1508235263502",
+        "205:5gpsc:1508235405482",
+        "206:5gpsc:1508235214496",
+        "207:5gpsc:1508235307499",
+        "208:5gpsc:1508235486503",
+        "209:5gpsc:1508235530459",
+        "210:5gpsc:1508235626494",
+        "211:5gpsc:1508235761495",
+        "212:5gpsc:1508235584505",
+        "213:5gpsc:1508235665492"
+      ],
+      "outer_test_subject": "5gpsc",
+      "outer_training_subjects": [
+        "1mpau",
+        "2nxs5",
+        "3caqi",
+        "6frz4"
+      ],
+      "seed": 42,
+      "selected_candidate_id": "fts_lr_gaussian_10.0",
+      "selected_hyperparameters": {
+        "C": 10.0,
+        "mf_type": "gaussian"
+      },
+      "selected_threshold": 0.3
+    },
+    {
+      "candidate_results": [
+        {
+          "candidate_id": "fts_lr_triangular_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6115,
+            "accuracy": 0.6115,
+            "auc": 0.6669,
+            "bal_acc": 0.6112,
+            "f1": 0.6303,
+            "macro_f1": 0.6105,
+            "precision": 0.6047,
+            "recall": 0.6582
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_triangular_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6306,
+            "accuracy": 0.6306,
+            "auc": 0.6736,
+            "bal_acc": 0.63,
+            "f1": 0.6628,
+            "macro_f1": 0.6272,
+            "precision": 0.6129,
+            "recall": 0.7215
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_triangular_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6178,
+            "accuracy": 0.6178,
+            "auc": 0.6812,
+            "bal_acc": 0.6177,
+            "f1": 0.625,
+            "macro_f1": 0.6177,
+            "precision": 0.6173,
+            "recall": 0.6329
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_triangular_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "triangular"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5924,
+            "accuracy": 0.5924,
+            "auc": 0.6578,
+            "bal_acc": 0.5912,
+            "f1": 0.6559,
+            "macro_f1": 0.578,
+            "precision": 0.5701,
+            "recall": 0.7722
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6115,
+            "accuracy": 0.6115,
+            "auc": 0.6371,
+            "bal_acc": 0.6135,
+            "f1": 0.4299,
+            "macro_f1": 0.5676,
+            "precision": 0.8214,
+            "recall": 0.2911
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6242,
+            "accuracy": 0.6242,
+            "auc": 0.6379,
+            "bal_acc": 0.6254,
+            "f1": 0.5354,
+            "macro_f1": 0.61,
+            "precision": 0.7083,
+            "recall": 0.4304
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5669,
+            "accuracy": 0.5669,
+            "auc": 0.6136,
+            "bal_acc": 0.5662,
+            "f1": 0.6092,
+            "macro_f1": 0.5617,
+            "precision": 0.5579,
+            "recall": 0.6709
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.3,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gaussian_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "gaussian"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5732,
+            "accuracy": 0.5732,
+            "auc": 0.6147,
+            "bal_acc": 0.5736,
+            "f1": 0.5503,
+            "macro_f1": 0.5721,
+            "precision": 0.5857,
+            "recall": 0.519
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6306,
+            "accuracy": 0.6306,
+            "auc": 0.6483,
+            "bal_acc": 0.6302,
+            "f1": 0.6548,
+            "macro_f1": 0.6288,
+            "precision": 0.618,
+            "recall": 0.6962
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6497,
+            "accuracy": 0.6497,
+            "auc": 0.6655,
+            "bal_acc": 0.6501,
+            "f1": 0.6259,
+            "macro_f1": 0.6483,
+            "precision": 0.6765,
+            "recall": 0.5823
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6369,
+            "accuracy": 0.6369,
+            "auc": 0.6415,
+            "bal_acc": 0.6367,
+            "f1": 0.6503,
+            "macro_f1": 0.6364,
+            "precision": 0.631,
+            "recall": 0.6709
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_trapezoid_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "trapezoid"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6369,
+            "accuracy": 0.6369,
+            "auc": 0.6149,
+            "bal_acc": 0.6362,
+            "f1": 0.6743,
+            "macro_f1": 0.6321,
+            "precision": 0.6146,
+            "recall": 0.7468
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.5,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_0.01",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.01,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6369,
+            "accuracy": 0.6369,
+            "auc": 0.6365,
+            "bal_acc": 0.6388,
+            "f1": 0.4956,
+            "macro_f1": 0.606,
+            "precision": 0.8235,
+            "recall": 0.3544
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 100.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.6,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_0.1",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 0.1,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.6051,
+            "accuracy": 0.6051,
+            "auc": 0.6368,
+            "bal_acc": 0.6065,
+            "f1": 0.5,
+            "macro_f1": 0.5868,
+            "precision": 0.6889,
+            "recall": 0.3924
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 10.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.7,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_1.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 1.0,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.5924,
+            "accuracy": 0.5924,
+            "auc": 0.6113,
+            "bal_acc": 0.5917,
+            "f1": 0.6322,
+            "macro_f1": 0.5875,
+            "precision": 0.5789,
+            "recall": 0.6962
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 1.0,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.4,
+          "status": "success"
+        },
+        {
+          "candidate_id": "fts_lr_gbell_10.0",
+          "failed_inner_fold_index": null,
+          "failure_reason": null,
+          "hyperparameters": {
+            "C": 10.0,
+            "mf_type": "gbell"
+          },
+          "inner_oof_metrics": {
+            "acc": 0.586,
+            "accuracy": 0.586,
+            "auc": 0.6014,
+            "bal_acc": 0.585,
+            "f1": 0.6448,
+            "macro_f1": 0.5743,
+            "precision": 0.5673,
+            "recall": 0.7468
+          },
+          "method_name": "fts_logistic_regression",
+          "model_complexity": 0.1,
+          "outer_fold_index": 4,
+          "selected_threshold": 0.3,
+          "status": "success"
+        }
+      ],
+      "configuration_hash": "a0e76503f20b803022452bdf246d26bdb03514764cbabf951a3ed0c9b46d062c",
+      "inner_selection_metrics": {
+        "acc": 0.6497,
+        "accuracy": 0.6497,
+        "auc": 0.6655,
+        "bal_acc": 0.6501,
+        "f1": 0.6259,
+        "macro_f1": 0.6483,
+        "precision": 0.6765,
+        "recall": 0.5823
+      },
+      "outer_fold_index": 4,
+      "outer_test_sample_ids": [
+        "77:6frz4:1507729223503",
+        "78:6frz4:1507729416500",
+        "79:6frz4:1507729536491",
+        "80:6frz4:1507729716498",
+        "81:6frz4:1507730695510",
+        "82:6frz4:1507730873511",
+        "83:6frz4:1507731029504",
+        "84:6frz4:1507730777494",
+        "85:6frz4:1507730934495",
+        "86:6frz4:1507731165482",
+        "87:6frz4:1507731324509",
+        "88:6frz4:1507731539499",
+        "89:6frz4:1507731693490",
+        "90:6frz4:1507731378504",
+        "91:6frz4:1507731594505",
+        "92:6frz4:1507731794502",
+        "93:6frz4:1507731892508",
+        "94:6frz4:1507732037506",
+        "95:6frz4:1507732235498",
+        "96:6frz4:1507731945503",
+        "97:6frz4:1507732191502",
+        "98:6frz4:1507732327502",
+        "99:6frz4:1507732412511",
+        "100:6frz4:1507732646504",
+        "101:6frz4:1507732865488",
+        "102:6frz4:1507732464501",
+        "103:6frz4:1507732719483",
+        "104:6frz4:1507732990496",
+        "105:6frz4:1507733041498",
+        "106:6frz4:1507733242494",
+        "107:6frz4:1507733473490",
+        "108:6frz4:1507733118497",
+        "109:6frz4:1507733291504",
+        "110:6frz4:1507733544502",
+        "111:6frz4:1507733687509",
+        "112:6frz4:1507733837479",
+        "113:6frz4:1507734100510",
+        "114:6frz4:1507733736506",
+        "115:6frz4:1507733917492"
+      ],
+      "outer_test_subject": "6frz4",
+      "outer_training_subjects": [
+        "1mpau",
+        "2nxs5",
+        "3caqi",
+        "5gpsc"
+      ],
+      "seed": 42,
+      "selected_candidate_id": "fts_lr_trapezoid_0.1",
+      "selected_hyperparameters": {
+        "C": 0.1,
+        "mf_type": "trapezoid"
+      },
+      "selected_threshold": 0.6
+    }
+  ],
+  "overall_metrics": {
+    "acc": 0.5459,
+    "accuracy": 0.5459,
+    "auc": 0.5746,
+    "bal_acc": 0.5464,
+    "f1": 0.5241,
+    "macro_f1": 0.545,
+    "precision": 0.5568,
+    "recall": 0.4949
+  },
+  "per_subject_metrics": [
+    {
+      "acc": 0.4737,
+      "auc": 0.4848,
+      "bal_acc": 0.4737,
+      "f1": 0.5833,
+      "macro_f1": 0.4345,
+      "n": 38,
+      "subject": "1mpau"
+    },
+    {
+      "acc": 0.5128,
+      "auc": 0.6921,
+      "bal_acc": 0.5224,
+      "f1": 0.24,
+      "macro_f1": 0.4408,
+      "n": 39,
+      "subject": "2nxs5"
+    },
+    {
+      "acc": 0.6667,
+      "auc": 0.7395,
+      "bal_acc": 0.6684,
+      "f1": 0.6486,
+      "macro_f1": 0.6658,
+      "n": 39,
+      "subject": "3caqi"
+    },
+    {
+      "acc": 0.5854,
+      "auc": 0.7762,
+      "bal_acc": 0.5952,
+      "f1": 0.7018,
+      "macro_f1": 0.5109,
+      "n": 41,
+      "subject": "5gpsc"
+    },
+    {
+      "acc": 0.4872,
+      "auc": 0.5105,
+      "bal_acc": 0.5,
+      "f1": 0.0,
+      "macro_f1": 0.3276,
+      "n": 39,
+      "subject": "6frz4"
+    }
+  ],
+  "runtime_metadata": {
+    "dataset_order_hash": "44dfd4428fad06e7a1c201165b7fa32f84bcc72046e0adf186cc0f679900e926",
+    "deterministic_threads": 1,
+    "manifest_hash": "5dedbc246dd51cf33f97478eedfce45f81d21de2d3d1ecd79a3e382b2a38a8ff",
+    "package_versions": {
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.17.1",
+      "threadpoolctl": "3.6.0"
+    },
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "seed": 42,
+    "timestamp_utc": "2026-06-23T10:15:35.646595+00:00"
+  }
+}
