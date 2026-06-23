@@ -57,6 +57,8 @@ class TestResult:
 
 @dataclass(slots=True)
 class RunResult:
+    """Legacy result shape kept for `run_one_experiment()` compatibility."""
+
     config: ExperimentConfig
     dataset: Any
     fold_indices: list[tuple[np.ndarray, np.ndarray]]

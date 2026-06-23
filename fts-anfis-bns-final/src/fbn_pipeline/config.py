@@ -1,13 +1,19 @@
 from __future__ import annotations
 
-import os
 from dataclasses import asdict, dataclass
 
 from .ablation import Ablation
+from .determinism import configure_determinism
 
 
 @dataclass(slots=True)
 class ExperimentConfig:
+    """Legacy experiment config kept for the existing publication runner.
+
+    New nested evaluation code should use the structured config models in
+    `fbn_pipeline.structured_config`.
+    """
+
     seed: int = 42
     k_folds: int = 5
     data_path: str = "last_30s_segments"
@@ -107,20 +113,8 @@ class ExperimentConfig:
 
 
 def setup_seed(seed: int) -> None:
-    os.environ["PYTHONHASHSEED"] = str(seed)
-    os.environ.setdefault("OMP_NUM_THREADS", "1")
-    os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
-    os.environ.setdefault("MKL_NUM_THREADS", "1")
-    os.environ.setdefault("VECLIB_MAXIMUM_THREADS", "1")
-    os.environ.setdefault("NUMEXPR_NUM_THREADS", "1")
-    os.environ.setdefault("LOKY_MAX_CPU_COUNT", "1")
-
-    import random
-
-    import numpy as np
-
-    random.seed(seed)
-    np.random.seed(seed)
+    """Legacy compatibility wrapper around the centralized deterministic setup."""
+    configure_determinism(seed, deterministic_threads=1, respect_existing_env=True)
 
 
 THESIS_CONFIG_EXPECTED = {

@@ -1,0 +1,102 @@
+{
+  "dataset_stats": {
+    "class_counts": {
+      "rest": 412,
+      "task": 413
+    },
+    "n_samples": 825,
+    "n_subjects": 23
+  },
+  "oof_metrics": {
+    "acc": 0.6234,
+    "accuracy": 0.6234,
+    "auc": 0.6201,
+    "bal_acc": 0.6236,
+    "f1": 0.6437,
+    "macro_f1": 0.6222,
+    "precision": 0.6091,
+    "recall": 0.6825
+  },
+  "rounded_posterior_hash": "0f5b62f25d2b746bb49414afe7159d73aa402df074d3ac32e596588dff481b5e",
+  "selected_threshold": 0.55,
+  "shapes": {
+    "final_posterior": [
+      193
+    ],
+    "fts_train": [
+      632,
+      36
+    ],
+    "full_dataset": [
+      825,
+      4,
+      30
+    ],
+    "oof_post": [
+      632
+    ],
+    "test_X": [
+      193,
+      4,
+      30
+    ],
+    "test_y": [
+      193
+    ],
+    "train_X": [
+      632,
+      4,
+      30
+    ],
+    "train_y": [
+      632
+    ]
+  },
+  "split_stats": {
+    "test_class_counts": {
+      "rest": 95,
+      "task": 98
+    },
+    "test_subjects": [
+      "3caqi",
+      "6frz4",
+      "bd47a",
+      "f1gjp",
+      "iz3x1"
+    ],
+    "train_class_counts": {
+      "rest": 317,
+      "task": 315
+    },
+    "train_subjects": [
+      "1mpau",
+      "2nxs5",
+      "5gpsc",
+      "7swyk",
+      "8a1ep",
+      "b7mrd",
+      "c24ur",
+      "dkhty",
+      "e4gay",
+      "ef5rq",
+      "f3j25",
+      "hpbxa",
+      "ibvx8",
+      "iz2ps",
+      "rc1in",
+      "tn4vl",
+      "wjxci",
+      "yljm5"
+    ]
+  },
+  "test_metrics": {
+    "acc": 0.7513,
+    "accuracy": 0.7513,
+    "auc": 0.7734,
+    "bal_acc": 0.7519,
+    "f1": 0.7447,
+    "macro_f1": 0.7511,
+    "precision": 0.7778,
+    "recall": 0.7143
+  }
+}
