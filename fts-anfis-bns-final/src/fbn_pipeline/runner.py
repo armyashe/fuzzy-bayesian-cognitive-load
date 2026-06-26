@@ -306,6 +306,7 @@ def lock_development_config(
     selection: DevelopmentSelection,
     *,
     output_path: Path | str,
+    extra_metadata: dict | None = None,
 ) -> dict:
     """Persist a versioned locked configuration selected from OOF only."""
     if development_result.configuration_id != selection.selected_result.configuration_id:
@@ -330,6 +331,8 @@ def lock_development_config(
         "selection_metric_value": development_result.selection_metric_value,
         "final_test_evaluated": False,
     }
+    if extra_metadata:
+        lock_payload.update(extra_metadata)
     lock_payload["config_hash"] = _json_hash(config_payload)
     lock_payload["lock_hash"] = _json_hash(
         {k: v for k, v in lock_payload.items() if k != "lock_hash"}

@@ -47,7 +47,7 @@
   "final_test_evaluated": false,
   "grouping_protocol": "GroupKFold grouped by training subject IDs only",
   "k_folds": 5,
-  "lock_hash": "11b6e00b8dbef235dbbf8010d415d3ec2490468db1f18918b850b59143c3f38f",
+  "lock_hash": "f14733254621ac76df7e0c679c423eb85455228e65ba2bdbe60652f57752befc",
   "oof_metrics": {
     "acc": 0.6234,
     "accuracy": 0.6234,
@@ -72,5 +72,5 @@
     "lower_model_complexity",
     "configuration_id_lexicographic"
   ],
-  "timestamp_utc": "2026-06-23T13:43:07+00:00"
+  "timestamp_utc": "2026-06-23T14:23:01+00:00"
 }

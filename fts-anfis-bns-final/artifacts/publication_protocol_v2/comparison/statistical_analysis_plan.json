@@ -1,0 +1,41 @@
+{
+  "best_classical_baseline_lock_path": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\baselines\\locks\\stat_logreg.json",
+  "clustered_bootstrap_confidence_intervals": {
+    "level": 0.95,
+    "replicates": 10000,
+    "resampling_unit": "subject",
+    "sampling_scheme": "sample training-independent subjects with replacement and aggregate window-level predictions within each replicate",
+    "seed": 4242,
+    "undefined_auc_handling": "skip undefined AUC replicates and report effective replicate count"
+  },
+  "comparison_manifest_hash": "7538e7e8521030e35d02e56684d11b40afd456795ab9d62c15936269eab68a9f",
+  "final_reporting_metrics": [
+    "accuracy",
+    "balanced_accuracy",
+    "precision",
+    "recall",
+    "task_f1",
+    "macro_f1",
+    "roc_auc",
+    "confusion_matrix",
+    "per_subject_accuracy",
+    "per_subject_balanced_accuracy",
+    "per_subject_task_f1",
+    "per_subject_roc_auc_when_defined"
+  ],
+  "paired_significance_test": {
+    "comparison": "proposed model versus best locked classical baseline",
+    "execution_status": "not_executed",
+    "name": "McNemar"
+  },
+  "plan_hash": "5edc14b998cd87f9c5fbcd2f4dda5c5837754adf46350bca7eda376f240ed164",
+  "predefined_ablation_lock_paths": {
+    "ABLATION_FULL": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\ablations\\locks\\ABLATION_FULL.json",
+    "ABLATION_NO_ANFIS": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\ablations\\locks\\ABLATION_NO_ANFIS.json",
+    "ABLATION_NO_BN": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\ablations\\locks\\ABLATION_NO_BN.json",
+    "ABLATION_NO_FTS": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\ablations\\locks\\ABLATION_NO_FTS.json"
+  },
+  "proposed_model_lock_path": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\locked_config.json",
+  "protocol_version": "publication_protocol_v2",
+  "schema_version": 1
+}

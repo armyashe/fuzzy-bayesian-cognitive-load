@@ -1,0 +1,50 @@
+{
+  "baseline_family": "flat_logreg",
+  "comparison_manifest_hash": "7538e7e8521030e35d02e56684d11b40afd456795ab9d62c15936269eab68a9f",
+  "config_hash": "2bec6bef10c3350ad007b97868169d50a109b80553744b26a5ee55a9fbd567c7",
+  "configuration_id": "FLAT_LOGREG__C0.1__CWnone",
+  "feature_definitions": {
+    "representation": "flattened_120",
+    "shape": 120,
+    "signals": [
+      "temp",
+      "hr",
+      "gsr",
+      "rr"
+    ],
+    "time_steps": 30
+  },
+  "final_test_evaluated": false,
+  "grouping_protocol": "GroupKFold grouped by training subject IDs only",
+  "input_representation": "flattened_120",
+  "k_folds": 5,
+  "lock_hash": "c17a9cddadf6182c687d127f8e31f2a07c96b68e45f268e14350f005ae9df50d",
+  "oof_metrics": {
+    "acc": 0.5712,
+    "accuracy": 0.5712,
+    "auc": 0.5728,
+    "bal_acc": 0.5722,
+    "f1": 0.6739,
+    "macro_f1": 0.524,
+    "precision": 0.5426,
+    "recall": 0.8889
+  },
+  "oof_threshold": 0.378629,
+  "prediction_hash": "9af9bb943f6f31051ecd5292fa7ba6559ad0d13935b2f92a5838d3cc7bc3a584",
+  "preprocessing_specification": {
+    "imputer": "median",
+    "scaler": "standard"
+  },
+  "protocol_version": "publication_protocol_v2",
+  "schema_version": 1,
+  "seed": 42,
+  "selected_hyperparameters": {
+    "C": 0.1,
+    "class_weight": null,
+    "max_iter": 5000,
+    "solver": "lbfgs"
+  },
+  "selected_using": "training_oof_only",
+  "threshold_metric": "balanced_accuracy",
+  "threshold_source": "training_oof_only"
+}

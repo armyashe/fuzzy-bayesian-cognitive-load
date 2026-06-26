@@ -24,6 +24,13 @@ class DatasetSplit:
     user_test: np.ndarray
 
 
+@dataclass(slots=True)
+class TrainingSplit:
+    X_train: np.ndarray
+    y_train: np.ndarray
+    user_train: np.ndarray
+
+
 def _binarize_labels(raw_labels: np.ndarray) -> np.ndarray:
     y = raw_labels.astype(object).copy()
     y[y == "rest"] = -1
@@ -70,4 +77,13 @@ def load_dataset(data_folder_path: str | Path) -> DatasetSplit:
         X_test=np.vstack(X_test),
         y_test=np.array(y_test, dtype=int),
         user_test=np.array(user_test),
+    )
+
+
+def load_training_split(data_folder_path: str | Path) -> TrainingSplit:
+    dataset = load_dataset(data_folder_path)
+    return TrainingSplit(
+        X_train=dataset.X_train,
+        y_train=dataset.y_train,
+        user_train=dataset.user_train,
     )

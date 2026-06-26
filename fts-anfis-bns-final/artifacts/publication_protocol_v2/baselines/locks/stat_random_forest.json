@@ -1,0 +1,60 @@
+{
+  "baseline_family": "stat_random_forest",
+  "comparison_manifest_hash": "7538e7e8521030e35d02e56684d11b40afd456795ab9d62c15936269eab68a9f",
+  "config_hash": "21d414527c8a03c613ce48eb20d08f542a57f77ac744edd130cde1f6314a814e",
+  "configuration_id": "STAT_RF__Dnone__L3",
+  "feature_definitions": {
+    "per_signal_features": [
+      "mean",
+      "std",
+      "median",
+      "min",
+      "max",
+      "iqr",
+      "slope",
+      "mean_abs_diff"
+    ],
+    "representation": "statistical_32",
+    "shape": 32,
+    "signals": [
+      "temp",
+      "hr",
+      "gsr",
+      "rr"
+    ]
+  },
+  "final_test_evaluated": false,
+  "grouping_protocol": "GroupKFold grouped by training subject IDs only",
+  "input_representation": "statistical_32",
+  "k_folds": 5,
+  "lock_hash": "442a2637469dc622abed4636cc805151a0aeb3c95ec7e0f19e80a83caf7767e9",
+  "oof_metrics": {
+    "acc": 0.6297,
+    "accuracy": 0.6297,
+    "auc": 0.6362,
+    "bal_acc": 0.6298,
+    "f1": 0.6321,
+    "macro_f1": 0.6297,
+    "precision": 0.6262,
+    "recall": 0.6381
+  },
+  "oof_threshold": 0.504339,
+  "prediction_hash": "1a282692d8c2c7673662628a045c62b11197f0b2563d4e40ed6f0d0575f5950f",
+  "preprocessing_specification": {
+    "imputer": "median",
+    "scaler": "none"
+  },
+  "protocol_version": "publication_protocol_v2",
+  "schema_version": 1,
+  "seed": 42,
+  "selected_hyperparameters": {
+    "class_weight": "balanced",
+    "max_depth": null,
+    "min_samples_leaf": 3,
+    "n_estimators": 300,
+    "n_jobs": 1
+  },
+  "selected_using": "training_oof_only",
+  "threshold_metric": "balanced_accuracy",
+  "threshold_source": "training_oof_only"
+}

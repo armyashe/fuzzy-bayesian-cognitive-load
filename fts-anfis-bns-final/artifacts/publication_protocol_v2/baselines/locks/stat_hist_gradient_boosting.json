@@ -1,0 +1,59 @@
+{
+  "baseline_family": "stat_hist_gradient_boosting",
+  "comparison_manifest_hash": "7538e7e8521030e35d02e56684d11b40afd456795ab9d62c15936269eab68a9f",
+  "config_hash": "f9d3631b2930cab9b0e18b9cd398601e68cd6cc42f8eca4b81b773ac2498d9e8",
+  "configuration_id": "STAT_HGB__LR0.05__LN7__L20.0",
+  "feature_definitions": {
+    "per_signal_features": [
+      "mean",
+      "std",
+      "median",
+      "min",
+      "max",
+      "iqr",
+      "slope",
+      "mean_abs_diff"
+    ],
+    "representation": "statistical_32",
+    "shape": 32,
+    "signals": [
+      "temp",
+      "hr",
+      "gsr",
+      "rr"
+    ]
+  },
+  "final_test_evaluated": false,
+  "grouping_protocol": "GroupKFold grouped by training subject IDs only",
+  "input_representation": "statistical_32",
+  "k_folds": 5,
+  "lock_hash": "50ffb518c5649cc0e6d6e412b011c133c64a5494e8d96d7285f46531b27b6b98",
+  "oof_metrics": {
+    "acc": 0.6139,
+    "accuracy": 0.6139,
+    "auc": 0.6285,
+    "bal_acc": 0.6139,
+    "f1": 0.6139,
+    "macro_f1": 0.6139,
+    "precision": 0.612,
+    "recall": 0.6159
+  },
+  "oof_threshold": 0.543851,
+  "prediction_hash": "afcc36b3d29a4f259e747484197bb4479455eb5b1a051029a880a5de0412244e",
+  "preprocessing_specification": {
+    "imputer": "median",
+    "scaler": "none"
+  },
+  "protocol_version": "publication_protocol_v2",
+  "schema_version": 1,
+  "seed": 42,
+  "selected_hyperparameters": {
+    "l2_regularization": 0.0,
+    "learning_rate": 0.05,
+    "max_iter": 200,
+    "max_leaf_nodes": 7
+  },
+  "selected_using": "training_oof_only",
+  "threshold_metric": "balanced_accuracy",
+  "threshold_source": "training_oof_only"
+}

@@ -1,0 +1,26 @@
+{
+  "final_oof_metrics": {
+    "acc": 0.6234,
+    "accuracy": 0.6234,
+    "auc": 0.6201,
+    "bal_acc": 0.6236,
+    "f1": 0.6437,
+    "macro_f1": 0.6222,
+    "precision": 0.6091,
+    "recall": 0.6825
+  },
+  "final_proposed_model_configuration_id": "PUB_FINAL__EXP1_MF_GAUSS__R6__BN_SOFT_NAIVE_BIN5",
+  "final_test_executed": false,
+  "lock_path": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\locked_config.json",
+  "manifest_hash": "a05d840c75ab97438ec611c72b78b0822553ee626f122e4de3ceec64940c3efe",
+  "oof_csv_paths": {
+    "anfis_rule_selection": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\development\\anfis_rule_selection_oof.csv",
+    "bn_selection": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\development\\bn_selection_oof.csv",
+    "fts_selection": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\development\\fts_selection_oof.csv",
+    "pipeline_ablation": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\development\\pipeline_ablation_oof.csv"
+  },
+  "selected_anfis_candidate": "PUB_RULE__EXP1_MF_GAUSS__R6",
+  "selected_bn_candidate": "PUB_BN__EXP1_MF_GAUSS__R6__BN_SOFT_NAIVE_BIN5",
+  "selected_fts_candidate": "EXP1_MF_GAUSS",
+  "selected_threshold": 0.55
+}
