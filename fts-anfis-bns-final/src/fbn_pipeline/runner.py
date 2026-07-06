@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import hashlib
+import json
 from pathlib import Path
 
 import numpy as np
+from threadpoolctl import threadpool_limits
 
 from .bn_dashboard import export_bn_dashboard_artifacts
 from .config import ExperimentConfig, setup_seed
@@ -16,6 +19,7 @@ from .metrics import (
     print_per_subject_table,
 )
 from .pipeline import retrain_and_test_result, run_cv_result
+from .stages import extract_features_for_ablation
 from .console_reporting import (
     dump_anfis_rules,
     dump_bn_cpt,
@@ -26,6 +30,120 @@ from .csv_reporting import (
     make_result_row,
 )
 from .results import RunResult
+
+
+_EXP2_DEBUG_VARIANTS = {"EXP2_RULES_3", "EXP2_RULES_8", "EXP2_RULES_12"}
+
+
+def _array_hash(arr: np.ndarray) -> str:
+    data = np.ascontiguousarray(arr, dtype=np.float64)
+    return hashlib.sha256(data.tobytes()).hexdigest()
+
+
+def _deterministic_thread_context():
+    """Force deterministic linear algebra/KMeans reductions for experiments."""
+    return threadpool_limits(limits=1)
+
+
+def _json_hash(obj) -> str:
+    payload = json.dumps(obj, sort_keys=True, separators=(",", ":"), default=float)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _bn_hash_payload(bn) -> dict:
+    if bn is None:
+        return {}
+    payload = {}
+    for name in (
+        "prior_",
+        "bin_edges_",
+        "cpts_",
+        "bin_mids_",
+        "bin_sigmas_",
+        "signal_weights_",
+    ):
+        if hasattr(bn, name):
+            value = getattr(bn, name)
+            if isinstance(value, list):
+                payload[name] = [np.asarray(v, dtype=float).tolist() for v in value]
+            else:
+                payload[name] = np.asarray(value, dtype=float).tolist()
+    return payload
+
+
+def _write_exp2_debug_artifact(
+    *,
+    exp_name: str,
+    cfg: ExperimentConfig,
+    dataset: DatasetSplit,
+    cv_post: np.ndarray,
+    cv_y: np.ndarray,
+    test,
+    best_threshold: float,
+) -> None:
+    if not cfg.dump_exp2_debug or exp_name not in _EXP2_DEBUG_VARIANTS:
+        return
+
+    out_dir = Path(cfg.exp2_debug_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    artifact_path = out_dir / f"{exp_name}_debug.npz"
+    hash_path = out_dir / f"{exp_name}_hashes.json"
+
+    F_tr, F_te, _ = extract_features_for_ablation(
+        dataset.X_train,
+        dataset.X_test,
+        cfg,
+    )
+    train_probs = (
+        test.models.train_evidence
+        if test.models.train_evidence is not None
+        else np.empty((0, 0), dtype=float)
+    )
+    test_probs = test.models.test_evidence
+
+    np.savez_compressed(
+        artifact_path,
+        oof_post=cv_post,
+        oof_y=cv_y,
+        test_post=test.posterior,
+        test_pred=test.y_pred,
+        test_y=dataset.y_test,
+        threshold=np.array([best_threshold]),
+        train_signal_probs=train_probs,
+        test_signal_probs=test_probs,
+    )
+
+    anfis_hashes = []
+    for idx, model in enumerate(test.models.anfis_list or []):
+        entry = {
+            "signal_index": idx,
+            "random_state": int(getattr(model, "random_state", -1)),
+            "centers": _array_hash(model.centers_),
+            "sigmas": _array_hash(model.sigmas_),
+            "theta": _array_hash(model.theta_),
+        }
+        anfis_hashes.append(entry)
+
+    bn_payload = _bn_hash_payload(test.models.bn)
+    hashes = {
+        "variant": exp_name,
+        "final_seed_offset": int(cfg.final_seed_offset),
+        "anfis_random_states": [
+            int(cfg.seed + cfg.final_seed_offset + s) for s in range(4)
+        ],
+        "fts_train_features": _array_hash(F_tr),
+        "fts_test_features": _array_hash(F_te),
+        "train_signal_probs": _array_hash(train_probs),
+        "test_signal_probs": _array_hash(test_probs),
+        "anfis": anfis_hashes,
+        "bn_cpt": _json_hash(bn_payload),
+        "final_posterior": _array_hash(test.posterior),
+        "debug_npz": str(artifact_path),
+    }
+    hash_path.write_text(json.dumps(hashes, indent=2, sort_keys=True), encoding="utf-8")
+    print(f"  ANFIS seeds       : {hashes['anfis_random_states']}")
+    print(f"  Debug artifact    : {artifact_path}")
+    print(f"  Debug hashes      : {hash_path}")
 
 
 def run_one_experiment(
@@ -55,7 +173,8 @@ def run_one_experiment(
 
     if print_progress:
         print("\n[1/3] Running GroupKFold CV...")
-    cv = run_cv_result(dataset.X_train, dataset.y_train, dataset.user_train, cfg)
+    with _deterministic_thread_context():
+        cv = run_cv_result(dataset.X_train, dataset.y_train, dataset.user_train, cfg)
 
     best_thr, thr_score = find_best_threshold(
         cv.oof_y,
@@ -73,14 +192,16 @@ def run_one_experiment(
 
     if print_progress:
         print("\n[2/3] Retraining on full training set and evaluating on test set...")
-    test = retrain_and_test_result(
-        dataset.X_train,
-        dataset.y_train,
-        dataset.X_test,
-        dataset.y_test,
-        best_thr,
-        cfg,
-    )
+    setup_seed(cfg.seed)
+    with _deterministic_thread_context():
+        test = retrain_and_test_result(
+            dataset.X_train,
+            dataset.y_train,
+            dataset.X_test,
+            dataset.y_test,
+            best_thr,
+            cfg,
+        )
 
     if print_progress:
         print_metrics(dataset.y_test, test.y_pred, test.posterior, title="Held-out Test")
@@ -145,6 +266,16 @@ def run_one_experiment(
         if print_progress:
             print(f"Saved CSV row to: {csv_path}")
 
+    _write_exp2_debug_artifact(
+        exp_name=exp_name,
+        cfg=cfg,
+        dataset=dataset,
+        cv_post=cv.oof_post,
+        cv_y=cv.oof_y,
+        test=test,
+        best_threshold=best_thr,
+    )
+
     if print_progress:
         print("\nDone.")
 
@@ -156,10 +287,10 @@ def run_one_experiment(
         threshold_score=float(thr_score),
         oof_post=cv.oof_post,
         oof_pred=oof_pred,
-        oof_metrics=oof_metrics,
+        oof_metrics=dict(oof_metrics),
         test_post=test.posterior,
         test_pred=test.y_pred,
-        test_metrics=test.metrics,
+        test_metrics=dict(test.metrics),
         models=test.models,
         subject_rows=subject_rows,
         artifact_dir=artifact_dir_str,

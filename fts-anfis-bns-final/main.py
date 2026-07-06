@@ -10,11 +10,11 @@ from typing import Any
 # CLI arguments (--ablation, --preset, etc.) override these values.
 # ============================================================
 MODE = "single"                    # "single"
-PRESET_NAME = "A2_soft"           # None | "A1" | "A2" | ...
+PRESET_NAME = "THESIS_FINAL"       # None | "THESIS_FINAL" | "A1" | "A2" | ...
 ABLATION = "exp1"                 # "exp1" | "exp2" | "exp3" | "exp4"
 EXP_NAME = "main_run"
 DATA_FOLDER = "last_30s_segments"
-CSV_PATH = "results_main.csv"
+CSV_PATH = "artifacts/A2_soft_results/results_main.csv"
 SAVE_CSV = True
 SHOW_PER_SUBJECT = True
 DUMP_RULES = True
@@ -23,11 +23,7 @@ FTS_SUMMARY_MODE = "diag_high"    # "diag"|"high"|"diag_high"|"entropy" (exp3 on
 NO_STAGE1_FEATURE_MODE = "stats"  # "stats"                   (exp4 only)
 
 
-OVERRIDES: dict[str, Any] = {
-    # "seed": 42,
-    # "k_folds": 5,
-    # "n_epochs": 20,
-}
+OVERRIDES: dict[str, Any] = {}
 
 
 # ============================================================
@@ -45,7 +41,7 @@ SRC_PATH = PROJECT_ROOT / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
-from fbn_pipeline import ABLATION_CHOICES, ExperimentConfig, apply_preset
+from fbn_pipeline import ABLATION_CHOICES, ExperimentConfig, apply_preset, assert_thesis_config
 from fbn_pipeline.data import load_dataset
 from fbn_pipeline.runner import run_one_experiment
 
@@ -228,6 +224,8 @@ def build_config(args: argparse.Namespace | None = None) -> ExperimentConfig:
         dump_rules=dump_rules,
         **(({"anfis_mf_type": anfis_mf_type_override}) if anfis_mf_type_override else {}),
     )
+    if preset_name == "THESIS_FINAL":
+        assert_thesis_config(cfg)
     return cfg
 
 

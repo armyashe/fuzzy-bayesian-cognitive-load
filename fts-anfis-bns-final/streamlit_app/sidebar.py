@@ -2,106 +2,92 @@ from pathlib import Path
 
 import streamlit as st
 
-from fbn_pipeline.presets import EXPERIMENT_PRESETS
 from streamlit_app.services.streamlit_support import (
-    RULE_COUNT_OPTIONS,
-    get_group1_default_variant,
+    A2_SOFT_PRESET,
     get_group2_default_base_preset,
-    get_group3_default_variant,
-    get_group_help,
-    get_group_options,
-    get_variant_options,
-    group2_variant_label,
     resolve_selection,
     run_streamlit_experiment,
 )
 
 
-GROUP_OPTIONS = get_group_options()
-GROUP_LABELS = {option.key: option.label for option in GROUP_OPTIONS}
+ABLATION_VARIANTS = {
+    "Full pipeline — FTS → ANFIS → BN": "EXP3_FULL",
+    "Without BN — FTS → ANFIS only": "EXP3_NO_BN",
+    "Without ANFIS — FTS summary → BN": "EXP3_NO_ANFIS",
+}
+
+EXPERIMENT_GROUP = "exp3"
+
+
+def _force_exp3_session_state() -> None:
+    st.session_state["experiment_group"] = EXPERIMENT_GROUP
+    st.session_state["selected_group"] = EXPERIMENT_GROUP
+
+    results = st.session_state.get("results")
+    selection = results.get("selection") if isinstance(results, dict) else None
+    cfg = results.get("cfg") if isinstance(results, dict) else None
+    result_group = getattr(selection, "group_key", None) or str(
+        getattr(cfg, "experiment_group", EXPERIMENT_GROUP)
+    ).lower()
+    if result_group != EXPERIMENT_GROUP:
+        st.session_state.pop("results", None)
 
 
 def render_sidebar(root: Path) -> None:
+    _force_exp3_session_state()
+
     with st.sidebar:
         st.header("Experiment")
 
-        base_preset_keys = [
-            key for key in EXPERIMENT_PRESETS.keys()
-            if not key.startswith(("EXP1_", "EXP2_", "EXP3_"))
-        ]
         default_base_preset = get_group2_default_base_preset()
-        default_base_idx = (
-            base_preset_keys.index(default_base_preset)
-            if default_base_preset in base_preset_keys
-            else 0
-        )
+        if default_base_preset != A2_SOFT_PRESET:
+            raise ValueError(f"Streamlit dashboard requires the {A2_SOFT_PRESET} preset.")
 
-        base_preset_name = st.selectbox(
+        base_preset_name = A2_SOFT_PRESET
+        st.selectbox(
             "Preset / Base configuration",
-            base_preset_keys,
-            index=default_base_idx,
-        )
-
-        group_key = st.selectbox(
-            "Experiment group",
-            [option.key for option in GROUP_OPTIONS],
+            [A2_SOFT_PRESET],
             index=0,
-            format_func=lambda key: GROUP_LABELS[key],
+            disabled=True,
         )
 
-        st.caption(get_group_help(group_key))
+        experiment_group = EXPERIMENT_GROUP
+        st.caption(
+            "Compare the contribution of major pipeline stages using the "
+            "ablation logic already defined in source."
+        )
 
-        variant_key: str | None = None
-        n_rules_override: int | None = None
-
-        if group_key == "exp1":
-            group1_options = get_variant_options("exp1")
-            group1_keys = [option.key for option in group1_options]
-            default_group1 = get_group1_default_variant()
-            variant_key = st.selectbox(
-                "Variant / preset",
-                group1_keys,
-                index=group1_keys.index(default_group1),
-                format_func=lambda key: next(option.label for option in group1_options if option.key == key),
-            )
-        elif group_key == "exp2":
-            st.selectbox(
-                "Variant",
-                [base_preset_name],
-                index=0,
-                format_func=lambda _: group2_variant_label(base_preset_name),
-                disabled=True,
-            )
-            n_rules_override = st.selectbox(
-                "Number of ANFIS rules",
-                list(RULE_COUNT_OPTIONS),
-                index=list(RULE_COUNT_OPTIONS).index(6),
-            )
-        else:
-            group3_options = get_variant_options("exp3")
-            group3_keys = [option.key for option in group3_options]
-            default_group3 = get_group3_default_variant()
-            variant_key = st.selectbox(
-                "Ablation variant",
-                group3_keys,
-                index=group3_keys.index(default_group3),
-                format_func=lambda key: next(option.label for option in group3_options if option.key == key),
-            )
+        selected_label = st.selectbox(
+            "Ablation variant",
+            list(ABLATION_VARIANTS),
+            index=0,
+        )
+        selected_variant = ABLATION_VARIANTS[selected_label]
+        stored_variant = st.session_state.get("exp3_selected_variant")
+        if stored_variant is not None and stored_variant != selected_variant:
+            st.session_state.pop("results", None)
+            st.session_state.pop("exp3_result", None)
 
         data_path = st.text_input("Data path", "last_30s_segments")
 
         run_btn = st.button("Run / refresh experiment", use_container_width=True)
 
-    if run_btn:
-        selection = resolve_selection(
-            group_key=group_key,
-            variant_key=variant_key,
-            base_preset_name=base_preset_name,
-            n_rules_override=n_rules_override,
-        )
-        with st.spinner(f"Running {selection.run_name}..."):
-            st.session_state["results"] = run_streamlit_experiment(
-                project_root=root,
-                data_path=data_path,
-                selection=selection,
+        if run_btn:
+            previous_key = st.session_state.get("results", {}).get("cache_key")
+            selection = resolve_selection(
+                group_key=experiment_group,
+                variant_key=selected_variant,
+                base_preset_name=base_preset_name,
+                n_rules_override=None,
             )
+            if previous_key is not None:
+                st.session_state.pop("results", None)
+            with st.spinner(f"Running {selection.run_name}..."):
+                result = run_streamlit_experiment(
+                    project_root=root,
+                    data_path=data_path,
+                    selection=selection,
+                )
+                st.session_state["exp3_selected_variant"] = selected_variant
+                st.session_state["exp3_result"] = result
+                st.session_state["results"] = result

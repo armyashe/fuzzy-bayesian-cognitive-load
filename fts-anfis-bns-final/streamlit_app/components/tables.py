@@ -66,25 +66,6 @@ def compute_soft_influence_table(bn_trace: dict) -> pd.DataFrame | None:
     return pd.DataFrame(rows) if rows else None
 
 
-def compute_hard_debug_contribution_table(bn_trace: dict) -> pd.DataFrame:
-    contrib_rows = []
-    for class_id, class_name in [(0, "rest"), (1, "task")]:
-        class_likelihoods = _trace_class_mapping(
-            bn_trace.get("log_likelihoods", {}),
-            class_id,
-            class_name,
-        )
-        for sig, value in class_likelihoods.items():
-            contrib_rows.append(
-                {
-                    "class": class_name,
-                    "signal": sig,
-                    "log_contribution": round(float(value), 4),
-                }
-            )
-    return pd.DataFrame(contrib_rows)
-
-
 def _trace_class_mapping(mapping: dict, class_id: int, class_name: str) -> dict:
     """Read live traces and JSON-loaded traces, whose integer keys become strings."""
     for key in (class_id, str(class_id), class_name):

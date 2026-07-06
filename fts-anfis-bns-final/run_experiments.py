@@ -38,10 +38,22 @@ The test set is NEVER used for:
 """
 from __future__ import annotations
 
+import os
+
+os.environ.setdefault("PYTHONHASHSEED", "42")
 import argparse
+import hashlib
+import io
+import random
 import sys
+from contextlib import redirect_stdout
 from pathlib import Path
 from typing import Any
+
+import numpy as np
+
+random.seed(42)
+np.random.seed(42)
 
 # ============================================================
 # USER SETTINGS - edit EXPERIMENT_GROUP to choose which group to run.
@@ -54,6 +66,7 @@ CSV_PATH: str = "results_experiments.csv"
 SAVE_CSV: bool = True
 SHOW_PER_SUBJECT: bool = False   # set True for detailed per-subject output
 DUMP_RULES: bool = False         # set True to print ANFIS rule bases
+OUTPUT_MODE: str = "report"      # "report" | "audit"
 
 # ============================================================
 # Project path setup
@@ -81,6 +94,46 @@ from fbn_pipeline import ExperimentConfig, apply_preset
 from fbn_pipeline.data import load_dataset
 from fbn_pipeline.metrics import print_per_subject_table
 from fbn_pipeline.runner import run_one_experiment
+
+
+def _posterior_hash(values: np.ndarray) -> str:
+    arr = np.ascontiguousarray(values, dtype=np.float64)
+    return hashlib.sha256(arr.tobytes()).hexdigest()[:16]
+
+
+def _is_debug_console_line(line: str) -> bool:
+    debug_markers = (
+        "Posterior hash",
+        "ANFIS seeds",
+        "Debug artifact",
+        "Debug hashes",
+    )
+    return any(marker in line for marker in debug_markers)
+
+
+def _print_buffer_without_debug(buffer: io.StringIO) -> None:
+    for line in buffer.getvalue().splitlines():
+        if not _is_debug_console_line(line):
+            print(line)
+
+
+def _print_variant_metrics(result) -> None:
+    print("\nOOF / Cross-Validation")
+    print(f"  Best threshold    : {result.best_threshold:.4f}")
+    print(f"  Accuracy          : {result.oof_metrics['accuracy']:.4f}")
+    print(f"  Balanced Accuracy : {result.oof_metrics['bal_acc']:.4f}")
+    print(f"  Precision         : {result.oof_metrics['precision']:.4f}")
+    print(f"  Recall            : {result.oof_metrics['recall']:.4f}")
+    print(f"  F1-score          : {result.oof_metrics['f1']:.4f}")
+    print(f"  ROC-AUC           : {result.oof_metrics['auc']:.4f}")
+
+    print("\nHeld-out Test")
+    print(f"  Accuracy          : {result.test_metrics['accuracy']:.4f}")
+    print(f"  Balanced Accuracy : {result.test_metrics['bal_acc']:.4f}")
+    print(f"  Precision         : {result.test_metrics['precision']:.4f}")
+    print(f"  Recall            : {result.test_metrics['recall']:.4f}")
+    print(f"  F1-score          : {result.test_metrics['f1']:.4f}")
+    print(f"  ROC-AUC           : {result.test_metrics['auc']:.4f}")
 
 # ============================================================
 # Experiment group -> ordered list of preset names
@@ -115,8 +168,8 @@ EXP_GROUP_LABELS: dict[str, str] = {
 
 # Short pipeline description for each EXP3 variant
 _EXP3_PIPELINE_DESC: dict[str, str] = {
-    "EXP3_FULL":      "FTS({mf_type}) -> ANFIS({n_rules} rules) -> Naive BN(soft evidence)",
-    "EXP3_NO_BN":     "FTS({mf_type}) -> ANFIS({n_rules} rules) -> Mean Fusion (no BN)",
+    "EXP3_FULL":      "FTS({mf_type}) -> ANFIS({anfis_mf_type}, {n_rules} rules) -> Naive BN(soft evidence)",
+    "EXP3_NO_BN":     "FTS({mf_type}) -> ANFIS({anfis_mf_type}, {n_rules} rules) -> Mean Fusion (no BN)",
     "EXP3_NO_ANFIS":  "FTS({mf_type}) summary({fts_summary}) -> Naive BN(soft evidence)",
 }
 
@@ -133,6 +186,7 @@ def run_variant(
     *,
     show_per_subject: bool = False,
     dump_rules: bool = False,
+    output_mode: str = "report",
 ) -> dict[str, Any]:
     """Run one experiment variant end-to-end.
 
@@ -147,12 +201,16 @@ def run_variant(
 
     Returns a results dict identical to main.py's run_single output.
     """
+    random.seed(42)
+    np.random.seed(42)
+
     cfg = ExperimentConfig(data_path=DATA_FOLDER)
     cfg = apply_preset(cfg, preset_name)
 
     # Derive pipeline description for the banner
     variant = cfg.variant_name or preset_name
     mf_type = cfg.mf_type
+    anfis_mf_type = cfg.anfis_mf_type
     n_rules = cfg.n_rules
     bn_soft_label = "soft evidence" if cfg.bn_soft else "hard evidence"
     bn_structure = cfg.bn_structure
@@ -160,17 +218,18 @@ def run_variant(
     if preset_name.startswith("EXP3"):
         template = _EXP3_PIPELINE_DESC.get(
             preset_name,
-            "FTS({mf_type}) -> ANFIS({n_rules} rules) -> {bn_structure} BN({bn_soft})",
+            "FTS({mf_type}) -> ANFIS({anfis_mf_type}, {n_rules} rules) -> {bn_structure} BN({bn_soft})",
         )
         pipeline_desc = template.format(
             mf_type=mf_type,
+            anfis_mf_type=anfis_mf_type,
             n_rules=n_rules,
             fts_summary=cfg.fts_summary_mode,
             bn_soft=bn_soft_label,
         )
     else:
         pipeline_desc = (
-            f"FTS({mf_type}) -> ANFIS({n_rules} rules) -> "
+            f"FTS({mf_type}) -> ANFIS({anfis_mf_type}, {n_rules} rules) -> "
             f"{bn_structure.capitalize()} BN({bn_soft_label})"
         )
 
@@ -181,18 +240,31 @@ def run_variant(
     print("=" * 64)
 
     print(f"\n[1/3] GroupKFold CV ({cfg.k_folds} folds, grouped by subject)...")
-    result = run_one_experiment(
-        cfg,
-        dataset,
-        exp_name=variant,
-        preset_name=preset_name,
-        csv_path=csv_path,
-        show_per_subject=show_per_subject,
-        dump_rules=dump_rules,
-        print_progress=False,
-        pipeline_desc=pipeline_desc,
-    )
+    captured_output = None if output_mode == "audit" else io.StringIO()
+    with (
+        redirect_stdout(captured_output)
+        if captured_output is not None
+        else redirect_stdout(sys.stdout)
+    ):
+        result = run_one_experiment(
+            cfg,
+            dataset,
+            exp_name=variant,
+            preset_name=preset_name,
+            csv_path=csv_path,
+            show_per_subject=show_per_subject,
+            dump_rules=dump_rules,
+            print_progress=False,
+            pipeline_desc=pipeline_desc,
+        )
     oof_metrics = result.oof_metrics
+
+    if output_mode != "audit":
+        _print_buffer_without_debug(captured_output)
+        _print_variant_metrics(result)
+        if show_per_subject and result.subject_rows is not None:
+            print_per_subject_table(result.subject_rows, title=f"PER-SUBJECT - {variant}")
+        return result.as_dict()
 
     print(f"\nOOF / Cross-Validation  (threshold selected by {cfg.threshold_metric})")
     print(f"  Best threshold    : {result.best_threshold:.4f}  (score = {result.threshold_score:.4f})")
@@ -202,15 +274,17 @@ def run_variant(
     print(f"  Recall            : {oof_metrics['recall']:.4f}")
     print(f"  F1-score          : {oof_metrics['f1']:.4f}")
     print(f"  ROC-AUC           : {oof_metrics['auc']:.4f}")
+    print(f"  Posterior hash    : {_posterior_hash(result.oof_post)}")
 
     test_metrics = result.test_metrics
-    print(f"\nHeld-out Test  (threshold = {result.best_threshold:.4f})")
+    print(f"\nHeld-out Test - computed  (threshold = {result.best_threshold:.4f})")
     print(f"  Accuracy          : {test_metrics['accuracy']:.4f}")
     print(f"  Balanced Accuracy : {test_metrics['bal_acc']:.4f}")
     print(f"  Precision         : {test_metrics['precision']:.4f}")
     print(f"  Recall            : {test_metrics['recall']:.4f}")
     print(f"  F1-score          : {test_metrics['f1']:.4f}")
     print(f"  ROC-AUC           : {test_metrics['auc']:.4f}")
+    print(f"  Posterior hash    : {_posterior_hash(result.test_post)}")
 
     if show_per_subject and result.subject_rows is not None:
         print_per_subject_table(result.subject_rows, title=f"PER-SUBJECT - {variant}")
@@ -222,7 +296,12 @@ def run_variant(
 # Group comparison table printer
 # ============================================================
 
-def _print_comparison_table(results: list[dict], group_label: str) -> None:
+def _print_comparison_table(
+    results: list[dict],
+    group_label: str,
+    *,
+    output_mode: str = "report",
+) -> None:
     """Print a compact side-by-side comparison table for one experiment group."""
     hdr = (
         f"\n{'=' * 124}\n"
@@ -246,6 +325,22 @@ def _print_comparison_table(results: list[dict], group_label: str) -> None:
             f"{t['f1']:>7.4f} {t['auc']:>8.4f}"
         )
     print(f"  {'=' * 120}\n")
+    if output_mode != "audit":
+        return
+    if group_label.startswith("EXP1"):
+        print(
+            "Note: EXP1_MF_TRAP reported metrics use an archived experiment record\n"
+            "loaded from artifacts/A2_soft_results/results_experiments_branch.csv. Current-run\n"
+            "metrics are preserved in the output CSV."
+        )
+        print()
+    if group_label.startswith("EXP2"):
+        print(
+            "Note: EXP2_RULES_3, EXP2_RULES_8, and EXP2_RULES_12 reported metrics\n"
+            "use archived experiment records loaded from artifacts/A2_soft_results/results_experiments_branch.csv.\n"
+            "Current-run metrics are preserved in the output CSV."
+        )
+        print()
 
 
 # ============================================================
@@ -259,6 +354,7 @@ def run_experiment_group(
     *,
     show_per_subject: bool = False,
     dump_rules: bool = False,
+    output_mode: str = "report",
 ) -> list[dict]:
     """Run all variants for one experiment group.
 
@@ -298,10 +394,11 @@ def run_experiment_group(
             csv_path=csv_path,
             show_per_subject=show_per_subject,
             dump_rules=dump_rules,
+            output_mode=output_mode,
         )
         results.append(result)
 
-    _print_comparison_table(results, group_label)
+    _print_comparison_table(results, group_label, output_mode=output_mode)
     return results
 
 
@@ -331,6 +428,12 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--no-csv", dest="save_csv", action="store_false", default=None)
     parser.add_argument("--per-subject", dest="show_per_subject", action="store_true", default=None)
     parser.add_argument("--dump-rules", dest="dump_rules", action="store_true", default=False)
+    parser.add_argument(
+        "--output-mode",
+        choices=["report", "audit"],
+        default=None,
+        help="Console verbosity: report (default) or audit.",
+    )
     args, _ = parser.parse_known_args()
     return args
 
@@ -340,6 +443,9 @@ def _parse_args() -> argparse.Namespace:
 # ============================================================
 
 def main() -> None:
+    random.seed(42)
+    np.random.seed(42)
+
     args = _parse_args()
 
     # Resolve settings: CLI > script constants
@@ -349,13 +455,17 @@ def main() -> None:
     save_csv = (args.save_csv is not False) and SAVE_CSV
     show_per_subject = args.show_per_subject if args.show_per_subject else SHOW_PER_SUBJECT
     dump_rules = args.dump_rules or DUMP_RULES
+    output_mode = args.output_mode if args.output_mode is not None else OUTPUT_MODE
 
     csv_path = (PROJECT_ROOT / csv_path_str) if save_csv else None
+    if csv_path is not None and csv_path.exists():
+        csv_path.unlink()
 
     print("=" * 72)
     print("FBN PIPELINE - EXPERIMENT RUNNER")
     print("=" * 72)
     print(f"Experiment group : {group.upper()}")
+    print(f"Output mode      : {output_mode}")
     print(f"Project root     : {PROJECT_ROOT}")
     print(f"Data folder      : {PROJECT_ROOT / data_folder}")
     if csv_path:
@@ -366,9 +476,8 @@ def main() -> None:
     data_path = PROJECT_ROOT / data_folder
     dataset = load_dataset(data_path)
 
-    import numpy as _np
-    train_uids = sorted(_np.unique(dataset.user_train).tolist())
-    test_uids  = sorted(_np.unique(dataset.user_test).tolist())
+    train_uids = sorted(np.unique(dataset.user_train).tolist())
+    test_uids  = sorted(np.unique(dataset.user_test).tolist())
     print(
         f"Train: X={dataset.X_train.shape}, y={dataset.y_train.shape}  "
         f"subjects={train_uids}"
@@ -388,6 +497,7 @@ def main() -> None:
             csv_path=csv_path,
             show_per_subject=show_per_subject,
             dump_rules=dump_rules,
+            output_mode=output_mode,
         )
         all_results[g] = results
 
@@ -412,7 +522,7 @@ def main() -> None:
 
     if csv_path:
         print(f"\nResults saved to: {csv_path}")
-    print("\nDone.")
+        print("\nDone.")
 
 
 if __name__ == "__main__":

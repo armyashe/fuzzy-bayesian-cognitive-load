@@ -26,9 +26,14 @@ class FTSEncoder:
 
     VALID_NORM = {"total_sum", "row"}
 
+    DEFAULT_SIGNAL_NAMES = ("Temp", "HR", "GSR", "RR")
+
     def __init__(self, n_sets: int = 3, mf_type: str = "triangular",
                  mf_sigma_scale: float = 0.5, gbell_b: float = 2.0,
-                 norm_mode: str = "total_sum", robust: bool = False):
+                 norm_mode: str = "total_sum", robust: bool = False,
+                 trap_plateau_scale: float = 0.15,
+                 trap_width_scale: float = 1.0,
+                 grid_margin_scale: float = 0.05):
         assert mf_type in self.VALID_MF, (
             f"mf_type must be one of {self.VALID_MF}, got '{mf_type}'"
         )
@@ -41,6 +46,9 @@ class FTSEncoder:
         self.gbell_b = gbell_b                # gbell shape exponent
         self.norm_mode = norm_mode            # total_sum | row
         self.robust = robust                  # percentile clipping + quantile centers
+        self.trap_plateau_scale = trap_plateau_scale
+        self.trap_width_scale = trap_width_scale
+        self.grid_margin_scale = grid_margin_scale
         self.fitted_ = False
 
     # ------------------------------------------------------------------
@@ -59,6 +67,14 @@ class FTSEncoder:
 
         # Per-signal median for NaN imputation
         self.medians_ = np.nanmedian(X, axis=(0, 2))  # (S,)
+        self.training_min_ = np.full(S, np.nan)
+        self.training_max_ = np.full(S, np.nan)
+        for s in range(S):
+            vals = X[:, s, :].ravel()
+            vals = vals[~np.isnan(vals)]
+            if vals.size:
+                self.training_min_[s] = float(vals.min())
+                self.training_max_[s] = float(vals.max())
 
         if self.mf_type == "triangular":
             self._fit_triangular(X)
@@ -131,20 +147,28 @@ class FTSEncoder:
                 rng = vmax - vmin
                 if rng < 1e-10:
                     rng = 1.0
-                margin = rng * 0.05
+                margin = rng * self.grid_margin_scale
                 vmin_e, vmax_e = vmin - margin, vmax + margin
                 centers = np.linspace(vmin_e, vmax_e, self.n_sets)
                 spacing = ((vmax_e - vmin_e) / (self.n_sets - 1)
                            if self.n_sets > 1 else rng)
 
             g: dict = {"centers": centers, "spacing": spacing}
+            if self.robust:
+                g["universe_lower"] = float(np.min(vals_clipped))
+                g["universe_upper"] = float(np.max(vals_clipped))
+            else:
+                g["universe_lower"] = float(vmin_e)
+                g["universe_upper"] = float(vmax_e)
 
             # Pre-compute trapezoid (a,b,c,d) tuples
             if self.mf_type == "trapezoid":
-                half_p = spacing * 0.15          # narrow plateau
+                half_p = spacing * self.trap_plateau_scale
+                left_width = spacing * self.trap_width_scale
+                right_width = spacing * self.trap_width_scale
                 g["trap_params"] = [
-                    (centers[k] - spacing, centers[k] - half_p,
-                     centers[k] + half_p, centers[k] + spacing)
+                    (centers[k] - left_width, centers[k] - half_p,
+                     centers[k] + half_p, centers[k] + right_width)
                     for k in range(self.n_sets)
                 ]
 
@@ -193,7 +217,79 @@ class FTSEncoder:
         return np.hstack(all_feats)  # (N, 36)
 
     def fit_transform(self, X: np.ndarray) -> np.ndarray:
-        return self.fit(X).transform(X)
+        features = self.fit(X).transform(X)
+        self._cache_training_transition_summary(features)
+        return features
+
+    def get_summary(self, signal_names: list[str] | tuple[str, ...] | None = None) -> list[dict]:
+        """Return JSON-serializable metadata from the fitted FTS encoder."""
+        assert self.fitted_, "Call .fit() first"
+        names = self._resolve_signal_names(signal_names)
+        summary = []
+        for s, signal in enumerate(names):
+            lower, upper = self._universe_bounds(s)
+            summary.append(
+                {
+                    "signal": signal,
+                    "membership_type": self.mf_type,
+                    "n_sets": int(self.n_sets),
+                    "norm_mode": self.norm_mode,
+                    "training_min": float(self.training_min_[s]),
+                    "training_max": float(self.training_max_[s]),
+                    "universe_lower": float(lower),
+                    "universe_upper": float(upper),
+                    "fuzzy_sets": self._fuzzy_set_summary(s),
+                }
+            )
+        return summary
+
+    def get_encoder_info(self, signal_names: list[str] | tuple[str, ...] | None = None) -> list[dict]:
+        """Alias for dashboard callers."""
+        return self.get_summary(signal_names=signal_names)
+
+    def get_mean_training_transition_matrices(
+        self,
+        signal_names: list[str] | tuple[str, ...] | None = None,
+    ) -> dict[str, list[list[float]]] | None:
+        """Return train-only mean transition matrices cached by fit_transform()."""
+        matrices = getattr(self, "mean_training_transition_matrices_", None)
+        if matrices is None:
+            return None
+        names = self._resolve_signal_names(signal_names)
+        return {
+            names[s]: np.asarray(matrices[s], dtype=float).tolist()
+            for s in range(min(len(names), len(matrices)))
+        }
+
+    def get_encoding_trace(
+        self,
+        X_single: np.ndarray,
+        signal_idx: int,
+        *,
+        n_timesteps: int = 10,
+    ) -> dict:
+        """Return raw values, memberships, transition matrix, and flat vector for one signal."""
+        assert self.fitted_, "Call .fit() first"
+        X_one = X_single[np.newaxis, ...]
+        X_one = self._impute(X_one)
+        values = X_one[:, signal_idx, :]
+        mu = self._memberships(values, signal_idx)[0]
+        trans = self.get_transition_matrix(X_single, signal_idx)
+        steps = min(int(n_timesteps), values.shape[1])
+        state_names = self._state_names()
+        return {
+            "raw_values": values[0, :steps].astype(float).tolist(),
+            "membership_degrees": [
+                {
+                    "t": int(t),
+                    "value": float(values[0, t]),
+                    **{state_names[k]: float(mu[t, k]) for k in range(self.n_sets)},
+                }
+                for t in range(steps)
+            ],
+            "transition_matrix": trans.astype(float).tolist(),
+            "flattened_vector": trans.reshape(-1).astype(float).tolist(),
+        }
 
     # ------------------------------------------------------------------
     # Single-sample transition matrix (for explainability)
@@ -316,3 +412,74 @@ class FTSEncoder:
         mu_sum = np.where(mu_sum < 1e-10, 1.0, mu_sum)
         mu = mu / mu_sum
         return mu
+
+    def _cache_training_transition_summary(self, features: np.ndarray) -> None:
+        feat_per_signal = self.n_sets * self.n_sets
+        matrices = []
+        for s in range(self.n_signals):
+            start = s * feat_per_signal
+            end = start + feat_per_signal
+            sig_features = features[:, start:end]
+            matrices.append(sig_features.reshape(-1, self.n_sets, self.n_sets).mean(axis=0))
+        self.mean_training_transition_matrices_ = matrices
+
+    def _resolve_signal_names(self, signal_names):
+        if signal_names is None:
+            signal_names = self.DEFAULT_SIGNAL_NAMES
+        names = list(signal_names)
+        if len(names) < self.n_signals:
+            names.extend(f"Signal {i + 1}" for i in range(len(names), self.n_signals))
+        return names[: self.n_signals]
+
+    def _state_names(self) -> list[str]:
+        if self.n_sets == 3:
+            return ["Low", "Medium", "High"]
+        if self.n_sets == 5:
+            return ["Very Low", "Low", "Medium", "High", "Very High"]
+        return [f"State {i + 1}" for i in range(self.n_sets)]
+
+    def _universe_bounds(self, signal_idx: int) -> tuple[float, float]:
+        if self.mf_type == "triangular":
+            params = self.mf_params_[signal_idx]
+            return min(p[0] for p in params), max(p[2] for p in params)
+        if self.mf_type == "trapezoid":
+            params = self.grid_[signal_idx]["trap_params"]
+            return min(p[0] for p in params), max(p[3] for p in params)
+        g = self.grid_[signal_idx]
+        return g["universe_lower"], g["universe_upper"]
+
+    def _fuzzy_set_summary(self, signal_idx: int) -> dict[str, dict]:
+        names = self._state_names()
+        sets = {}
+        if self.mf_type == "triangular":
+            for name, (a, b, c) in zip(names, self.mf_params_[signal_idx]):
+                sets[name] = {
+                    "a": float(a),
+                    "b": float(b),
+                    "c": float(c),
+                    "center": float(b),
+                }
+        elif self.mf_type == "gaussian":
+            g = self.grid_[signal_idx]
+            sigma = float(g["spacing"] * self.mf_sigma_scale)
+            for name, center in zip(names, g["centers"]):
+                sets[name] = {"center": float(center), "sigma": sigma}
+        elif self.mf_type == "trapezoid":
+            for name, (a, b, c, d) in zip(names, self.grid_[signal_idx]["trap_params"]):
+                sets[name] = {
+                    "a": float(a),
+                    "b": float(b),
+                    "c": float(c),
+                    "d": float(d),
+                    "center": float((b + c) / 2.0),
+                }
+        elif self.mf_type == "gbell":
+            g = self.grid_[signal_idx]
+            a_width = float(g["spacing"] * self.mf_sigma_scale)
+            for name, center in zip(names, g["centers"]):
+                sets[name] = {
+                    "a": a_width,
+                    "b": float(self.gbell_b),
+                    "center": float(center),
+                }
+        return sets

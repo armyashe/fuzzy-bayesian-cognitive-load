@@ -199,55 +199,158 @@ class BNFusion:
         -------
         posteriors : ndarray, shape (N,)
         """
-        if self.soft:
-            return self._predict_soft(probs)
-        return self._predict_hard(probs)
+        probs = np.atleast_2d(np.asarray(probs, dtype=float))
+        return np.array([self._infer_single(row)[0] for row in probs], dtype=float)
 
     def _predict_hard(self, probs: np.ndarray) -> np.ndarray:
         """Hard-evidence Naive Bayes with optional signal weighting."""
-        evidence = self._discretise(probs)
-        N = evidence.shape[0]
-        posteriors = np.zeros(N)
-        w = self.signal_weights_
-
-        for i in range(N):
-            log_p = np.zeros(2)
-            for c in range(2):
-                log_p[c] = np.log(self.prior_[c] + 1e-10)
-                for s in range(self.n_signals_):
-                    log_p[c] += w[s] * np.log(
-                        self.cpts_[s][c, evidence[i, s]] + 1e-10
-                    )
-            # Stable softmax
-            log_p -= log_p.max()
-            p = np.exp(log_p)
-            p /= p.sum()
-            posteriors[i] = p[1]
-
-        return posteriors
+        return np.array([self._infer_single(row, evidence_mode="hard")[0] for row in probs])
 
     def _predict_soft(self, probs: np.ndarray) -> np.ndarray:
         """Soft-evidence Naive Bayes: sum_b mu_b(p) * CPT[c, b]."""
-        mem = self._soft_membership(probs)
-        N = probs.shape[0]
-        posteriors = np.zeros(N)
+        return np.array([self._infer_single(row, evidence_mode="soft")[0] for row in probs])
+
+    def _infer_single(
+        self,
+        probs_single: np.ndarray,
+        *,
+        evidence_mode: str | None = None,
+    ) -> tuple[float, dict]:
+        """Single source of truth for hard and soft naive-BN inference."""
+        probs_single = np.asarray(probs_single, dtype=float).reshape(-1)
+        mode = evidence_mode or ("soft" if self.soft else "hard")
+        if mode not in {"hard", "soft"}:
+            raise ValueError(f"Unknown evidence_mode: {mode!r}")
+        if mode == "soft":
+            return self._infer_single_soft(probs_single)
+        return self._infer_single_hard(probs_single)
+
+    def _normalise_log_scores(self, log_p: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+        shifted = log_p - log_p.max()
+        scores = np.exp(shifted)
+        posterior = scores / scores.sum()
+        return posterior, scores
+
+    def _infer_single_hard(self, probs_single: np.ndarray) -> tuple[float, dict]:
+        ev = self._discretise(probs_single.reshape(1, -1))[0]
         w = self.signal_weights_
 
-        for i in range(N):
-            log_p = np.zeros(2)
-            for c in range(2):
-                log_p[c] = np.log(self.prior_[c] + 1e-10)
-                for s in range(self.n_signals_):
-                    # Weighted CPT lookup: sum_b mu_b * P(b|c)
-                    p_ev = np.dot(mem[i, s, :], self.cpts_[s][c, :])
-                    log_p[c] += w[s] * np.log(p_ev + 1e-10)
-            # Stable softmax
-            log_p -= log_p.max()
-            p = np.exp(log_p)
-            p /= p.sum()
-            posteriors[i] = p[1]
+        log_p = np.zeros(2)
+        contribs: dict = {0: {}, 1: {}}
+        for c in range(2):
+            log_p[c] = np.log(self.prior_[c] + 1e-10)
+            for s in range(self.n_signals_):
+                name = SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"
+                ll = np.log(self.cpts_[s][c, ev[s]] + 1e-10)
+                contribs[c][name] = float(w[s] * ll)
+                log_p[c] += w[s] * ll
 
-        return posteriors
+        posterior, scores = self._normalise_log_scores(log_p)
+        ev_bins = {
+            SIGNAL_NAMES[s]: self.bin_names_[ev[s]]
+            for s in range(self.n_signals_)
+        }
+        trace = {
+            "mode": "hard",
+            "evidence_mode": "hard",
+            "prior": {"rest": float(self.prior_[0]), "task": float(self.prior_[1])},
+            "log_scores": {"rest": float(log_p[0]), "task": float(log_p[1])},
+            "total_scores": {"rest": float(scores[0]), "task": float(scores[1])},
+            "evidence_bins": ev_bins,
+            "posterior_task": float(posterior[1]),
+            "posterior_rest": float(posterior[0]),
+            "log_likelihoods": contribs,
+            "signal_weights": self.get_signal_weights(),
+        }
+        return float(posterior[1]), trace
+
+    def _infer_single_soft(self, probs_single: np.ndarray) -> tuple[float, dict]:
+        p_arr = probs_single.reshape(1, -1)
+        mem = self._soft_membership(p_arr)
+        w = self.signal_weights_
+
+        log_p = np.zeros(2)
+        contribs: dict = {0: {}, 1: {}}
+        effective_likelihoods: dict = {"rest": {}, "task": {}}
+        soft_trace_rows = []
+
+        for c in range(2):
+            cls = "rest" if c == 0 else "task"
+            log_p[c] = np.log(self.prior_[c] + 1e-10)
+            for s in range(self.n_signals_):
+                name = SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"
+                p_ev = float(np.dot(mem[0, s, :], self.cpts_[s][c, :]))
+                effective_likelihoods[cls][name] = p_ev
+                ll = w[s] * np.log(p_ev + 1e-10)
+                contribs[c][name] = float(ll)
+                log_p[c] += ll
+
+        posterior, scores = self._normalise_log_scores(log_p)
+
+        anfis_probs: dict = {
+            (SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"): float(probs_single[s])
+            for s in range(self.n_signals_)
+        }
+        soft_memberships: dict = {}
+        dominant_bins = {}
+        for s in range(self.n_signals_):
+            name = SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"
+            memberships = {
+                self.bin_names_[b]: float(mem[0, s, b])
+                for b in range(self.n_bins)
+            }
+            cpt_rest = {
+                self.bin_names_[b]: float(self.cpts_[s][0, b])
+                for b in range(self.n_bins)
+            }
+            cpt_task = {
+                self.bin_names_[b]: float(self.cpts_[s][1, b])
+                for b in range(self.n_bins)
+            }
+            soft_memberships[name] = memberships
+            dominant_bins[name] = self.bin_names_[int(np.argmax(mem[0, s, :]))]
+            soft_trace_rows.append(
+                {
+                    "signal": name,
+                    "anfis_probability": float(probs_single[s]),
+                    "bin_memberships": memberships,
+                    "cpt_rest": cpt_rest,
+                    "cpt_task": cpt_task,
+                    "likelihood_rest": effective_likelihoods["rest"][name],
+                    "likelihood_task": effective_likelihoods["task"][name],
+                    "dominant_bin_for_interpretation_only": dominant_bins[name],
+                }
+            )
+
+        log_likelihood_ratio = {
+            (SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"): (
+                contribs[1][SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"]
+                - contribs[0][SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"]
+            )
+            for s in range(self.n_signals_)
+        }
+
+        trace = {
+            "mode": "soft",
+            "evidence_mode": "soft",
+            "prior": {"rest": float(self.prior_[0]), "task": float(self.prior_[1])},
+            "log_scores": {"rest": float(log_p[0]), "task": float(log_p[1])},
+            "total_scores": {"rest": float(scores[0]), "task": float(scores[1])},
+            "anfis_probs": anfis_probs,
+            "dominant_bins": dominant_bins,
+            "evidence_bins": dominant_bins,
+            "soft_memberships": soft_memberships,
+            "effective_likelihoods": effective_likelihoods,
+            "soft_evidence_trace": soft_trace_rows,
+            "log_likelihoods": contribs,
+            "log_likelihood_ratio": log_likelihood_ratio,
+            "posterior_task": float(posterior[1]),
+            "posterior_rest": float(posterior[0]),
+            "final_posterior_task": float(posterior[1]),
+            "final_posterior_rest": float(posterior[0]),
+            "signal_weights": self.get_signal_weights(),
+        }
+        return float(posterior[1]), trace
 
     def predict(self, probs: np.ndarray,
                 threshold: float = 0.5) -> np.ndarray:
@@ -296,43 +399,11 @@ class BNFusion:
         -------
         dict - see _explain_sample_hard / _explain_sample_soft for keys.
         """
-        if self.soft:
-            return self._explain_sample_soft(probs_single)
-        return self._explain_sample_hard(probs_single)
+        return self._infer_single(probs_single)[1]
 
     def _explain_sample_hard(self, probs_single: np.ndarray) -> dict:
         """Hard-evidence inference trace (original logic)."""
-        ev = self._discretise(probs_single.reshape(1, -1))[0]
-        w = self.signal_weights_
-
-        log_p = np.zeros(2)
-        contribs: dict = {0: {}, 1: {}}
-        for c in range(2):
-            log_p[c] = np.log(self.prior_[c] + 1e-10)
-            for s in range(self.n_signals_):
-                name = (
-                    SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"
-                )
-                ll = np.log(self.cpts_[s][c, ev[s]] + 1e-10)
-                contribs[c][name] = float(w[s] * ll)
-                log_p[c] += w[s] * ll
-
-        log_p -= log_p.max()
-        p = np.exp(log_p)
-        p /= p.sum()
-
-        ev_bins = {
-            SIGNAL_NAMES[s]: self.bin_names_[ev[s]]
-            for s in range(self.n_signals_)
-        }
-        return {
-            "mode": "hard",
-            "evidence_bins": ev_bins,
-            "posterior_task": float(p[1]),
-            "posterior_rest": float(p[0]),
-            "log_likelihoods": contribs,
-            "signal_weights": self.get_signal_weights(),
-        }
+        return self._infer_single_hard(probs_single)[1]
 
     def _explain_sample_soft(self, probs_single: np.ndarray) -> dict:
         """
@@ -343,82 +414,4 @@ class BNFusion:
         Instead, the effective likelihood for each signal is the expectation
         of CPT likelihoods under the Gaussian membership distribution over bins.
         """
-        p_arr = probs_single.reshape(1, -1)
-        # shape (1, S, n_bins)
-        mem = self._soft_membership(p_arr)
-        w = self.signal_weights_
-
-        log_p = np.zeros(2)
-        contribs: dict = {0: {}, 1: {}}
-        effective_likelihoods: dict = {"rest": {}, "task": {}}
-
-        for c in range(2):
-            cls = "rest" if c == 0 else "task"
-            log_p[c] = np.log(self.prior_[c] + 1e-10)
-            for s in range(self.n_signals_):
-                name = SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"
-                # Soft evidence mode:
-                # We do not use a single hard bin as evidence.
-                # Instead, the effective likelihood for each signal is the expectation
-                # of CPT likelihoods under the Gaussian membership distribution over bins.
-                p_ev = float(np.dot(mem[0, s, :], self.cpts_[s][c, :]))
-                effective_likelihoods[cls][name] = p_ev
-                ll = w[s] * np.log(p_ev + 1e-10)
-                contribs[c][name] = float(ll)
-                log_p[c] += ll
-
-        log_p -= log_p.max()
-        p = np.exp(log_p)
-        p /= p.sum()
-
-        # Build anfis_probs dict
-        anfis_probs: dict = {
-            (SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"): float(probs_single[s])
-            for s in range(self.n_signals_)
-        }
-
-        # Soft memberships
-        soft_memberships: dict = {}
-        for s in range(self.n_signals_):
-            name = SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"
-            soft_memberships[name] = {
-                self.bin_names_[b]: float(mem[0, s, b])
-                for b in range(self.n_bins)
-            }
-
-        # Dominant bin - argmax of soft membership, for visualization only.
-        # In soft mode, evidence_bins only means dominant bin for visualization.
-        # Actual inference uses soft_memberships.
-        dominant_bins = {
-            (SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"): self.bin_names_[int(np.argmax(mem[0, s, :]))]
-            for s in range(self.n_signals_)
-        }
-
-        # log_likelihood_ratio[s] = LL_task(s) - LL_rest(s)
-        # Positive -> supports TASK; negative -> supports REST.
-        log_likelihood_ratio = {
-            (SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"): (
-                contribs[1][SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"]
-                - contribs[0][SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"]
-            )
-            for s in range(self.n_signals_)
-        }
-
-        return {
-            "mode": "soft",
-            "anfis_probs": anfis_probs,
-            # dominant_bins: argmax-bin per signal, for visualization only.
-            "dominant_bins": dominant_bins,
-            # In soft mode, evidence_bins only means dominant bin for visualization.
-            # Actual inference uses soft_memberships.
-            "evidence_bins": dominant_bins,
-            "soft_memberships": soft_memberships,
-            "effective_likelihoods": effective_likelihoods,
-            "log_likelihoods": contribs,
-            "log_likelihood_ratio": log_likelihood_ratio,
-            "posterior_task": float(p[1]),
-            "posterior_rest": float(p[0]),
-            "final_posterior_task": float(p[1]),
-            "final_posterior_rest": float(p[0]),
-            "signal_weights": self.get_signal_weights(),
-        }
+        return self._infer_single_soft(probs_single)[1]

@@ -1,5 +1,5 @@
 from .ablation import Ablation, ABLATION_CHOICES, ABLATION_DESCRIPTIONS
-from .config import ExperimentConfig, setup_seed
+from .config import ExperimentConfig, assert_thesis_config, setup_seed
 from .presets import apply_preset
 from .results import CvResult, RunResult, TestResult, TrainedModels
 
@@ -13,5 +13,6 @@ __all__ = [
     "TestResult",
     "TrainedModels",
     "apply_preset",
+    "assert_thesis_config",
     "setup_seed",
 ]

@@ -109,9 +109,21 @@ def retrain_and_test_result(
         bn = make_bn(cfg)
         bn.fit(tr_evidence, y_train, signal_weights=sw)
         te_post = bn.predict_proba(te_evidence)
-        models = TrainedModels(fts=fts, bn=bn, anfis_list=None, test_evidence=te_evidence)
+        models = TrainedModels(
+            fts=fts,
+            bn=bn,
+            anfis_list=None,
+            test_evidence=te_evidence,
+            train_evidence=tr_evidence,
+        )
     else:
-        tr_probs, te_probs, anfis_models = fit_signal_models(F_tr, F_te, y_train, cfg)
+        tr_probs, te_probs, anfis_models = fit_signal_models(
+            F_tr,
+            F_te,
+            y_train,
+            cfg,
+            seed_offset=cfg.final_seed_offset,
+        )
         tr_probs, te_probs = calibrate_probs(tr_probs, te_probs, y_train, cfg.calibrate)
 
         if cfg.ablation == Ablation.NO_BN:
@@ -128,6 +140,7 @@ def retrain_and_test_result(
             bn=bn,
             anfis_list=anfis_models,
             test_evidence=te_probs,
+            train_evidence=tr_probs,
         )
 
     y_pred = (te_post >= threshold).astype(int)

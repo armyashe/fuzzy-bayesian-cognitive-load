@@ -603,6 +603,9 @@ class TANFusion:
             log_likelihoods  : {class_idx -> {signal_name -> log_contribution}}
             structure        : learned BN structure (see get_structure())
         """
+        if self.soft:
+            return self._explain_sample_soft(probs_single)
+
         ev = self._discretise(probs_single.reshape(1, -1))[0]
 
         log_p = np.zeros(2)
@@ -634,6 +637,8 @@ class TANFusion:
         q /= q.sum()
 
         return {
+            "mode": "hard",
+            "evidence_mode": "hard",
             "evidence_bins": {
                 SIGNAL_NAMES[s]: self.bin_names_[ev[s]]
                 for s in range(self.n_signals_)
@@ -642,4 +647,43 @@ class TANFusion:
             "posterior_rest": float(q[0]),
             "log_likelihoods": contribs,
             "structure": self.get_structure(),
+        }
+
+    def _explain_sample_soft(self, probs_single: np.ndarray) -> dict:
+        """Soft TAN trace that uses the same posterior path as predict_proba()."""
+        probs_single = np.asarray(probs_single, dtype=float).reshape(-1)
+        p_arr = probs_single.reshape(1, -1)
+        mem = self._soft_membership(p_arr)
+        posterior_task = float(self.predict_proba(p_arr)[0])
+        posterior_rest = float(1.0 - posterior_task)
+
+        soft_memberships: dict = {}
+        dominant_bins: dict = {}
+        for s in range(self.n_signals_):
+            name = SIGNAL_NAMES[s] if s < len(SIGNAL_NAMES) else f"S{s}"
+            soft_memberships[name] = {
+                self.bin_names_[b]: float(mem[0, s, b])
+                for b in range(self.n_bins)
+            }
+            dominant_bins[name] = self.bin_names_[int(np.argmax(mem[0, s, :]))]
+
+        return {
+            "mode": "soft",
+            "evidence_mode": "soft",
+            "anfis_probs": {
+                SIGNAL_NAMES[s]: float(probs_single[s])
+                for s in range(self.n_signals_)
+            },
+            "dominant_bins": dominant_bins,
+            "evidence_bins": dominant_bins,
+            "soft_memberships": soft_memberships,
+            "posterior_task": posterior_task,
+            "posterior_rest": posterior_rest,
+            "final_posterior_task": posterior_task,
+            "final_posterior_rest": posterior_rest,
+            "structure": self.get_structure(),
+            "note": (
+                "Soft TAN inference marginalizes the joint evidence distribution; "
+                "dominant bins are for interpretation only."
+            ),
         }
