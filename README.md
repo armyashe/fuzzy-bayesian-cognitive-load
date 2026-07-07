@@ -10,6 +10,7 @@ The model is designed for research-oriented cognitive load estimation, with emph
 - ANFIS-based per-signal inference
 - Bayesian Network-based evidence fusion
 - subject-independent evaluation
+- interactive dataset visualization and exploratory analysis
 
 ---
 
@@ -84,6 +85,24 @@ The signal order used in the current implementation is:
 Temp, HR, GSR, RR
 ```
 
+### Dataset Visualization Dashboard
+
+The project includes an interactive dashboard for exploratory analysis of the cognitive load dataset.
+
+***Dashboard URL:***
+
+```text
+https://script.google.com/macros/s/AKfycbzy53w0DI3orn9estitNIplHlGfqFrwO0lXGzccOm0NuRMrgPuYw1xQhsXo7OdHOH9gpw/exec
+```
+
+The dashboard visualizes HR, GSR, RR, skin temperature, performance data, TLX workload, personality information, combined data, subject filters, task filters, metric filters, and grouping by task/level.
+
+***Dashboard demo:***
+
+[Watch the dashboard demo video](image/README/1783406369654.mp4)
+
+*This dashboard is intended for exploratory visualization and interpretation, while the model training pipeline is implemented separately in Python.*
+
 ---
 
 ## 3. Project Structure
@@ -118,24 +137,25 @@ project/
 
 ## 4. Main Files
 
-| File | Description |
-|---|---|
-| `main.py` | Main runner for loading data, running cross-validation, retraining, testing, and reporting |
-| `config.py` | Defines experiment configuration and presets |
-| `data.py` | Loads Excel data, stacks physiological signals, binarizes labels, and creates train/test splits |
-| `fts_encoder.py` | Converts raw time-series windows into fuzzy transition features |
-| `anfis_tsk.py` | Implements a 5-layer TSK/Sugeno ANFIS model |
-| `bn_fusion.py` | Implements Bayesian Network fusion for ANFIS outputs |
-| `pipeline.py` | Orchestrates FTS encoding, ANFIS training, BN fusion, cross-validation, and testing |
-| `metrics.py` | Computes evaluation metrics and threshold tuning |
-| `reporting.py` | Prints ANFIS rules, FTS transitions, BN CPTs, and saves experiment results |
+| File               | Description                                                                                     |
+| ------------------ | ----------------------------------------------------------------------------------------------- |
+| `main.py`        | Main runner for loading data, running cross-validation, retraining, testing, and reporting      |
+| `config.py`      | Defines experiment configuration and presets                                                    |
+| `data.py`        | Loads Excel data, stacks physiological signals, binarizes labels, and creates train/test splits |
+| `fts_encoder.py` | Converts raw time-series windows into fuzzy transition features                                 |
+| `anfis_tsk.py`   | Implements a 5-layer TSK/Sugeno ANFIS model                                                     |
+| `bn_fusion.py`   | Implements Bayesian Network fusion for ANFIS outputs                                            |
+| `pipeline.py`    | Orchestrates FTS encoding, ANFIS training, BN fusion, cross-validation, and testing             |
+| `metrics.py`     | Computes evaluation metrics and threshold tuning                                                |
+| `reporting.py`   | Prints ANFIS rules, FTS transitions, BN CPTs, and saves experiment results                      |
 
 ---
 
 ## 5. Methodology
 
 The proposed framework contains three main stages:
-![1778517358605](image/README/1778517358605.png)
+
+![1783357368812](image/README/1783357368812.png)
 
 ```text
 Raw physiological windows
@@ -151,138 +171,7 @@ Final cognitive load prediction
 
 ---
 
-## 6. Stage 1: Fuzzy Time Series Encoding
-
-For each physiological signal, the raw time-series window is transformed into fuzzy transition features.
-![1778491249779](image/README/1778491249779.png)
-Each signal value is fuzzified into linguistic states such as:
-
-```text
-Low, Medium, High
-```
-
-At each time step, the signal is represented by a fuzzy membership vector:
-
-```text
-μ_s(t) = [μ_L(x_s(t)), μ_M(x_s(t)), μ_H(x_s(t))]
-```
-
-The fuzzy transition matrix is computed as:
-
-```text
-T_ij = Σ_t μ_i(x_s(t)) · μ_j(x_s(t+1))
-```
-
-This matrix describes the degree to which the signal moves from fuzzy state `i` at time `t` to fuzzy state `j` at time `t+1`.
-
-For 3 fuzzy states, each signal produces:
-
-```text
-3 × 3 = 9 fuzzy transition features
-```
-
-With 4 physiological signals, the full FTS feature vector contains:
-
-```text
-4 × 9 = 36 features
-```
-
-Supported membership functions:
-
-- triangular
-- gaussian
-- trapezoid
-- generalized bell
-
----
-
-## 7. Stage 2: Per-Signal ANFIS Inference
-
-After FTS encoding, each signal is modeled by a separate ANFIS classifier.
-![1778516679409](image/README/1778516679409.png)
-
-For each signal:
-
-```text
-FTS features of one signal → ANFIS → P(task | signal)
-```
-
-The four ANFIS models produce:
-
-```text
-[p_Temp, p_HR, p_GSR, p_RR]
-```
-
-Each ANFIS follows a 5-layer TSK/Sugeno architecture:
-
-```text
-Layer 1: Gaussian membership functions
-Layer 2: Rule firing strengths
-Layer 3: Normalized firing strengths
-Layer 4: Linear TSK consequents
-Layer 5: Weighted output aggregation
-```
-
-The raw ANFIS output is passed through a sigmoid function:
-
-```text
-p_s = sigmoid(y_s)
-```
-
-where `p_s` is interpreted as the probability of the task class for signal `s`.
-
----
-
-## 8. Stage 3: Bayesian Network Fusion
-
-The Bayesian Network combines the four ANFIS probabilities into one final posterior probability.
-
-The current BN structure follows a Naive Bayes-style assumption:
-![1778490931791](image/README/1778490931791.png)
-
-The BN estimates:
-
-```text
-P(Task | E_Temp, E_HR, E_GSR, E_RR)
-```
-
-where each evidence node `E_s` is derived from the ANFIS output of signal `s`.
-
-The posterior is computed as:
-
-```text
-P(Task = c | evidence) ∝ P(Task = c) · Π_s P(E_s | Task = c)
-```
-
-The implementation supports two evidence modes.
-
-### Hard evidence
-
-ANFIS probabilities are discretized into bins, for example:
-
-```text
-low, med, high
-```
-
-or with 5 bins:
-
-```text
-very_low, low, med, high, very_high
-```
-
-### Soft evidence
-
-Instead of assigning one hard bin, the model uses Gaussian membership over bin centers:
-
-```text
-P(E_s | Task = c) = Σ_b μ_b(p_s) · P(bin_b | Task = c)
-```
-
-This helps reduce sensitivity when ANFIS probabilities are close to bin boundaries.
-
----
-
-## 9. Evaluation Protocol
+## 6. Evaluation Protocol
 
 The project uses subject-independent evaluation.
 
@@ -318,19 +207,19 @@ Metrics include:
 
 ---
 
-## 10. Experiment Presets
+## 7. Experiment Presets
 
 The project provides several predefined experiment presets in `config.py`.
 
-| Preset | Description |
-|---|---|
-| `A1` | Triangular FTS, 3 fuzzy sets, default BN |
-| `A2` | Gaussian FTS, row-normalized transition matrix, 5 BN bins |
-| `A2_soft` | Same as A2, with soft Bayesian evidence |
+| Preset      | Description                                                      |
+| ----------- | ---------------------------------------------------------------- |
+| `A1`      | Triangular FTS, 3 fuzzy sets, default BN                         |
+| `A2`      | Gaussian FTS, row-normalized transition matrix, 5 BN bins        |
+| `A2_soft` | Same as A2, with soft Bayesian evidence                          |
 | `A2_plus` | Adds robust FTS, scaling, reliability weighting, and calibration |
-| `A3` | Trapezoidal FTS with more fuzzy sets and more ANFIS rules |
-| `A4` | Generalized bell membership functions |
-| `A5` | Gaussian FTS with 4 fuzzy sets |
+| `A3`      | Trapezoidal FTS with more fuzzy sets and more ANFIS rules        |
+| `A4`      | Generalized bell membership functions                            |
+| `A5`      | Gaussian FTS with 4 fuzzy sets                                   |
 
 The default preset in `main.py` is:
 
@@ -340,55 +229,23 @@ PRESET_NAME = "A2_soft"
 
 ---
 
-## 11. Installation
-
-Create a virtual environment:
-
-### Windows PowerShell
-
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-```
-
-### macOS / Linux
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-Install dependencies:
-
-```bash
-pip install numpy pandas scikit-learn openpyxl
-```
-
-If using notebooks:
-
-```bash
-pip install notebook ipykernel
-```
-
----
-
-## 12. How to Run
+## 8. How to Run
 
 Run from the project root:
 
 ```bash
-python main.py
+python -m streamlit run app.py
 ```
 
 Or run inside a notebook:
 
 ```python
-%run main.py
+%run ../run_experiments.py --group all --csv-path results_experiments.csv
 ```
 
 ---
 
-## 13. Main Configuration
+## 9. Main Configuration
 
 The main settings are located in `main.py`:
 
@@ -456,7 +313,7 @@ rank_metric
 
 ---
 
-## 14. Output
+## 10. Output
 
 After running `main.py`, the program prints:
 
@@ -470,12 +327,12 @@ After running `main.py`, the program prints:
 If CSV saving is enabled, the results are written to:
 
 ```text
-results_main.csv
+results_experiment.csv
 ```
 
 ---
 
-## 15. Explainability
+## 12. Explainability
 
 The project provides several explanation mechanisms.
 
@@ -508,36 +365,7 @@ P(E_s = bin | Task = task)
 
 ### Sample-level explanation
 
-For a single test sample, the model can report:
-
-- ANFIS probability of each signal
-- BN evidence bin of each signal
-- posterior probability of task
-- posterior probability of rest
-- log-likelihood contribution of each signal
-
----
-
-## 16. Relation to Previous Work
-
-This work extends a previous classical Bayesian Network approach where physiological features were modeled using crisp states.
-
-Previous implementation:
-
-```text
-https://github.com/TyTy7023/cogLoad_experiment.git
-```
-
-Compared with the previous BN-based approach, this project introduces:
-
-- fuzzy linguistic modeling of physiological signals
-- fuzzy temporal transition features
-- ANFIS-based nonlinear per-signal inference
-- Bayesian Network fusion of fuzzy evidence
-- more interpretable sample-level reasoning
-
----
-
+![1783358255493](image/README/1783358255493.png)
 
 ## Reference
 
