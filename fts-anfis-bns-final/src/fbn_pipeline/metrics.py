@@ -116,6 +116,7 @@ def per_subject_metrics(
     y_pred: np.ndarray,
     y_prob: np.ndarray,
     subjects: np.ndarray,
+    subject_order: list[str] | None = None,
 ) -> list[dict]:
     """Compute Acc / Balanced-Acc / Macro-F1 / F1 / AUC per subject.
 
@@ -129,7 +130,14 @@ def per_subject_metrics(
     -------
     rows : list[dict]  with keys  subject, n, acc, bal_acc, macro_f1, f1, auc
     """
-    unique = np.unique(subjects)
+    if subject_order is None:
+        unique = np.unique(subjects)
+    else:
+        present = {str(subject) for subject in np.unique(subjects)}
+        unique = np.array(
+            [subject for subject in subject_order if str(subject) in present],
+            dtype=object,
+        )
     rows: list[dict] = []
     for uid in unique:
         mask = subjects == uid

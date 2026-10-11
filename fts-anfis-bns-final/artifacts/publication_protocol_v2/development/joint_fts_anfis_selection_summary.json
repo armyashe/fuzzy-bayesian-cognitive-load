@@ -1,0 +1,25 @@
+{
+  "balanced_accuracy_matrix_csv": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\development\\joint_fts_anfis_balanced_accuracy_matrix.csv",
+  "created_at_utc": "2026-06-28T16:22:05+00:00",
+  "fold_assignment_hash": "90bc408cd6a1a6e21b1d711df2ea62abd752a32246dbbfe44a322dc6a12f7ae0",
+  "k_folds": 5,
+  "long_form_csv": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\development\\joint_fts_anfis_selection_oof.csv",
+  "protocol_version": "publication_protocol_v2",
+  "report_md": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\development\\joint_fts_anfis_selection_report.md",
+  "seed": 42,
+  "selected_configuration_id": "PUB_JOINT__MF_GAUSSIAN__R6",
+  "selected_mf_type": "gaussian",
+  "selected_n_rules": 6,
+  "selected_oof_balanced_accuracy": 0.6236,
+  "selected_oof_macro_f1": 0.6222,
+  "selected_oof_roc_auc": 0.6201,
+  "selected_threshold": 0.55,
+  "selection_metric": "oof_balanced_accuracy",
+  "selection_mode": "joint_fts_anfis_selection",
+  "tie_break_rules": [
+    "oof_macro_f1",
+    "oof_auc",
+    "lower_model_complexity",
+    "configuration_id_lexicographic"
+  ]
+}

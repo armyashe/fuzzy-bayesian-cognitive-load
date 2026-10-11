@@ -4,6 +4,7 @@ import hashlib
 import json
 from datetime import datetime, timezone
 from pathlib import Path
+import os
 
 import numpy as np
 from threadpoolctl import threadpool_limits
@@ -188,6 +189,7 @@ def run_development(
     configuration_id: str | None = None,
     threshold_metric: str | None = None,
     print_progress: bool = True,
+    fold_indices: list[tuple[np.ndarray, np.ndarray]] | None = None,
 ) -> DevelopmentResult:
     """Run development-only GroupKFold OOF evaluation on training data."""
     setup_seed(cfg.seed)
@@ -197,7 +199,13 @@ def run_development(
         print("\n[development] Running GroupKFold CV on training subjects only...")
 
     with _deterministic_thread_context():
-        cv = run_cv_result(X_train, y_train, user_train, cfg)
+        cv = run_cv_result(
+            X_train,
+            y_train,
+            user_train,
+            cfg,
+            fold_indices=fold_indices,
+        )
 
     threshold_metric_name = threshold_metric or cfg.threshold_metric
     best_thr, thr_score = find_best_threshold(
@@ -340,10 +348,12 @@ def lock_development_config(
 
     output_file = Path(output_path)
     output_file.parent.mkdir(parents=True, exist_ok=True)
-    output_file.write_text(
+    tmp_file = output_file.with_name(f".{output_file.name}.tmp")
+    tmp_file.write_text(
         json.dumps(lock_payload, indent=2, sort_keys=True),
         encoding="utf-8",
     )
+    os.replace(tmp_file, output_file)
     return lock_payload
 
 

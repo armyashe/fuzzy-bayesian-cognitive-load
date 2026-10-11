@@ -14,7 +14,7 @@
     "dump_exp2_debug": false,
     "dump_rules": false,
     "exp2_debug_dir": "artifacts/debug_exp2",
-    "experiment_group": "PUB_FINAL",
+    "experiment_group": "PUB_JOINT",
     "final_seed_offset": 0,
     "fts_norm": "row",
     "fts_summary_mode": "diag_high",
@@ -30,7 +30,7 @@
     "n_rules": 6,
     "n_sets": 3,
     "no_stage1_feature_mode": "stats",
-    "rank_metric": "auc",
+    "rank_metric": "balanced_accuracy",
     "ridge_lambda": 0.01,
     "robust_fts": false,
     "save_csv": "artifacts/A2_soft_results/results_main.csv",
@@ -41,14 +41,15 @@
     "threshold_metric": "balanced_accuracy",
     "trap_plateau_scale": 0.15,
     "trap_width_scale": 1.0,
-    "variant_name": "PUB_FINAL__EXP1_MF_GAUSS__R6__BN_SOFT_NAIVE_BIN5"
+    "variant_name": "PUB_JOINT__MF_GAUSSIAN__R6"
   },
-  "config_hash": "ad2f91375057dbe40890c902ff39bdaf8c32a3b31a588f745e2aed5eba82706e",
-  "configuration_id": "PUB_FINAL__EXP1_MF_GAUSS__R6__BN_SOFT_NAIVE_BIN5",
+  "config_hash": "10ac80f10db1f671b7ec32d916f22bf1784a1dafe6aec04744b0bc76fad5903f",
+  "configuration_id": "PUB_JOINT__MF_GAUSSIAN__R6",
   "final_test_evaluated": false,
+  "fold_assignment_hash": "90bc408cd6a1a6e21b1d711df2ea62abd752a32246dbbfe44a322dc6a12f7ae0",
   "grouping_protocol": "GroupKFold grouped by training subject IDs only",
   "k_folds": 5,
-  "lock_hash": "a2e479262944b50f002d304a2ecb91af6228376b7440ee639ed71169cb80aa37",
+  "lock_hash": "f790ddc101b1397b5b5cde35a258b69be265830e5e88b67339d3817e1cacf3f8",
   "oof_metrics": {
     "acc": 0.6234,
     "accuracy": 0.6234,
@@ -59,12 +60,20 @@
     "precision": 0.6091,
     "recall": 0.6825
   },
+  "prediction_hash": "490d1270282a80883e000553bd7e763d1a821ac9b90dee464adf20b9646ba79c",
   "protocol_version": "publication_protocol_v2",
+  "rank_metric": "balanced_accuracy",
   "schema_version": 1,
   "seed": 42,
+  "selected_mf_type": "gaussian",
+  "selected_n_rules": 6,
+  "selected_oof_balanced_accuracy": 0.6236,
+  "selected_oof_threshold": 0.55,
   "selected_using": "training_oof_only",
   "selection_metric": "oof_balanced_accuracy",
   "selection_metric_value": 0.6236,
+  "selection_mode": "joint_fts_anfis_selection",
+  "source_joint_selection_artifact": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\development\\joint_fts_anfis_selection_summary.json",
   "threshold": 0.55,
   "threshold_source": "training_oof_only",
   "tie_break_rules": [
@@ -73,5 +82,5 @@
     "lower_model_complexity",
     "configuration_id_lexicographic"
   ],
-  "timestamp_utc": "2026-06-23T14:26:55+00:00"
+  "timestamp_utc": "2026-06-28T16:22:05+00:00"
 }

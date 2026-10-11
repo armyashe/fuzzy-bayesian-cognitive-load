@@ -9,7 +9,13 @@ from .baselines import (
 )
 from .config import ExperimentConfig, assert_thesis_config, setup_seed
 from .data import TrainingSplit, load_training_split
+from .final_evaluation import run_publication_protocol_v2_final_evaluation
+from .interpretability import run_publication_protocol_v2_interpretability
 from .presets import apply_preset
+from .publication_selection import (
+    run_joint_fts_anfis_selection,
+    run_publication_joint_selection,
+)
 from .results import (
     CvResult,
     DevelopmentResult,
@@ -49,10 +55,14 @@ __all__ = [
     "run_baseline_development",
     "run_development",
     "run_final_evaluation_from_lock",
+    "run_joint_fts_anfis_selection",
+    "run_publication_joint_selection",
     "select_best_baseline",
     "select_best_development_config",
     "setup_seed",
     "load_training_split",
+    "run_publication_protocol_v2_final_evaluation",
+    "run_publication_protocol_v2_interpretability",
     "write_baseline_lock",
     "write_development_results_csv",
 ]

@@ -1,0 +1,5 @@
+Membership function,3 rules,6 rules,8 rules,12 rules
+Triangular,0.6032,0.6055,0.5858,0.5885
+Gaussian,0.6047,0.6236,0.5795,0.5557
+Trapezoidal,0.5978,0.6111,0.608,0.579
+Generalized bell,0.5658,0.5763,0.5844,0.5558

@@ -1,0 +1,99 @@
+{
+  "all_thresholds_from_training_oof": true,
+  "best_classical_baseline_locked": "STAT_LOGREG__C0.1__CWnone",
+  "comparison_manifest": {
+    "file_hash": "5ba6da84a8f23f194402804461711c6b0d47066eb131c7ffbba5fb7b38b17a93",
+    "manifest_hash": "7538e7e8521030e35d02e56684d11b40afd456795ab9d62c15936269eab68a9f",
+    "path": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\comparison\\final_comparison_manifest.json"
+  },
+  "execution_mode": "LOCKED_FINAL_EVALUATION",
+  "execution_timestamp_utc": "2026-06-30T02:01:47+00:00",
+  "input_lock_paths_and_hashes": {
+    "ablations": {
+      "Full FTS-ANFIS-BN": {
+        "file_hash": "c88f463ab2c79b3db49303fab824ea177fbb66f90c871b6ccf056b74364b06bb",
+        "lock_hash": "d11021ef3e2e3784b2ca408ad685a890211acbb035b77f3101ca161c30762e4e",
+        "path": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\ablations\\locks\\ABLATION_FULL.json"
+      },
+      "No ANFIS": {
+        "file_hash": "729396a88e4c25d3e1fc57c42a4e90c6085de10e81297dbb46488b25fc1322b7",
+        "lock_hash": "cd94ca90013633d3f4c1b4442b4135d1a7d6ea917c183ebc60919c1679754da7",
+        "path": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\ablations\\locks\\ABLATION_NO_ANFIS.json"
+      },
+      "No BN": {
+        "file_hash": "05027ec3667d73515d0a462963a51244060dee7bfa57f103aafb649a4eea0514",
+        "lock_hash": "8b41fed9449a035e1d8aefc33a20d9c56d124ff56821c19f2822af2d78b8c339",
+        "path": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\ablations\\locks\\ABLATION_NO_BN.json"
+      },
+      "No FTS": {
+        "file_hash": "594a24538e725945b7468c0bbeee45d32dab4b035b1827b8fad29864832c5cd2",
+        "lock_hash": "43c77b83d7dda740e826034af65a3380a63c437d4e5e73270f8c23d2839dd08e",
+        "path": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\ablations\\locks\\ABLATION_NO_FTS.json"
+      }
+    },
+    "baselines": {
+      "Flattened-window Logistic Regression": {
+        "file_hash": "f4062db182a1dcdf63133c7201de4944e9b0d0d63be7959be53c76a3610ca9fa",
+        "lock_hash": "c17a9cddadf6182c687d127f8e31f2a07c96b68e45f268e14350f005ae9df50d",
+        "path": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\baselines\\locks\\flat_logreg.json"
+      },
+      "Statistical HistGradientBoosting": {
+        "file_hash": "3afd8e29830b85c1f58faf08354695bbb7f4aa156705a692cc9b760755fabdc5",
+        "lock_hash": "50ffb518c5649cc0e6d6e412b011c133c64a5494e8d96d7285f46531b27b6b98",
+        "path": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\baselines\\locks\\stat_hist_gradient_boosting.json"
+      },
+      "Statistical Logistic Regression": {
+        "file_hash": "1e26c4f0bb8b645424b34e9429451a1384a21fee18df9b2c2823cc01c0696e22",
+        "lock_hash": "2797cf9d4683cec2b05e8328154a7a360ffe22526bff1c2772b5d53a945f949e",
+        "path": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\baselines\\locks\\stat_logreg.json"
+      },
+      "Statistical RBF SVM": {
+        "file_hash": "5e58b238a0abe3c48586467f14c3e32b7171d851759c58fd2112e3c934b83caf",
+        "lock_hash": "239293e5f373f75fff5cee0414c4df942a20478fb838c2c59a7af728f45853b2",
+        "path": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\baselines\\locks\\stat_svm.json"
+      },
+      "Statistical Random Forest": {
+        "file_hash": "ae42400d2c025be61be75e138a31f8fa29a49ad38d1239fc26754db0839aba1d",
+        "lock_hash": "442a2637469dc622abed4636cc805151a0aeb3c95ec7e0f19e80a83caf7767e9",
+        "path": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\baselines\\locks\\stat_random_forest.json"
+      }
+    },
+    "proposed": {
+      "file_hash": "b32afd5500ec42ec7f5f430ba89d8748f5f3a511217cb35a7bbd1f857f596a33",
+      "lock_hash": "f790ddc101b1397b5b5cde35a258b69be265830e5e88b67339d3817e1cacf3f8",
+      "path": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\locked_config.json"
+    }
+  },
+  "model_ids": [
+    "PUB_JOINT__MF_GAUSSIAN__R6",
+    "STAT_LOGREG__C0.1__CWnone",
+    "STAT_SVM__C0.1__G0.01",
+    "STAT_RF__Dnone__L3",
+    "STAT_HGB__LR0.05__LN7__L20.0",
+    "FLAT_LOGREG__C0.1__CWnone",
+    "ABLATION_FULL",
+    "ABLATION_NO_BN",
+    "ABLATION_NO_ANFIS",
+    "ABLATION_NO_FTS"
+  ],
+  "no_tuning_occurred": true,
+  "prediction_hashes": {
+    "ABLATION_FULL": "5429e4010425b251ca8bcbb12fcdcf616f63f9dd033ebc3a14741b125524bd6b",
+    "ABLATION_NO_ANFIS": "eec29dd3310059776df500de05222ed5775a6699c11e059a49e8e962194c2963",
+    "ABLATION_NO_BN": "e5c3bc2a3a5fffdaffd6e94f57033d6be3ba63babdc44cb968617adc5fc2ab60",
+    "ABLATION_NO_FTS": "d537f15483f0dc1fd46699d695772dc086014a89933a96ef5598a943e9261f55",
+    "FLAT_LOGREG__C0.1__CWnone": "6359c9d7267232f0d7bdfa49268207111c831ac1923278df3672a4e6cdfb2df2",
+    "PUB_JOINT__MF_GAUSSIAN__R6": "614cdab65fa8a9a2b91a2f987adbdc826933d982d171eced57af07d1104cd8d9",
+    "STAT_HGB__LR0.05__LN7__L20.0": "46ccef81a4ebd680841bf75bb4405f06f8bfd00439509fd272b37ec7efa7f919",
+    "STAT_LOGREG__C0.1__CWnone": "bc04000cff478debea093512b37f234a2b154ebe717482d55cd31ab977be966b",
+    "STAT_RF__Dnone__L3": "6bf625d160c0c8d469903698a0097c1d8cbd72f04afe4de4610f5a3242370a17",
+    "STAT_SVM__C0.1__G0.01": "0f80244ef7e21b1142296ace23ff5c9b959479939dc118d6fe837827d458a9d3"
+  },
+  "protocol_version": "publication_protocol_v2",
+  "seed": 42,
+  "statistical_plan": {
+    "file_hash": "b96a94e12759656c78df3a1c6b9a1b863372b9323e02c6bb5e3d4ab304549bdf",
+    "path": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\comparison\\statistical_analysis_plan.json",
+    "plan_hash": "5edc14b998cd87f9c5fbcd2f4dda5c5837754adf46350bca7eda376f240ed164"
+  }
+}

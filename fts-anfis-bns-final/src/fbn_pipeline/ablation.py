@@ -20,8 +20,3 @@ ABLATION_DESCRIPTIONS: dict[Ablation, str] = {
 }
 
 ABLATION_CHOICES: tuple[str, ...] = tuple(item.value for item in Ablation)
-
-
-def describe_ablation(value: str) -> str:
-    """Return a human-readable pipeline description for an ablation value."""
-    return ABLATION_DESCRIPTIONS[Ablation(value)]

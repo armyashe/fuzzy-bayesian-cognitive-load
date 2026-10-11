@@ -11,7 +11,7 @@ import numpy as np
 from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, roc_auc_score
+from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score
 from sklearn.model_selection import GroupKFold
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler

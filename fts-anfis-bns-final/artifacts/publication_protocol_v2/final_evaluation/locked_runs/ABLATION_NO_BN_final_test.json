@@ -1,0 +1,18 @@
+{
+  "configuration_id": "ABLATION_NO_BN",
+  "final_test_evaluated": true,
+  "locked_config_path": "C:\\Users\\doqua\\Desktop\\fuzzy-bayesian-cognitive-load\\fts-anfis-bns-final\\artifacts\\publication_protocol_v2\\ablations\\locks\\ABLATION_NO_BN.json",
+  "protocol_version": "publication_protocol_v2",
+  "test_metrics": {
+    "acc": 0.6891,
+    "accuracy": 0.6891,
+    "auc": 0.7158,
+    "bal_acc": 0.6873,
+    "f1": 0.7248,
+    "macro_f1": 0.6838,
+    "precision": 0.6583,
+    "recall": 0.8061
+  },
+  "threshold": 0.62,
+  "timestamp_utc": "2026-06-30T01:53:50+00:00"
+}

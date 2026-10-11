@@ -19,21 +19,27 @@ def run_cv_result(
     y_train: np.ndarray,
     user_train: np.ndarray,
     cfg: ExperimentConfig,
+    *,
+    fold_indices: list[tuple[np.ndarray, np.ndarray]] | None = None,
 ) -> CvResult:
     """Run GroupKFold CV and return typed out-of-fold predictions."""
-    gkf = GroupKFold(n_splits=cfg.k_folds)
     oof_post = np.full(len(y_train), np.nan)
-    fold_indices: list[tuple[np.ndarray, np.ndarray]] = []
+    used_fold_indices: list[tuple[np.ndarray, np.ndarray]] = []
+    split_iter = (
+        fold_indices
+        if fold_indices is not None
+        else list(GroupKFold(n_splits=cfg.k_folds).split(X_train, y_train, user_train))
+    )
 
     header = f"  {'Fold':>4} | {'Split':>5} | {'Total':>5} | {'cls 0':>5} | {'cls 1':>5} | Users"
     print("-" * 80)
     print(header)
     print("-" * 80)
 
-    for fold_i, (tr_idx, va_idx) in enumerate(
-        gkf.split(X_train, y_train, user_train)
-    ):
-        fold_indices.append((tr_idx, va_idx))
+    for fold_i, (tr_idx, va_idx) in enumerate(split_iter):
+        tr_idx = np.asarray(tr_idx, dtype=int)
+        va_idx = np.asarray(va_idx, dtype=int)
+        used_fold_indices.append((tr_idx, va_idx))
         X_tr, X_va = X_train[tr_idx], X_train[va_idx]
         y_tr = y_train[tr_idx]
         y_va = y_train[va_idx]
@@ -76,7 +82,11 @@ def run_cv_result(
 
         _print_fold_metrics(y_tr, y_va, tr_post_fold, oof_post[va_idx], fold_i)
 
-    return CvResult(oof_post=oof_post, oof_y=y_train.copy(), fold_indices=fold_indices)
+    return CvResult(
+        oof_post=oof_post,
+        oof_y=y_train.copy(),
+        fold_indices=used_fold_indices,
+    )
 
 
 def run_cv(

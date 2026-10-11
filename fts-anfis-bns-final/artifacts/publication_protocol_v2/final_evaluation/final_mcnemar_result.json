@@ -1,0 +1,15 @@
+{
+  "baseline_correct_proposed_wrong": 13,
+  "baseline_lock_hash": "2797cf9d4683cec2b05e8328154a7a360ffe22526bff1c2772b5d53a945f949e",
+  "baseline_model_id": "STAT_LOGREG__C0.1__CWnone",
+  "baseline_prediction_hash": "bc04000cff478debea093512b37f234a2b154ebe717482d55cd31ab977be966b",
+  "comparison": "Proposed FTS-ANFIS-BN vs Statistical Logistic Regression",
+  "discordant_total": 48,
+  "mcnemar_statistic": 9.1875,
+  "method": "continuity-corrected",
+  "p_value": 0.002437,
+  "proposed_correct_baseline_wrong": 35,
+  "proposed_lock_hash": "f790ddc101b1397b5b5cde35a258b69be265830e5e88b67339d3817e1cacf3f8",
+  "proposed_model_id": "PUB_JOINT__MF_GAUSSIAN__R6",
+  "proposed_prediction_hash": "614cdab65fa8a9a2b91a2f987adbdc826933d982d171eced57af07d1104cd8d9"
+}

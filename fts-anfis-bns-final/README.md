@@ -28,6 +28,9 @@ python run_experiments.py --group exp2
 python run_experiments.py --group exp3
 python run_experiments.py --group all
 
+# Chay publication joint selection (16 to hop mf_type x n_rules)
+python run_publication_joint_selection.py
+
 # Mo dashboard
 streamlit run app.py
 ```
@@ -99,6 +102,28 @@ fts-anfis-bns-final/
 ```
 
 ## Main Entry Points
+
+### `run_publication_joint_selection.py`
+
+Dung cho publication model selection moi:
+
+- chay joint OOF selection tren 16 to hop `(mf_type, n_rules)`
+- giu co dinh BN la `naive + soft evidence + 5 bins + alpha=0.5`
+- chon threshold bang OOF balanced accuracy
+- chi cap nhat `artifacts/publication_protocol_v2/locked_config.json` sau khi artifact va validation da hoan tat
+
+Artifacts chinh:
+
+- `artifacts/publication_protocol_v2/development/joint_fts_anfis_selection_oof.csv`
+- `artifacts/publication_protocol_v2/development/joint_fts_anfis_balanced_accuracy_matrix.csv`
+- `artifacts/publication_protocol_v2/development/joint_fts_anfis_selection_report.md`
+- `artifacts/publication_protocol_v2/development/joint_fts_anfis_selection_summary.json`
+
+Artifacts cu cua flow chon tuan tu duoc giu lai trong:
+
+- `artifacts/publication_protocol_v2/development/legacy_sequential_selection/`
+
+Luu y: cac artifact legacy chi de doi chieu/provenance va **khong duoc** dung de chon cau hinh publication hien tai.
 
 ### `main.py`
 
